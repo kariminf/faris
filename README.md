@@ -6,5 +6,6 @@ Knowledge representation, Sentences, Language modeling, MultiLingual,
 Farest: Intending to represent knowledge the Farest we could.
 
 FarEst: Farabi & Arestotle.
+
 FaReSt: Facts' Representation of Sentences.
 
