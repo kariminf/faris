@@ -5,10 +5,11 @@ Knowledge representation, Sentences, Language modeling, MultiLingual,
 
 Farest: Intending to represent knowledge the Farest we could.
 
-FarEst: [Farabi](http://en.wikipedia.org/wiki/Al-Farabi) & [Aristotle](http://en.wikipedia.org/wiki/Aristotle).
+FarEst: [Farabi](http://en.wikipedia.org/wiki/Al-Farabi" target="blank) & [Aristotle](http://en.wikipedia.org/wiki/Aristotle" target="blank).
 
 FaReSt: Facts' Representation of Sentences.
 
+## Features
 
 ## Licence
 
