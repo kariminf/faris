@@ -1,0 +1,28 @@
+@roles: [
+	r:{
+		id: <role_name>,
+		synSet: <synSet_number>,
+		adjectives: [
+			adj:{
+				synSet: <synSet_number>,
+				adverbs: [<synSet_number>, ...]
+			adj:}
+		]
+	r:}
+	r:{
+		...
+	r:}
+]
+
+@actions: [
+	act:{
+		id: <action_name>,
+		synSet: <synSet_number>,
+		tense: <0:present,1:past>,
+		subjects: [<id>,...],
+		objects: [<id>]
+	act:}
+	act:{
+		...
+	act:}
+]
