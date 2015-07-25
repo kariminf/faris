@@ -14,6 +14,6 @@ hs_err_pid*
 
 
 #directories for dictionaries and libraries
-Faris/lib/
-Faris/dict/
-Faris/bin/
+lib/
+dict/
+bin/

@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import dz.aak.faris.linguistic.Adverb;
 import dz.aak.faris.linguistic.Verb;
 
 /**
@@ -46,6 +47,9 @@ public class Action {
 	//- A verb has tense, indicating the time that the sentence describes
 	//- A verb has mood, indicating whether the sentence describes reality or 
 	//expresses a command, a hypothesis, a hope, etc.
+	
+	//An action is modifiied by an adverb
+	private Adverb adverb;
 	
 	//An Action can have many doers (we can't duplicate a doer)
 	private Set<Substance> subjects = new HashSet<Substance>(); 

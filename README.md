@@ -1,5 +1,5 @@
 # Faris
-Faris is a framework intended to represent ideas in sentences, and arrange them according to their factuality (truth level).
+Faris is a framework intended to represent ideas in sentences, and arrange them according to their factualness level (truth level).
 The representation must be MultiLingual, since ideas have nothing to do with language.
 
 Keywords:
