@@ -16,6 +16,12 @@
  */
 package dz.aak.faris.philosophical;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import dz.aak.faris.linguistic.Adjective;
+import dz.aak.faris.linguistic.Adverb;
+
 /**
  * Qualification or quality (ποιόν, poion, of what kind or quality). 
  * This determination characterizes the nature of an object. Examples: white, black, 
@@ -25,6 +31,9 @@ package dz.aak.faris.philosophical;
  *
  */
 public class Quality {
+	
+	private Adjective adjective;
+	private Set<Adverb> adverbs = new HashSet<Adverb>();
 
 	public Quality() {
 		// TODO Auto-generated constructor stub
