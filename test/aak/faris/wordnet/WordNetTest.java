@@ -1,4 +1,4 @@
-package dz.aak.wordnet;
+package aak.faris.wordnet;
 
 import java.io.File;
 import java.io.IOException;
