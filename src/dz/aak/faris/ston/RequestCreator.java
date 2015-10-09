@@ -13,6 +13,11 @@ public class RequestCreator {
 	public RequestCreator() {
 	}
 	
+	public RequestCreator(HashMap<String, RRolePlayer> players, HashMap<String, RAction> actions){
+		this.players = new HashMap<String, RRolePlayer>(players);
+		this.actions = new HashMap<String, RAction>(actions);
+	}
+	
 	
 	public boolean addRolePlayer(String id, int nounSynSet){
 		id = id.trim();

@@ -45,5 +45,13 @@ public class Mind {
 		this.name = name;
 		
 	}
+	
+	public void addIdea(Truth truth, Idea idea){
+		ideas.put(truth, idea);
+	}
+	
+	public void addCondition(Conditional condition){
+		conditions.add(condition);
+	}
 
 }

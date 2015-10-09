@@ -7,6 +7,49 @@ import java.util.Set;
 
 public class RAction {
 
+	/**
+	 * @return the verbSynSet
+	 */
+	public int getVerbSynSet() {
+		return verbSynSet;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @return the subjects
+	 */
+	public Set<String> getSubjects() {
+		return subjects;
+	}
+
+	/**
+	 * @return the objects
+	 */
+	public Set<String> getObjects() {
+		return objects;
+	}
+
+	/**
+	 * @return the tense
+	 */
+	public int getTense() {
+		return tense;
+	}
+
+	/**
+	 * @return the aspect
+	 */
+	public int getAspect() {
+		return aspect;
+	}
+
+
 	private int verbSynSet;
 	private String id;
 	private Set<String> subjects = new HashSet<String>();

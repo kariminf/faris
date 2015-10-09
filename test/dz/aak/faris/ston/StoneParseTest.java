@@ -20,6 +20,13 @@ public class StoneParseTest {
 		//specif = "{ jjjjj }";
 		System.out.println(specif + "\n----------\n");
 		Parser parser = new Parser(specif);
+		System.out.println(parser.parsed());
+		
+		RequestCreator rq = new RequestCreator(parser.getPlayers(), parser.getActions());
+		
+		
+		String specif2 = rq.getStructuredRequest();
+		System.out.println(specif2 + "\n----------\n");
 
 	}
 

@@ -28,7 +28,7 @@ public class Parser {
 
 		description = description.replaceAll(BL, "");
 		
-		System.out.println(description);
+		//System.out.println(description);
 		
 		Matcher m = CONT.matcher(description);
 		if (m.find()) {
@@ -37,8 +37,20 @@ public class Parser {
 			Roles(roles);
 			Actions(actions);
         }
+		success = true;
 	}
 	
+	public boolean parsed(){
+		return success;
+	}
+	
+	public HashMap<String, RRolePlayer> getPlayers(){
+		return new HashMap<String, RRolePlayer>(players);
+	}
+	
+	public HashMap<String, RAction> getActions(){
+		return new HashMap<String, RAction>(actions);
+	}
 	
 	private void Roles(String description){
 		
@@ -108,6 +120,8 @@ public class Parser {
 		
 		int synSet = Integer.parseInt(synSetStr);
 		action = RAction.create(id, synSet);
+		//TODO add other components of the action
+		actions.put(id, action);
 		
 			
 	}
@@ -121,45 +135,28 @@ public class Parser {
 		if(! id.matches("id:.*")) return;
 		id = id.substring(3);
 		
-		System.out.println(id);
+		//System.out.println(id);
 		
 		description = description.substring(idx +1);
 		
 		idx = description.indexOf(",");
-		if (idx < 0) idx = description.length();
+		if (idx < 0) 
+			idx = description.length();
 		
 		{
 			String synSetStr = description.substring(0,idx);
 			if(! synSetStr.matches("synSet:.*")) return;
 			
 			synSetStr = synSetStr.substring(7);
-			System.out.println(synSetStr);
+			//System.out.println(synSetStr);
 			int synSet = Integer.parseInt(synSetStr);
 			role = RRolePlayer.create(id, synSet);
 			
 		}
 		
+		//TODO complete the player description
+		players.put(id, role);
 		
-	}
-	
-	
-	
-	public static void main(String[] args) {
-		
-		
-		Pattern desc = Pattern.compile("r:\\{(.*)r:\\}$");
-		
-		String ss = "r:{kkkkkkkk1rr:},r:{kkkkkkkk2rr:}";
-		//Matcher m = desc.matcher();
-		
-		for (String s : ss.split("r:\\},r:\\{|r:\\}|r:\\{")){
-			System.out.println(s);
-		}
-		/*while (m.find()) {
-			String  description =  m.group(1);
-			System.out.println(description);
-        }*/
-
 	}
 	
 

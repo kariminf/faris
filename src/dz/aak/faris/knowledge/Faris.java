@@ -18,10 +18,14 @@
  */
 package dz.aak.faris.knowledge;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import dz.aak.faris.philosophical.Action;
 import dz.aak.faris.philosophical.Substance;
+import dz.aak.faris.ston.Parser;
+import dz.aak.faris.ston.RAction;
+import dz.aak.faris.ston.RRolePlayer;
 
 /**
  * The interface class,
@@ -46,16 +50,28 @@ public class Faris {
 
 	private HashSet<Substance> substances = new HashSet<Substance>();
 	private HashSet<Action> actions = new HashSet<Action>();
-	private HashSet<Mind> minds = new HashSet<Mind>();
+	private HashMap<String, Mind> minds = new HashMap<String, Mind>();
 	
 	
 	public Faris() {
-		
+		minds.put("Default", new Mind("Default"));
 	}
 	
 	public boolean addJSONDescription(String description){
 		
+		Parser parser = new Parser(description);
 		
+		if (! parser.parsed()) return false;
+		
+		HashMap<String, RRolePlayer> _players = parser.getPlayers();
+		HashMap<String, RAction> _actions = parser.getActions();
+		
+		Mind defaultMind = minds.get("Default");
+		
+		for (String _actionID : _actions.keySet()){
+			
+		}
+			
 		return true;
 	}
 
