@@ -26,6 +26,7 @@ import dz.aak.faris.philosophical.Substance;
  * @author Abdelkrime Aries 
  *
  */
+@Deprecated
 public class Idea {
 	
 	private HashMap<Substance, Mind> minds = new HashMap<Substance, Mind>();
@@ -35,6 +36,9 @@ public class Idea {
 	public Idea() {
 	}
 	
+	public void addAction(Action action){
+		this.action = action;
+	}
 	/**
 	 * 
 	 * @param idea STON representation of the sentence

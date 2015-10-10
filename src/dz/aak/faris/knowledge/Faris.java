@@ -57,7 +57,7 @@ public class Faris {
 		minds.put("Default", new Mind("Default"));
 	}
 	
-	public boolean addJSONDescription(String description){
+	public boolean addStonDescription(String description){
 		
 		Parser parser = new Parser(description);
 		

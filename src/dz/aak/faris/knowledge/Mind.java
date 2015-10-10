@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dz.aak.faris.philosophical.Action;
 import dz.aak.faris.philosophical.Substance;
 
 public class Mind {
@@ -37,17 +38,24 @@ public class Mind {
 	private String name;
 	private Substance owner;
 	
-	private HashMap<Truth, Idea> ideas = new HashMap<Truth, Idea>();
+	private HashMap<Truth, Mind> opinions = new HashMap<Truth, Mind>();
+	
+	private HashMap<Truth, Action> actions = new HashMap<Truth, Action>();
 	
 	private List<Conditional> conditions = new ArrayList<Conditional>();
 	
 	public Mind(String name) {
 		this.name = name;
-		
 	}
 	
-	public void addIdea(Truth truth, Idea idea){
-		ideas.put(truth, idea);
+	public void addAction(Truth truth, Action action){
+		//TODO verify if the action exists already, and if other components have to be added
+		actions.put(truth, action);
+	}
+	
+	public void addOpinion(Truth truth, Mind othersThoughts){
+		//TODO verify if the action exists already, and if other components have to be added
+		opinions.put(truth, othersThoughts);
 	}
 	
 	public void addCondition(Conditional condition){
