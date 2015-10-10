@@ -36,7 +36,7 @@ public class RRolePlayer {
 		result += "\t\t\t\tsynSet: " + adjSynSet;
 
 		if ((advSynSets != null) && ! advSynSets.isEmpty()){
-			result += ",\n\t\t\t\tadverbs: " + advSynSets;
+			result += ";\n\t\t\t\tadverbs: " + advSynSets;
 		}
 		result += "\n\t\t\tadj:}";
 		
@@ -56,13 +56,13 @@ public class RRolePlayer {
 		String result = "r:{";
 		
 		result += "id:" + id;
-		result += ",synSet:" + nounSynSet;
+		result += ";synSet:" + nounSynSet;
 		
 		if (quantity != null)
-			result += ",quantity:" + quantity;
+			result += ";quantity:" + quantity;
 		
 		if(! adjectives.isEmpty()) {
-			result += ",adjectives:[";
+			result += ";adjectives:[";
 			
 			Iterator<String> it = adjectives.iterator();
 			while(it.hasNext()){
@@ -85,13 +85,13 @@ public class RRolePlayer {
 		String result = "\tr:{";
 		
 		result += "\n\t\tid: " + id;
-		result += ",\n\t\tsynSet: " + nounSynSet;
+		result += ";\n\t\tsynSet: " + nounSynSet;
 		
 		if (quantity != null)
-			result += ",\n\t\tquantity: " + quantity;
+			result += ";\n\t\tquantity: " + quantity;
 		
 		if(! adjectives.isEmpty()) {
-			result += ",\n\t\tadjectives: [\n";
+			result += ";\n\t\tadjectives: [\n";
 			
 			Iterator<String> it = adjectives.iterator();
 			while(it.hasNext()){

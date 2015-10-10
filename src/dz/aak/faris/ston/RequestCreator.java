@@ -93,7 +93,7 @@ public class RequestCreator {
 		String result = "@roles:";
 		
 		if(players.isEmpty()){
-			result += " null,\n";
+			result += " null;\n";
 		} else {
 			result += " [\n";
 			Iterator<RRolePlayer> it = players.values().iterator();
@@ -125,7 +125,7 @@ public class RequestCreator {
 		String result = "@roles:";
 		
 		if(players.isEmpty()){
-			result += " null,";
+			result += " null;";
 		} else {
 			result += " [";
 			Iterator<RRolePlayer> it = players.values().iterator();

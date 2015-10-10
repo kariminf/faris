@@ -1,30 +1,30 @@
 @roles: [
 	r:{
-		id: mother,
+		id: mother;
 		synSet: 10332385
 	r:}
 	r:{
-		id: truth,
+		id: truth;
 		synSet: 5819453
 	r:}
 	r:{
-		id: food,
+		id: food;
 		synSet: 21265
 	r:}
 	r:{
-		id: +goodfood,
-		synSet: 21265,
+		id: +goodfood;
+		synSet: 21265;
 		adjectives: [
 			adj:{
-				synSet: 1123148,
+				synSet: 1123148;
 				adverbs: [89408]
 			adj:}
 		]
 	r:}
 	r:{
-		id: 2children,
-		synSet: 9917593,
-		quantity: 2,
+		id: 2children;
+		synSet: 9917593;
+		quantity: 2;
 		adjectives: [
 			adj:{
 				synSet: 1919931
@@ -38,22 +38,22 @@
 
 @actions: [
 	act:{
-		id: is,
-		synSet: 2604760,
-		tense: 1,
-		subjects: [eat, was],
+		id: is;
+		synSet: 2604760;
+		tense: 1;
+		subjects: [eat, was];
 		objects: [truth]
 	act:}
 	act:{
-		id: eat,
-		synSet: 1168468,
-		subjects: [mother, 2children],
+		id: eat;
+		synSet: 1168468;
+		subjects: [mother, 2children];
 		objects: [food]
 	act:}
 	act:{
-		id: was,
-		synSet: 2604760,
-		subjects: [food],
+		id: was;
+		synSet: 2604760;
+		subjects: [food];
 		objects: [+goodfood]
 	act:}
 ]

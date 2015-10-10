@@ -71,9 +71,9 @@ public class RAction {
 		return new RAction(id, verbSynSet);
 	}
 	
-	public void addVerbSpecif(int i, int j){
-		if (i > 0 && i < 3) this.tense = i;
-		if (j > 0 && j < 3) this.aspect = j;
+	public void addVerbSpecif(int tense, int aspect){
+		if (tense > 0 && tense < 3) this.tense = tense;
+		if (aspect > 0 && aspect < 3) this.aspect = aspect;
 	}
 	
 	public void addSubject(String roleId){
@@ -93,17 +93,17 @@ public class RAction {
 		
 		
 		result += "id:" + id ;
-		result += ",synSet:" + verbSynSet ;
+		result += ";synSet:" + verbSynSet ;
 		if (tense != 0 )
-			result += ",tense:" + tense;
+			result += ";tense:" + tense;
 		if (aspect != 0 )
-			result += ",aspect:" + aspect;
+			result += ";aspect:" + aspect;
 		if(! subjects.isEmpty()) {
-			result += ",subjects:";
+			result += ";subjects:";
 		}
 		
 		if(! objects.isEmpty()){
-			result += ",objects:";
+			result += ";objects:";
 			result += objects;
 		}
 		
@@ -119,18 +119,18 @@ public class RAction {
 		
 		
 		result += "\t\tid: " + id ;
-		result += ",\n\t\tsynSet: " + verbSynSet ;
+		result += ";\n\t\tsynSet: " + verbSynSet ;
 		if (tense != 0 )
-			result += ",\n\t\ttense: " + tense;
+			result += ";\n\t\ttense: " + tense;
 		if (aspect != 0 )
-			result += ",\n\t\taspect: " + aspect;
+			result += ";\n\t\taspect: " + aspect;
 		if(! subjects.isEmpty()) {
-			result += ",\n\t\tsubjects: ";
+			result += ";\n\t\tsubjects: ";
 			result += subjects;
 		}
 		
 		if(! objects.isEmpty()){
-			result += ",\n\t\tobjects: ";
+			result += ";\n\t\tobjects: ";
 			result += objects;
 		}
 		

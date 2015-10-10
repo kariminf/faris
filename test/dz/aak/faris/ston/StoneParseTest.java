@@ -18,7 +18,7 @@ public class StoneParseTest {
 		String specif = readFile(testFile);
 		
 		//specif = "{ jjjjj }";
-		System.out.println(specif + "\n----------\n");
+		//System.out.println(specif + "\n----------\n");
 		Parser parser = new Parser(specif);
 		System.out.println(parser.parsed());
 		
@@ -27,7 +27,7 @@ public class StoneParseTest {
 		
 		String specif2 = rq.getStructuredRequest();
 		System.out.println(specif2 + "\n----------\n");
-
+		//System.out.println(specif2.equals(specif));
 	}
 
 
