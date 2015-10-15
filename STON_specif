@@ -18,7 +18,7 @@
 	act:{
 		id: <action_name>;
 		synSet: <synSet_number>;
-		tense: <0:present,1:past>;
+		tense: <1:present,2:past,3:future>;
 		subjects: [<id>,...];
 		objects: [<id>,...]
 	act:}

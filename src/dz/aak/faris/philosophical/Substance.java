@@ -52,8 +52,24 @@ public class Substance {
 	private Quantity quantity;
 	
 	
-	public Substance() {
-		// TODO Auto-generated constructor stub
+	public Substance(int nounSynSet) {
+		noun = Noun.getNew(nounSynSet);
+	}
+	
+	public void addAction(Action action){
+		actions.add(action);
+	}
+	
+	public void addAffection(Action action){
+		affections.add(action);
+	}
+	
+	public void addQuality(Quality quality){
+		qualities.add(quality);
+	}
+	
+	public void setQuantity(Quantity quantity){
+		this.quantity = quantity;
 	}
 
 }

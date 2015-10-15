@@ -21,6 +21,10 @@ package dz.aak.faris.knowledge;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import dz.aak.faris.linguistic.Adjective;
+import dz.aak.faris.linguistic.Verb;
+import dz.aak.faris.linguistic.Verb.Aspect;
+import dz.aak.faris.linguistic.Verb.Tense;
 import dz.aak.faris.philosophical.Action;
 import dz.aak.faris.philosophical.Substance;
 import dz.aak.faris.ston.Parser;
@@ -69,7 +73,29 @@ public class Faris {
 		Mind defaultMind = minds.get("Default");
 		
 		for (String _actionID : _actions.keySet()){
+			RAction raction = _actions.get(_actionID);
+			Verb verb = new Verb(raction.getVerbSynSet());
+			verb.setTense(Tense.getTense(raction.getTense()));
+			verb.setAspect(Aspect.getAspect(raction.getAspect()));
 			
+			Action action = Action.getNew(verb);
+			
+			for (String subjID: raction.getSubjects()){
+				RRolePlayer rsubject = _players.get(subjID);
+				Substance subject = new Substance(rsubject.getNounSynSet());
+				
+				for(String radj : rsubject.getAdjectives()){
+					
+					//Adjective adjective = new Adjective();
+				}
+				
+				subject.addAction(action);
+				substances.add(subject);
+				action.addSubject(subject);
+			}
+			
+			actions.add(action);
+
 		}
 			
 		return true;

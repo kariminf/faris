@@ -101,7 +101,7 @@ public class WordNetTest {
 	public static void main(String[] args) {
 		
 		try {
-			//testTopic();
+			testTopic();
 			testWordSearch();
 		} catch (IOException e) {
 			

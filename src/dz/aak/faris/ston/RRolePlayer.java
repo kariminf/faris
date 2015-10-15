@@ -13,8 +13,40 @@ public class RRolePlayer {
 	private String id;
 	private List<String> adjectives = new ArrayList<String>();
 	private String quantity = null;
-	private List<String> possecives = new ArrayList<String>();
+	private List<String> possessives = new ArrayList<String>();
 	
+	/**
+	 * @return the nounSynSet
+	 */
+	public int getNounSynSet() {
+		return nounSynSet;
+	}
+
+
+	/**
+	 * @return the adjectives
+	 */
+	public List<String> getAdjectives() {
+		return adjectives;
+	}
+
+
+	/**
+	 * @return the quantity
+	 */
+	public String getQuantity() {
+		return quantity;
+	}
+
+
+	/**
+	 * @return the possessives
+	 */
+	public List<String> getPossessives() {
+		return possessives;
+	}
+
+
 	private static Set<String> ids = new HashSet<String>();
 	
 	private RRolePlayer(String id, int nounSynSet) {

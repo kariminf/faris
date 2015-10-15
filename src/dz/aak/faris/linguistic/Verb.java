@@ -23,15 +23,63 @@ public class Verb extends PartOfSpeach {
 	public static enum Tense {
 		PAST,
 		PRESENT,
-		FUTURE
+		FUTURE;
+		
+		public static Tense getTense (int number){
+			switch (number){
+			case 0: return PAST;
+			case 1: return PRESENT;
+			case 2: return FUTURE;
+			}
+			
+			return PRESENT;
+		}
 	}
 	
 	public static enum Aspect {
 		SIMPLE, //“I see” (simple aspect) expresses the act of seeing as a simple fact;
 		PROGRESSIVE, //“I am seeing” (progressive aspect) represents the action as continuous and ongoing; 
-		PERFECT //“I have seen” (perfect aspect) represents the present situation as the result of past action. 
+		PERFECT; //“I have seen” (perfect aspect) represents the present situation as the result of past action. 
+	
+		public static Aspect getAspect (int number){
+			switch (number){
+			case 0: return SIMPLE;
+			case 1: return PROGRESSIVE;
+			case 2: return PERFECT;
+			}
+			
+			return SIMPLE;
+		}
 	}
 	
+	/**
+	 * @return the tense
+	 */
+	public Tense getTense() {
+		return tense;
+	}
+
+	/**
+	 * @param tense the tense to set
+	 */
+	public void setTense(Tense tense) {
+		this.tense = tense;
+	}
+
+	/**
+	 * @return the aspect
+	 */
+	public Aspect getAspect() {
+		return aspect;
+	}
+
+	/**
+	 * @param aspect the aspect to set
+	 */
+	public void setAspect(Aspect aspect) {
+		this.aspect = aspect;
+	}
+
 	private Tense tense;
 	
 	private Aspect aspect;
