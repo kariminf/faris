@@ -149,7 +149,7 @@ public class Mind {
 					continue;
 				//found = true;
 				if(! roles.containsKey(subject)){
-					String roleId = "foundrole-" + numRoles;
+					String roleId = "srole-" + numRoles;
 					roles.put(subject, roleId);
 					subjects.add(subject);
 					rq.addRolePlayer(roleId, subject.getNounSynSet());

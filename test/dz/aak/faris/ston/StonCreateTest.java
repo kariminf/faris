@@ -119,7 +119,7 @@ public class StonCreateTest {
 		String str = rq.getStructuredRequest();
 		System.out.println(str);
 		
-		String str2 = readFile("test.ston");
+		String str2 = readFile("ston/test.ston");
 
 		if (str.equals(str2))
 			System.out.print("equal");

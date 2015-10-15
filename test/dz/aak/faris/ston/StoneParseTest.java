@@ -9,7 +9,7 @@ import dz.aak.faris.ston.Parser;
 
 public class StoneParseTest {
 
-	static String testFile = "test.ston";
+	static String testFile = "ston/test.ston";
 	/**
 	 * @param args
 	 */

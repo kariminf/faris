@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class FarisTest {
 	
-	static String testFile = "test2.ston";
+	static String testFile = "ston/test2.ston";
 
 	public static String readFile (String f) {
 		try {
