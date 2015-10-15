@@ -100,6 +100,14 @@ public class Action {
 		return result;
 	}
 	
+	public Set<Substance> getSubjectsSet(){
+		return subjects;
+	}
+	
+	public Set<Substance> getObjectsSet(){
+		return objects;
+	}
+	
 	public Verb getVerb(){
 		return verb;
 	}

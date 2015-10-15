@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import dz.aak.faris.linguistic.Verb;
 import dz.aak.faris.philosophical.Action;
@@ -125,6 +126,103 @@ public class Mind {
 		
 		
 		return rq.getStructuredRequest();
+	}
+	
+	
+	public String getSynSetText(int synSet){
+		if (! truthTable.containsKey(Truth.FACT))
+			return "";
+		RequestCreator rq = new RequestCreator();
+		//Affecting a label for each substance: subjects and objects
+		int numRoles = 0;
+		int numActions = 0;
+		HashMap<Substance, String> roles = new HashMap<Substance, String>();
+		//HashMap<Action, String> actions = new HashMap<Action, String>();
+		
+		//Searching for substances that contain this synSet
+		for (Action action : truthTable.get(Truth.FACT)){
+			HashSet<Substance> subjects = new HashSet<Substance>();
+			HashSet<Substance> objects = new HashSet<Substance>();
+			//boolean found = false;
+			for (Substance subject: action.getSubjects()){
+				if (subject.getNounSynSet() != synSet)
+					continue;
+				//found = true;
+				if(! roles.containsKey(subject)){
+					String roleId = "foundrole-" + numRoles;
+					roles.put(subject, roleId);
+					subjects.add(subject);
+					rq.addRolePlayer(roleId, subject.getNounSynSet());
+					numRoles++;
+				}
+				
+			}
+			
+			for (Substance object: action.getObjects()){
+				if (object.getNounSynSet() != synSet)
+					continue;
+				//found = true;
+				if(! roles.containsKey(object)){
+					String roleId = "srole-" + numRoles;
+					roles.put(object, roleId);
+					rq.addRolePlayer(roleId, object.getNounSynSet());
+					numRoles++;
+				}
+				
+			}
+			
+			if (!(subjects.isEmpty() && objects.isEmpty())){//found
+				String actionId = "action-" + numActions;
+				//actions.put(action, actionId);
+				Verb verb = action.getVerb();
+				rq.addAction(actionId, verb.getSynSet());
+				numActions++;
+				
+				Set<Substance> substances = (subjects.isEmpty())?action.getSubjectsSet():subjects;
+				
+				for (Substance subject: substances){
+					String roleId = "role-" + numRoles;
+					
+					if ( roles.containsKey(subject)){
+						roleId = roles.get(subject);
+					}
+					else{
+						roles.put(subject, roleId);
+						rq.addRolePlayer(roleId, subject.getNounSynSet());
+						numRoles++;
+					}
+
+					rq.addSubject(actionId, roleId);
+					
+				}
+				
+				substances = (objects.isEmpty())?action.getObjectsSet():objects;
+				
+				for (Substance object: substances){
+					String roleId = "role-" + numRoles;
+					
+					if ( roles.containsKey(object)){
+						roleId = roles.get(object);
+					}
+					else{
+						roles.put(object, roleId);
+						rq.addRolePlayer(roleId, object.getNounSynSet());
+						numRoles++;
+					}
+
+					rq.addObject(actionId, roleId);
+					
+				}
+				
+				
+			}
+			
+			
+		}
+		
+		
+		return rq.getStructuredRequest();
+		
 	}
 
 }

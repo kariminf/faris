@@ -158,6 +158,19 @@ public class Faris {
 	
 	/**
 	 * 
+	 * @param mindLabel
+	 * @param synSet
+	 * @return
+	 */
+	public String getSynSetText (String mindLabel, int synSet){
+		if (! minds.containsKey(mindLabel)) return "";
+		Mind mind = minds.get(mindLabel);
+		
+		return mind.getSynSetText(synSet);
+	}
+	
+	/**
+	 * 
 	 * @return
 	 */
 	public String info(){

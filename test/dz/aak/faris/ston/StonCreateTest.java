@@ -123,10 +123,7 @@ public class StonCreateTest {
 
 		if (str.equals(str2))
 			System.out.print("equal");
-		
-		
-		
-		
+
 	}
 	
 	public static int getSynSet(String word, POS pos){
