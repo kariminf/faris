@@ -29,6 +29,7 @@ import dz.aak.faris.philosophical.Action;
 import dz.aak.faris.philosophical.Substance;
 import dz.aak.faris.ston.Parser;
 import dz.aak.faris.ston.RAction;
+import dz.aak.faris.ston.RAdjective;
 import dz.aak.faris.ston.RRolePlayer;
 
 /**
@@ -84,7 +85,7 @@ public class Faris {
 				RRolePlayer rsubject = _players.get(subjID);
 				Substance subject = new Substance(rsubject.getNounSynSet());
 				
-				for(String radj : rsubject.getAdjectives()){
+				for(RAdjective radj : rsubject.getAdjectives()){
 					
 					//Adjective adjective = new Adjective();
 				}

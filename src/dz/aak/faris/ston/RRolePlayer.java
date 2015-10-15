@@ -11,7 +11,7 @@ public class RRolePlayer {
 
 	private int nounSynSet;
 	private String id;
-	private List<String> adjectives = new ArrayList<String>();
+	private List<RAdjective> adjectives = new ArrayList<RAdjective>();
 	private String quantity = null;
 	private List<String> possessives = new ArrayList<String>();
 	
@@ -26,7 +26,7 @@ public class RRolePlayer {
 	/**
 	 * @return the adjectives
 	 */
-	public List<String> getAdjectives() {
+	public List<RAdjective> getAdjectives() {
 		return adjectives;
 	}
 
@@ -64,15 +64,12 @@ public class RRolePlayer {
 	
 	public void addAdjective(int adjSynSet, Set<Integer> advSynSets){
 		
-		String result = "\t\t\tadj:{\n";
-		result += "\t\t\t\tsynSet: " + adjSynSet;
-
+		RAdjective adjective = new RAdjective(adjSynSet);
 		if ((advSynSets != null) && ! advSynSets.isEmpty()){
-			result += ";\n\t\t\t\tadverbs: " + advSynSets;
+			adjective.setAdvSynSets(advSynSets);
 		}
-		result += "\n\t\t\tadj:}";
 		
-		adjectives.add(result);
+		adjectives.add(adjective);
 	}
 	
 	
@@ -95,10 +92,10 @@ public class RRolePlayer {
 		
 		if(! adjectives.isEmpty()) {
 			result += ";adjectives:[";
-			
-			Iterator<String> it = adjectives.iterator();
+
+			Iterator<RAdjective> it = adjectives.iterator();
 			while(it.hasNext()){
-				result += it.next().replaceAll("[\\t \\n\\r]+", "");
+				result += it.next();
 				if(it.hasNext())
 					result += ",";
 			}
@@ -125,9 +122,9 @@ public class RRolePlayer {
 		if(! adjectives.isEmpty()) {
 			result += ";\n\t\tadjectives: [\n";
 			
-			Iterator<String> it = adjectives.iterator();
+			Iterator<RAdjective> it = adjectives.iterator();
 			while(it.hasNext()){
-				result += it.next();
+				result += it.next().structuredString();
 				if(it.hasNext())
 					result += ",";
 				result += "\n";
