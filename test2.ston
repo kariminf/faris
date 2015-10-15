@@ -18,9 +18,8 @@
 		]
 	r:}
 	r:{
-		id: 2children;
+		id: child;
 		synSet: 9917593;
-		quantity: 2;
 		adjectives: [
 			adj:{
 				synSet: 1919931
@@ -36,7 +35,7 @@
 	act:{
 		id: eat;
 		synSet: 1168468;
-		subjects: [mother, 2children];
+		subjects: [mother, child];
 		objects: [food]
 	act:}
 	act:{

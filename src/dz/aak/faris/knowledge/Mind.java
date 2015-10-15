@@ -18,10 +18,14 @@ package dz.aak.faris.knowledge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
+import dz.aak.faris.linguistic.Verb;
 import dz.aak.faris.philosophical.Action;
 import dz.aak.faris.philosophical.Substance;
+import dz.aak.faris.ston.RAction;
+import dz.aak.faris.ston.RequestCreator;
 
 public class Mind {
 
@@ -38,9 +42,9 @@ public class Mind {
 	private String name;
 	private Substance owner;
 	
-	private HashMap<Truth, Mind> opinions = new HashMap<Truth, Mind>();
+	private HashMap<Truth, List<Mind>> opinions = new HashMap<Truth, List<Mind>>();
 	
-	private HashMap<Truth, Action> actions = new HashMap<Truth, Action>();
+	private HashMap<Truth, List<Action>> truthTable = new HashMap<Truth, List<Action>>();
 	
 	private List<Conditional> conditions = new ArrayList<Conditional>();
 	
@@ -50,16 +54,77 @@ public class Mind {
 	
 	public void addAction(Truth truth, Action action){
 		//TODO verify if the action exists already, and if other components have to be added
-		actions.put(truth, action);
+		List<Action> actions;
+		if (truthTable.containsKey(truth)){
+			actions = truthTable.get(truth);
+		}
+		else{
+			actions = new ArrayList<Action>();
+			truthTable.put(truth, actions);
+		}
+		
+		actions.add(action);
 	}
 	
 	public void addOpinion(Truth truth, Mind othersThoughts){
 		//TODO verify if the action exists already, and if other components have to be added
-		opinions.put(truth, othersThoughts);
+		//opinions.put(truth, othersThoughts);
 	}
 	
 	public void addCondition(Conditional condition){
 		conditions.add(condition);
+	}
+	
+	public String getNoAdjectives(){
+		if (! truthTable.containsKey(Truth.FACT))
+			return "";
+		RequestCreator rq = new RequestCreator();
+		//Affecting a label for each substance: subjects and objects
+		int numRoles = 0;
+		int numActions = 0;
+		HashMap<Substance, String> roles = new HashMap<Substance, String>();
+		
+		for (Action action : truthTable.get(Truth.FACT)){
+			Verb verb = action.getVerb();
+			String actionId = "action" + numActions;
+			rq.addAction(actionId, verb.getSynSet());
+			numActions++;
+			for (Substance subject: action.getSubjects()){
+				String roleId = "role-" + numRoles;
+				
+				if ( roles.containsKey(subject)){
+					roleId = roles.get(subject);
+				}
+				else{
+					roles.put(subject, roleId);
+					rq.addRolePlayer(roleId, subject.getNounSynSet());
+					numRoles++;
+				}
+
+				rq.addSubject(actionId, roleId);
+				
+			}
+			
+			for (Substance object: action.getObjects()){
+				String roleId = "role-" + numRoles;
+				
+				if ( roles.containsKey(object)){
+					roleId = roles.get(object);
+				}
+				else{
+					roles.put(object, roleId);
+					rq.addRolePlayer(roleId, object.getNounSynSet());
+					numRoles++;
+				}
+
+				rq.addObject(actionId, roleId);
+				
+			}
+			
+		}
+		
+		
+		return rq.getStructuredRequest();
 	}
 
 }

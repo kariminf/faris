@@ -71,5 +71,9 @@ public class Substance {
 	public void setQuantity(Quantity quantity){
 		this.quantity = quantity;
 	}
+	
+	public int getNounSynSet(){
+		return noun.getSynSet();
+	}
 
 }

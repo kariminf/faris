@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class RRolePlayer {
-
+	private static Set<String> ids = new HashSet<String>();
 	private int nounSynSet;
 	private String id;
 	private List<RAdjective> adjectives = new ArrayList<RAdjective>();
@@ -45,9 +45,6 @@ public class RRolePlayer {
 	public List<String> getPossessives() {
 		return possessives;
 	}
-
-
-	private static Set<String> ids = new HashSet<String>();
 	
 	private RRolePlayer(String id, int nounSynSet) {
 		this.nounSynSet = nounSynSet;

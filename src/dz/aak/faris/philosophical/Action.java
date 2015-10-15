@@ -100,6 +100,10 @@ public class Action {
 		return result;
 	}
 	
+	public Verb getVerb(){
+		return verb;
+	}
+	
 	/**
 	 * @param args
 	 */

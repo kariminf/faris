@@ -35,8 +35,46 @@ public class Quality {
 	private Adjective adjective;
 	private Set<Adverb> adverbs = new HashSet<Adverb>();
 
-	public Quality() {
-		// TODO Auto-generated constructor stub
+	public Quality(Adjective adjective) {
+		this.adjective = adjective;
 	}
+
+	/**
+	 * @return the adjective
+	 */
+	public Adjective getAdjective() {
+		return adjective;
+	}
+
+	/**
+	 * @return the adverbs
+	 */
+	public Set<Adverb> getAdverbs() {
+		//Alert: Security problem
+		return adverbs;
+	}
+
+	/**
+	 * @param adverbs the adverbs to set
+	 */
+	public void setAdverbs(Set<Adverb> adverbs) {
+		//Alert: Security problem
+		this.adverbs = adverbs;
+	}
+	
+	/**
+	 * @param adverbs the adverbs to set
+	 */
+	public void setAdverbsInt(Set<Integer> advSynSets) {
+		if (advSynSets == null) return;
+		
+		for(int synSet: advSynSets){
+			Adverb adverb = new Adverb(synSet);
+			adverbs.add(adverb);
+		}
+	}
+	
+	
+	
 
 }
