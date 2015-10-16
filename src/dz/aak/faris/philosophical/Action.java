@@ -79,12 +79,20 @@ public class Action {
 		return new Action(verb);
 	}
 	
-	public void addSubject(Substance noun){
-		subjects.add(noun);
+	public void addSubject(Substance subject){
+		subjects.add(subject);
 	}
 	
-	public void addObject(Substance noun){
-		objects.add(noun);
+	public void addObject(Substance object){
+		objects.add(object);
+	}
+	
+	public void addSubjects(Set<Substance> subjects){
+		subjects.addAll(subjects);
+	}
+	
+	public void addObjects(Set<Substance> objects){
+		objects.addAll(objects);
 	}
 	
 	

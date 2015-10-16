@@ -66,8 +66,9 @@ public class StonCreateTest {
 		int good = getSynSet("good", POS.ADJECTIVE);
 		int noisy = getSynSet("noisy", POS.ADJECTIVE);
 		int little = getSynSet("little", POS.ADJECTIVE);
+		int happy = getSynSet("happy", POS.ADJECTIVE);
 		
-		
+		System.out.println(happy);
 		RequestCreator rq = new RequestCreator();
 		
 		

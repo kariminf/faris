@@ -16,6 +16,8 @@
  */
 package dz.aak.faris.philosophical;
 
+import java.util.Set;
+
 /**
  * Having or state, condition (ἔχειν, echein, to have or be). 
  * The examples Aristotle gives indicate that he meant a condition of rest resulting 
@@ -29,8 +31,48 @@ package dz.aak.faris.philosophical;
  */
 public class State {
 
-	public State() {
-		// TODO Auto-generated constructor stub
+	private Action action;
+	
+	private State(Action action) {
+		this.action = action;
+	}
+	
+	
+	/**
+	 * 
+	 * @param action the action which represents a state. 
+	 * This action must not have subjects or objects.<br/>
+	 * Example: a car which is stopped on the road and have an old engine. 
+	 * The car have two states: "stopped" and "having old engine".
+	 * @param haver The substance which have this state
+	 * @param relatives The subjects or the objects that share this action with the haver.
+	 * If the haver is a subject, the relatives are objects, and vis-versa.
+	 * @param affected if true, then the haver is an object, otherwise it is a subject
+	 * @return true if the affectation is successful 
+	 */
+	public static boolean affectState (Action action, Substance haver, Set<Substance> relatives, boolean affected){
+		if(action.getObjects().size() > 0)
+			return false;
+		if(action.getObjects().size() > 0)
+			return false;
+		
+		if (affected){
+			action.addObject(haver);
+			action.addSubjects(relatives);
+		}
+		else {
+			action.addSubject(haver);
+			action.addObjects(relatives);
+		}
+		
+		State state = new State(action);
+		haver.addState(state);
+		
+		return true;
+	}
+	
+	public Action getAction(){
+		return action;
 	}
 
 }

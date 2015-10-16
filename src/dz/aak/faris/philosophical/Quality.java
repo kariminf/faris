@@ -53,6 +53,14 @@ public class Quality {
 		//Alert: Security problem
 		return adverbs;
 	}
+	
+	public Set<Integer> getAdverbsInt() {
+		HashSet<Integer> result = new HashSet<Integer>();
+		for(Adverb adverb: adverbs)
+			result.add(adverb.getSynSet());
+		//Alert: Security problem
+		return result;
+	}
 
 	/**
 	 * @param adverbs the adverbs to set

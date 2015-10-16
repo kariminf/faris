@@ -24,6 +24,7 @@ import java.util.Set;
 
 import dz.aak.faris.linguistic.Verb;
 import dz.aak.faris.philosophical.Action;
+import dz.aak.faris.philosophical.Quality;
 import dz.aak.faris.philosophical.Substance;
 import dz.aak.faris.ston.RAction;
 import dz.aak.faris.ston.RequestCreator;
@@ -153,6 +154,10 @@ public class Mind {
 					roles.put(subject, roleId);
 					subjects.add(subject);
 					rq.addRolePlayer(roleId, subject.getNounSynSet());
+					for(Quality quality: subject.getQualities()){
+						rq.addAdjective(roleId, quality.getAdjective().getSynSet(), quality.getAdverbsInt());
+					}
+					
 					numRoles++;
 				}
 				
@@ -166,6 +171,9 @@ public class Mind {
 					String roleId = "srole-" + numRoles;
 					roles.put(object, roleId);
 					rq.addRolePlayer(roleId, object.getNounSynSet());
+					for(Quality quality: object.getQualities()){
+						rq.addAdjective(roleId, quality.getAdjective().getSynSet(), quality.getAdverbsInt());
+					}
 					numRoles++;
 				}
 				

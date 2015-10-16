@@ -1,7 +1,12 @@
 @roles: [
 	r:{
-		id: mother;
-		synSet: 10332385
+		id: happy_mother;
+		synSet: 10332385;
+		adjectives: [
+			adj:{
+				synSet: 1148283;
+			adj:}
+		]
 	r:}
 	r:{
 		id: food;
@@ -35,7 +40,7 @@
 	act:{
 		id: eat;
 		synSet: 1168468;
-		subjects: [mother, child];
+		subjects: [happy_mother, child];
 		objects: [food]
 	act:}
 	act:{

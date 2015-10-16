@@ -48,6 +48,9 @@ public class Substance {
 	//Qualities
 	private Set<Quality> qualities = new HashSet<Quality>();
 	
+	//States
+	private Set<State> states = new HashSet<State>();	
+	
 	//Quanity (one)
 	private Quantity quantity;
 	
@@ -74,6 +77,30 @@ public class Substance {
 	
 	public int getNounSynSet(){
 		return noun.getSynSet();
+	}
+	
+	/**
+	 * @return the states
+	 */
+	public Set<State> getStates() {
+		//Alert: security problem
+		return states;
+	}
+
+	/**
+	 * @param states the states to set
+	 */
+	public void addStates(Set<State> states) {
+		this.states.addAll(states);
+	}
+	
+	public void addState(State state) {
+		this.states.add(state);
+	}
+
+	public Set<Quality> getQualities(){
+		//Alert: security problem
+		return qualities;
 	}
 
 }
