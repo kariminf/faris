@@ -28,6 +28,7 @@ public class FarisTest {
 			return null;
 		} 
 	}
+	
 	/**
 	 * @param args
 	 */
@@ -37,7 +38,7 @@ public class FarisTest {
 		faris.addStonDescription(specif);
 		System.out.println(faris.info());
 		//System.out.print(faris.getNoAdjectives("Default"));
-		System.out.print(faris.getSynSetText("Default", 10332385));
+		System.out.print(faris.getSynSetText("Default", 9917593));
 	}
 
 }

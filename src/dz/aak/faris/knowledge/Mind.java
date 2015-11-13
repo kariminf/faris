@@ -26,8 +26,7 @@ import dz.aak.faris.linguistic.Verb;
 import dz.aak.faris.philosophical.Action;
 import dz.aak.faris.philosophical.Quality;
 import dz.aak.faris.philosophical.Substance;
-import dz.aak.faris.ston.RAction;
-import dz.aak.faris.ston.RequestCreator;
+import dz.aak.sentrep.ston.ReqCreator;
 
 public class Mind {
 
@@ -80,7 +79,7 @@ public class Mind {
 	public String getNoAdjectives(){
 		if (! truthTable.containsKey(Truth.FACT))
 			return "";
-		RequestCreator rq = new RequestCreator();
+		ReqCreator rq = new ReqCreator();
 		//Affecting a label for each substance: subjects and objects
 		int numRoles = 0;
 		int numActions = 0;
@@ -133,7 +132,7 @@ public class Mind {
 	public String getSynSetText(int synSet){
 		if (! truthTable.containsKey(Truth.FACT))
 			return "";
-		RequestCreator rq = new RequestCreator();
+		ReqCreator rq = new ReqCreator();
 		//Affecting a label for each substance: subjects and objects
 		int numRoles = 0;
 		int numActions = 0;
