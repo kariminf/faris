@@ -125,4 +125,28 @@ public class FarisParse extends Parser {
 		
 	}
 
+	@Override
+	protected void beginActions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void endActions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void beginRoles() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void endRoles() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

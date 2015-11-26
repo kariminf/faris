@@ -16,8 +16,6 @@
  */
 package dz.aak.faris.linguistic;
 
-import edu.mit.jwi.item.POS;
-
 public class Adjective extends PartOfSpeach {
 	
 	/*public static enum Graduation {

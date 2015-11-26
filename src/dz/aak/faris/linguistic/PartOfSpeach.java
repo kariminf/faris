@@ -16,9 +16,15 @@
  */
 package dz.aak.faris.linguistic;
 
-import edu.mit.jwi.item.POS;
-
 public abstract class PartOfSpeach {
+	
+	
+	public static enum POS {
+		NOUN,
+		VERB,
+		ADJECTIVE,
+		ADVERB
+	}
 
 	private int synSet = -1;
 	

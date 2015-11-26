@@ -16,8 +16,6 @@
  */
 package dz.aak.faris.linguistic;
 
-import edu.mit.jwi.item.POS;
-
 public class Adverb extends PartOfSpeach {
 	
 	public Adverb(int advSynSet) {

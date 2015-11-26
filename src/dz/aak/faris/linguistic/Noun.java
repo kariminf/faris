@@ -16,8 +16,6 @@
  */
 package dz.aak.faris.linguistic;
 
-import edu.mit.jwi.item.POS;
-
 
 //TODO redo this once again
 public class Noun extends PartOfSpeach {
