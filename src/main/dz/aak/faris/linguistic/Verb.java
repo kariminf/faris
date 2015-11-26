@@ -23,7 +23,7 @@ public class Verb extends PartOfSpeach {
 		PRESENT,
 		FUTURE;
 		
-		public static Tense getTense (int number){
+		/*public static Tense getTense (int number){
 			switch (number){
 			case 0: return PAST;
 			case 1: return PRESENT;
@@ -31,7 +31,7 @@ public class Verb extends PartOfSpeach {
 			}
 			
 			return PRESENT;
-		}
+		}*/
 	}
 	
 	public static enum Aspect {
@@ -39,7 +39,7 @@ public class Verb extends PartOfSpeach {
 		PROGRESSIVE, //“I am seeing” (progressive aspect) represents the action as continuous and ongoing; 
 		PERFECT; //“I have seen” (perfect aspect) represents the present situation as the result of past action. 
 	
-		public static Aspect getAspect (int number){
+		/*public static Aspect getAspect (int number){
 			switch (number){
 			case 0: return SIMPLE;
 			case 1: return PROGRESSIVE;
@@ -47,7 +47,7 @@ public class Verb extends PartOfSpeach {
 			}
 			
 			return SIMPLE;
-		}
+		}*/
 	}
 	
 	/**

@@ -47,8 +47,8 @@ public class FarisParse extends Parser {
 	@Override
 	protected void addVerbSpecif(int tense, int aspect) {
 		Verb verb = currentAction.getVerb();
-		verb.setTense(Tense.getTense(tense));
-		verb.setAspect(Aspect.getAspect(aspect));
+		verb.setTense(Tense.valueOf(tense));
+		verb.setAspect(Aspect.valueOf(aspect));
 	}
 
 	@Override
