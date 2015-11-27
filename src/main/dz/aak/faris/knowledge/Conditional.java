@@ -1,5 +1,7 @@
-/* Farest : Facts representation of sentences
- * ------------------------------------------
+/* FARIS : Factual Arrangement and Representation of Ideas in Sentences
+ * FAris : Farabi & Aristotle
+ * Faris : A knight (in Arabic)
+ * --------------------------------------------------------------------
  * Copyright (C) 2015 Abdelkrime Aries (kariminfo0@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
 package dz.aak.faris.knowledge;
 
 /**
@@ -34,7 +38,7 @@ package dz.aak.faris.knowledge;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Conditional {
+public class Conditional extends Idea {
 
 	private Idea condition;
 	private Idea predicate2;

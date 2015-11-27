@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+
 package dz.aak.faris.knowledge;
 
 import java.util.ArrayList;
@@ -51,13 +52,11 @@ import dz.aak.sentrep.ston.ReqCreator;
  */
 public class Mind {
 
-	//private HashMap<>
-	//TODO take this to idea
 	public static enum Truth {
 		THINK,
 		BELIEVE,
 		HOPE,
-		QUOTE,
+		QUOTE, //a quote is a belief that someone said, replace it by saying
 		FACT
 	}
 	
@@ -65,6 +64,8 @@ public class Mind {
 	private Substance owner;
 	
 	//These three are variants of idea
+	//TODO replace these with one hashmap<truth, list<idea>>
+	//even conditional have a truth level: "I think if ..., then ... ."
 	private HashMap<Truth, List<Mind>> opinions = new HashMap<Truth, List<Mind>>();
 	
 	private HashMap<Truth, List<Action>> truthTable = new HashMap<Truth, List<Action>>();
