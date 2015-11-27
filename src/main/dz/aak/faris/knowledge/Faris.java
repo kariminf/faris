@@ -41,7 +41,7 @@ import dz.aak.sentrep.ston.ReqRolePlayer;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) Abdelkrime Aries
+ *         Copyright (c) 2015 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
