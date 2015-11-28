@@ -59,6 +59,7 @@ public class Action {
 		Before
 	}
 	
+	
 	//An action is defined by a verb
 	private Verb verb;
 	//- A verb has tense, indicating the time that the sentence describes

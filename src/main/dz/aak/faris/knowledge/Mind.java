@@ -63,31 +63,34 @@ public class Mind {
 	private String name;
 	private Substance owner;
 	
-	//These three are variants of idea
-	//TODO replace these with one hashmap<truth, list<idea>>
 	//even conditional have a truth level: "I think if ..., then ... ."
-	private HashMap<Truth, List<Mind>> opinions = new HashMap<Truth, List<Mind>>();
-	
-	private HashMap<Truth, List<Action>> truthTable = new HashMap<Truth, List<Action>>();
-	
-	private List<Conditional> conditions = new ArrayList<Conditional>();
+	private HashMap<Truth, List<Idea>> truthTable = new HashMap<Truth, List<Idea>>();
 	
 	public Mind(String name) {
 		this.name = name;
 	}
 	
-	public void addAction(Truth truth, Action action){
-		//TODO verify if the action exists already, and if other components have to be added
-		List<Action> actions;
+	private List<Idea> getIdeas(Truth truth){
+		List<Idea> ideas;
 		if (truthTable.containsKey(truth)){
-			actions = truthTable.get(truth);
+			ideas = truthTable.get(truth);
 		}
 		else{
-			actions = new ArrayList<Action>();
-			truthTable.put(truth, actions);
+			ideas = new ArrayList<Idea>();
+			truthTable.put(truth, ideas);
 		}
 		
-		actions.add(action);
+		return ideas;
+	}
+	
+	public void addAction(Truth truth, Action action){
+		//TODO verify if the action exists already, and if other components have to be added
+		
+		List<Idea> ideas = getIdeas(truth);
+		
+		Thought thought = new Thought(action);
+		
+		ideas.add(thought);
 	}
 	
 	public void addOpinion(Truth truth, Mind othersThoughts){
@@ -95,8 +98,10 @@ public class Mind {
 		//opinions.put(truth, othersThoughts);
 	}
 	
-	public void addCondition(Conditional condition){
-		conditions.add(condition);
+	public void addCondition(Truth truth, Conditional condition){
+		List<Idea> ideas = getIdeas(truth);
+		
+		ideas.add(condition);
 	}
 	
 	public String getNoAdjectives(){
@@ -108,7 +113,12 @@ public class Mind {
 		int numActions = 0;
 		HashMap<Substance, String> roles = new HashMap<Substance, String>();
 		
-		for (Action action : truthTable.get(Truth.FACT)){
+		List<Idea> ideas = getIdeas(Truth.FACT);
+		
+		for (Idea idea : ideas){
+			if (! (idea instanceof Thought)) continue;
+			Action action = ((Thought) idea).getAction();
+			
 			Verb verb = action.getVerb();
 			String actionId = "action" + numActions;
 			rq.addAction(actionId, verb.getSynSet());
@@ -163,7 +173,11 @@ public class Mind {
 		//HashMap<Action, String> actions = new HashMap<Action, String>();
 		
 		//Searching for substances that contain this synSet
-		for (Action action : truthTable.get(Truth.FACT)){
+		List<Idea> ideas = getIdeas(Truth.FACT);
+		
+		for (Idea idea : ideas){
+			if (! (idea instanceof Thought)) continue;
+			Action action = ((Thought) idea).getAction();
 			HashSet<Substance> subjects = new HashSet<Substance>();
 			HashSet<Substance> objects = new HashSet<Substance>();
 			//boolean found = false;
