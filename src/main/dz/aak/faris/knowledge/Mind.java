@@ -184,14 +184,17 @@ public class Mind {
 		List<Idea> ideas = getIdeas(Truth.FACT);
 
 		for (Idea idea : ideas){
+			//Ideas which are thoughts
 			if (! (idea instanceof Thought)) continue;
 			Action action = ((Thought) idea).getAction();
+			
+			//The subjects and the objects
 			Set<Set<Substance>> subjects = new HashSet<Set<Substance>>();
 			Set<Set<Substance>> objects = new HashSet<Set<Substance>>();
+			
 			//boolean found = false;
 			for (Set<Substance> _subjects: action.getSubjects()){
 				Set<Substance> conjunctions = new HashSet<Substance>();
-				subjects.add(conjunctions);
 				for (Substance subject: _subjects){
 					if (subject.getNounSynSet() != synSet)
 						continue;
@@ -207,13 +210,13 @@ public class Mind {
 
 						numRoles++;
 					}
-
+					if (!conjunctions.isEmpty())
+						subjects.add(conjunctions);
 				}
 			}
 
 			for (Set<Substance> _objects: action.getObjects()){
 				Set<Substance> conjunctions = new HashSet<Substance>();
-				objects.add(conjunctions);
 				for(Substance object: _objects){
 					if (object.getNounSynSet() != synSet)
 						continue;
@@ -230,6 +233,8 @@ public class Mind {
 					}
 
 				}
+				if (!conjunctions.isEmpty())
+					objects.add(conjunctions);
 			}
 
 			if (!(subjects.isEmpty() && objects.isEmpty())){//found
