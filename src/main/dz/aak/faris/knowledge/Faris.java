@@ -21,20 +21,9 @@ package dz.aak.faris.knowledge;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import dz.aak.faris.knowledge.Mind.Truth;
-import dz.aak.faris.linguistic.Adjective;
-import dz.aak.faris.linguistic.Verb;
-import dz.aak.faris.linguistic.Verb.Aspect;
-import dz.aak.faris.linguistic.Verb.Tense;
 import dz.aak.faris.philosophical.Action;
-import dz.aak.faris.philosophical.Quality;
 import dz.aak.faris.philosophical.Substance;
 import dz.aak.faris.ston.FarisParse;
-import dz.aak.sentrep.ston.Parser;
-import dz.aak.sentrep.ston.ReqAction;
-import dz.aak.sentrep.ston.ReqAdjective;
-import dz.aak.sentrep.ston.ReqParser;
-import dz.aak.sentrep.ston.ReqRolePlayer;
 
 /**
  * The interface class,

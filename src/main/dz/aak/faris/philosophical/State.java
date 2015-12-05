@@ -21,6 +21,7 @@
 package dz.aak.faris.philosophical;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,6 +63,7 @@ public class State {
 		this.mainActions.add(mainAction);
 	}
 	
+	//TODO a state can be considered for a group or we just use a state for each Substance
 	
 	/**
 	 * 
@@ -75,24 +77,29 @@ public class State {
 	 * @param affected if true, then the haver is an object, otherwise it is a subject
 	 * @return true if the affectation is successful 
 	 */
-	public boolean affectState (Action action, Substance haver, Set<Substance> relatives, boolean affected){
-		if(action.getObjects().size() > 0)
+	public boolean affectState (Action action, Substance owner, Set<Set<Substance>> relatives, boolean affected){
+		if(action.hasObjects())
 			return false;
-		if(action.getObjects().size() > 0)
+		if(action.hasSubjects())
 			return false;
 		
+		Set<Substance> _owner = new HashSet<Substance>();
+		
 		if (affected){
-			action.addObject(haver);
-			action.addSubjects(relatives);
+			
+			action.addConjunctObjects(_owner);
+			for(Set<Substance> _relatives : relatives)
+				action.addConjunctSubjects(_relatives);
 		}
 		else {
-			action.addSubject(haver);
-			action.addObjects(relatives);
+			action.addConjunctSubjects(_owner);
+			for(Set<Substance> _relatives : relatives)
+				action.addConjunctObjects(_relatives);
 		}
 		
 		this.stateAction = action;
 		
-		haver.addState(this);
+		owner.addState(this);
 		
 		return true;
 	}

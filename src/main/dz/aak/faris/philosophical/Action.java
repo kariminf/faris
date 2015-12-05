@@ -59,6 +59,17 @@ public class Action {
 		Before
 	}
 	
+	private static class ConjunctedSubstances extends HashSet<Substance> {
+		private static final long serialVersionUID = 1L;
+		
+		public Set<Substance> getSubstances(){
+			Set<Substance> result = new HashSet<Substance>();
+			result.addAll(this);
+			return result;
+		}
+		
+	}
+	
 	
 	//An action is defined by a verb
 	private Verb verb;
@@ -66,14 +77,15 @@ public class Action {
 	//- A verb has mood, indicating whether the sentence describes reality or 
 	//expresses a command, a hypothesis, a hope, etc.
 	
-	//An action is modifiied by an adverb
+	//An action is modified by an adverb
 	private Adverb adverb;
 	
+	//Here, we use disjunctions of conjunctions 
 	//An Action can have many doers (we can't duplicate a doer)
-	private Set<Substance> subjects = new HashSet<Substance>(); 
+	private Set<ConjunctedSubstances> subjects = new HashSet<ConjunctedSubstances>(); 
 	
-	//An Action can affecte many predicates 
-	private Set<Substance> objects = new HashSet<Substance>(); 
+	//An Action can affect many predicates 
+	private Set<ConjunctedSubstances> objects = new HashSet<ConjunctedSubstances>();  
 	
 	//An action can have relations with other Actions
 	
@@ -97,6 +109,37 @@ public class Action {
 		return new Action(verb);
 	}
 	
+	/**
+	 * Adds substances that are separated by the word "and". <br>
+	 * @param subjects
+	 */
+	public void addConjunctSubjects(Set<Substance> subjects){
+		ConjunctedSubstances conjunctions = new ConjunctedSubstances();
+		conjunctions.addAll(subjects);
+		if (conjunctions.size()>0)
+			this.subjects.add(conjunctions);
+	}
+	
+	/**
+	 * Adds substances that are separated by the word "and". <br>
+	 * @param subjects
+	 */
+	public void addConjunctObjects(Set<Substance> objects){
+		ConjunctedSubstances conjunctions = new ConjunctedSubstances();
+		conjunctions.addAll(objects);
+		if (conjunctions.size()>0)
+			this.objects.add(conjunctions);
+	}
+	
+	public boolean hasSubjects(){
+		return (subjects.size() > 0);
+	}
+	
+	public boolean hasObjects(){
+		return (objects.size() > 0);
+	}
+	
+	/*
 	public void addSubject(Substance subject){
 		subjects.add(subject);
 	}
@@ -114,17 +157,7 @@ public class Action {
 	}
 	
 	
-	public List<Substance> getSubjects(){
-		List<Substance> result = new ArrayList<Substance>();
-		result.addAll(subjects);
-		return result;
-	}
 	
-	public List<Substance> getObjects(){
-		List<Substance> result = new ArrayList<Substance>();
-		result.addAll(objects);
-		return result;
-	}
 	
 	public Set<Substance> getSubjectsSet(){
 		return subjects;
@@ -132,6 +165,24 @@ public class Action {
 	
 	public Set<Substance> getObjectsSet(){
 		return objects;
+	}
+	
+	*/
+	
+	private Set<Set<Substance>> getDisjunctions(Set<ConjunctedSubstances> disjunctions){
+		Set<Set<Substance>> result = new HashSet<Set<Substance>>();
+		for (ConjunctedSubstances conjunctions: disjunctions)
+			result.add(conjunctions.getSubstances());
+		
+		return result;
+	}
+	
+	public Set<Set<Substance>> getSubjects(){
+		return getDisjunctions(subjects);
+	}
+	
+	public Set<Set<Substance>> getObjects(){
+		return getDisjunctions(objects);
 	}
 	
 	public Verb getVerb(){

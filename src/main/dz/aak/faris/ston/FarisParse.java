@@ -61,12 +61,14 @@ public class FarisParse extends Parser {
 	
 	private Substance currentPlayer;
 	//private String currentPlayerID;
-	HashMap<String, Substance> _players = new HashMap<String, Substance>();
+	private HashMap<String, Substance> _players = new HashMap<String, Substance>();
 	
 	private Action currentAction;
 	//private String currentPlayerID;
-	HashMap<String, Action> _actions = new HashMap<String, Action>();
+	private HashMap<String, Action> _actions = new HashMap<String, Action>();
 	
+	private Set<Substance> conjunctions = new HashSet<Substance>();
+	private boolean subject = true;
 	
 	public FarisParse(HashSet<Substance> substances, HashSet<Action> actions, HashMap<String, Mind> minds){
 		this.substances = substances;
@@ -87,23 +89,6 @@ public class FarisParse extends Parser {
 		Verb verb = currentAction.getVerb();
 		verb.setTense(Tense.valueOf(tense));
 		verb.setAspect(Aspect.valueOf(aspect));
-	}
-
-	@Override
-	protected void addSubject(String subjectID) {
-		if (_players.containsKey(subjectID)){
-			Substance subject = _players.get(subjectID);
-			currentAction.addSubject(subject);
-		}
-		
-	}
-
-	@Override
-	protected void addObject(String objectID) {
-		if (_players.containsKey(objectID)){
-			Substance object = _players.get(objectID);
-			currentAction.addObject(object);
-		}
 	}
 
 	@Override
@@ -184,6 +169,47 @@ public class FarisParse extends Parser {
 	@Override
 	protected void endRoles() {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void beginSubject() {
+		subject = true;
+	}
+
+	@Override
+	protected void beginObject() {
+		subject = false;
+	}
+
+	@Override
+	protected void beginDisjunction() {
+		conjunctions = new HashSet<Substance>();
+	}
+
+	@Override
+	protected void addConjunction(String roleID) {
+		if (_players.containsKey(roleID)){
+			Substance role = _players.get(roleID);
+			conjunctions.add(role);
+		}
+	}
+
+	@Override
+	protected void endDisjunction() {
+		if (subject){
+			currentAction.addConjunctSubjects(conjunctions);
+		} else {
+			currentAction.addConjunctObjects(conjunctions);
+		}
+	}
+
+	@Override
+	protected void endSubject() {
+	}
+
+	@Override
+	protected void endObject() {
 		
 	}
 
