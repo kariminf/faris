@@ -173,12 +173,12 @@ public class FarisParse extends Parser {
 	}
 
 	@Override
-	protected void beginSubject() {
+	protected void beginSubjects() {
 		subject = true;
 	}
 
 	@Override
-	protected void beginObject() {
+	protected void beginObjects() {
 		subject = false;
 	}
 
@@ -202,15 +202,6 @@ public class FarisParse extends Parser {
 		} else {
 			currentAction.addConjunctObjects(conjunctions);
 		}
-	}
-
-	@Override
-	protected void endSubject() {
-	}
-
-	@Override
-	protected void endObject() {
-		
 	}
 
 }

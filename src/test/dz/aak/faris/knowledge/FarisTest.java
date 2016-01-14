@@ -44,7 +44,7 @@ import java.io.IOException;
  */
 public class FarisTest {
 	
-	static String testFile = "ston/test2.ston";
+	static String testFile = "ston/or_and.ston";
 
 	public static String readFile (String f) {
 		try {

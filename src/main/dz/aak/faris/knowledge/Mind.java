@@ -123,8 +123,9 @@ public class Mind {
 			String actionId = "action" + numActions;
 			rq.addAction(actionId, verb.getSynSet());
 			numActions++;
+			
 			for (Set<Substance> subjects: action.getSubjects()){
-				rq.newSubjectDisjunction();
+				Set<String> subjectsIDs = new HashSet<String>();
 				for (Substance subject: subjects){
 
 
@@ -139,14 +140,13 @@ public class Mind {
 						numRoles++;
 					}
 
-					rq.addSubject(actionId, roleId);
-
 				}
+				rq.addSubjectConjunctions(actionId, subjectsIDs);
 			}
 
 			for (Set<Substance> objects: action.getObjects()){
+				Set<String> objectsIDs = new HashSet<String>();
 				for (Substance object: objects){
-					rq.newObjectDisjunction();
 					String roleId = "role-" + numRoles;
 
 					if ( roles.containsKey(object)){
@@ -157,10 +157,9 @@ public class Mind {
 						rq.addRolePlayer(roleId, object.getNounSynSet());
 						numRoles++;
 					}
-
-					rq.addObject(actionId, roleId);
-
 				}
+				rq.addObjectConjunctions(actionId, objectsIDs);
+				
 			}
 
 		}
@@ -247,7 +246,7 @@ public class Mind {
 				Set<Set<Substance>> substances = (subjects.isEmpty())?action.getSubjects():subjects;
 
 				for (Set<Substance> _subjects: substances){
-					rq.newSubjectDisjunction();
+					Set<String> subjectsIDs = new HashSet<String>();
 					for (Substance subject: _subjects){
 						String roleId = "role-" + numRoles;
 
@@ -259,16 +258,14 @@ public class Mind {
 							rq.addRolePlayer(roleId, subject.getNounSynSet());
 							numRoles++;
 						}
-
-						rq.addSubject(actionId, roleId);
-
 					}
+					rq.addSubjectConjunctions(actionId, subjectsIDs);
 				}
 
 				substances = (objects.isEmpty())?action.getObjects():objects;
 
 				for (Set<Substance> _objects: substances){
-					rq.newObjectDisjunction();
+					Set<String> objectsIDs = new HashSet<String>();
 					for(Substance object: _objects){
 						String roleId = "role-" + numRoles;
 
@@ -280,10 +277,8 @@ public class Mind {
 							rq.addRolePlayer(roleId, object.getNounSynSet());
 							numRoles++;
 						}
-
-						rq.addObject(actionId, roleId);
-
 					}
+					rq.addSubjectConjunctions(actionId, objectsIDs);
 				}
 
 
