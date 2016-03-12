@@ -89,7 +89,7 @@ public class FarisParse extends Parser {
 	protected void addVerbSpecif(String tense, String modality,
 			boolean progressive, boolean negated) {
 		Verb verb = currentAction.getVerb();
-		verb.setTense(Tense.valueOf(tense));
+		verb.setTense(Ston2FarisLex.getTense(tense));
 		//verb.setAspect(Aspect.valueOf(aspect));
 	}
 
