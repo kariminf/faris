@@ -20,8 +20,10 @@
 
 package kariminf.faris.ston;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import kariminf.faris.knowledge.Mind;
@@ -68,7 +70,7 @@ public class FarisParse extends Parser {
 	//private String currentPlayerID;
 	private HashMap<String, Action> _actions = new HashMap<String, Action>();
 	
-	private Set<Substance> conjunctions = new HashSet<Substance>();
+	private ArrayList<Substance> conjunctions = new ArrayList<Substance>();
 	private boolean subject = true;
 	
 	public FarisParse(HashSet<Substance> substances, HashSet<Action> actions, HashMap<String, Mind> minds){
@@ -103,16 +105,14 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addRole(String id, int synSet) {
-		currentPlayer = new Substance(synSet);
+		
+		currentPlayer = (_players.containsKey(id))? _players.get(id): new Substance(synSet);
 		_players.put(id, currentPlayer);
-		/*
-		if (! players.containsKey(id)){
-			players.put(id, currentPlayer);
-		}*/
+		
 	}
 
 	@Override
-	protected void addAdjective(int synSet, Set<Integer> advSynSets) {
+	protected void addAdjective(int synSet, List<Integer> advSynSets) {
 		Adjective adj = new Adjective(synSet);
 		Quality quality = new Quality(adj);
 		quality.setAdverbsInt(advSynSets);
@@ -153,29 +153,29 @@ public class FarisParse extends Parser {
 
 
 	@Override
-	protected void addConjunctions(Set<String> IDs) {
+	protected void addConjunctions(List<String> IDs) {
 		for (String roleID: IDs)
-		if (_players.containsKey(roleID)){
-			Substance role = _players.get(roleID);
-			conjunctions.add(role);
-		}
+			if (_players.containsKey(roleID)){
+				Substance role = _players.get(roleID);
+				conjunctions.add(role);
+			}
 	}
 
 
 	@Override
-	protected void addSubjects() {
-		conjunctions = new HashSet<Substance>();
+	protected void beginAgents() {
+		conjunctions = new ArrayList<Substance>();
 		
 	}
 
 	@Override
-	protected void endSubjects() {
+	protected void endAgents() {
 		currentAction.addConjunctSubjects(conjunctions);
 		
 	}
 
 	@Override
-	protected void addActionAdverb(int advSynSet, Set<Integer> advSynSets) {
+	protected void addActionAdverb(int advSynSet, List<Integer> advSynSets) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -187,13 +187,13 @@ public class FarisParse extends Parser {
 	}
 
 	@Override
-	protected void addObjects() {
-		conjunctions = new HashSet<Substance>();
+	protected void beginThemes() {
+		conjunctions = new ArrayList<Substance>();
 		
 	}
 
 	@Override
-	protected void endObjects() {
+	protected void endThemes() {
 		currentAction.addConjunctObjects(conjunctions);
 		
 	}
@@ -223,7 +223,7 @@ public class FarisParse extends Parser {
 	}
 
 	@Override
-	protected void addComparison(String type, Set<Integer> adjSynSets) {
+	protected void addComparison(String type, List<Integer> adjSynSets) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -243,6 +243,33 @@ public class FarisParse extends Parser {
 	@Override
 	protected void beginActions(boolean mainClause) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	String proleID = "";
+	
+	@Override
+	protected void addPRole(String id, String pronoun) {
+		proleID = id;
+		
+	}
+
+	@Override
+	protected void beginPRelatives() {
+		conjunctions = new ArrayList<Substance>();
+	}
+
+	@Override
+	protected void endPRelatives() {
+		if(conjunctions.size() == 1){
+			currentPlayer = conjunctions.get(0);
+			_players.put(proleID, currentPlayer);
+			return;
+		}
+			
+		//TODO where we have a lot of players
+		
 		
 	}
 

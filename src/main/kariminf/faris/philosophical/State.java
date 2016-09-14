@@ -77,23 +77,23 @@ public class State {
 	 * @param affected if true, then the haver is an object, otherwise it is a subject
 	 * @return true if the affectation is successful 
 	 */
-	public boolean affectState (Action action, Substance owner, Set<Set<Substance>> relatives, boolean affected){
+	public boolean affectState (Action action, Substance owner, List<List<Substance>> relatives, boolean affected){
 		if(action.hasObjects())
 			return false;
 		if(action.hasSubjects())
 			return false;
 		
-		Set<Substance> _owner = new HashSet<Substance>();
+		List<Substance> _owner = new ArrayList<Substance>();
 		
 		if (affected){
 			
 			action.addConjunctObjects(_owner);
-			for(Set<Substance> _relatives : relatives)
+			for(List<Substance> _relatives : relatives)
 				action.addConjunctSubjects(_relatives);
 		}
 		else {
 			action.addConjunctSubjects(_owner);
-			for(Set<Substance> _relatives : relatives)
+			for(List<Substance> _relatives : relatives)
 				action.addConjunctObjects(_relatives);
 		}
 		

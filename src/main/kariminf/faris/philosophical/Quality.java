@@ -20,7 +20,9 @@
 
 package kariminf.faris.philosophical;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import kariminf.faris.linguistic.Adjective;
@@ -38,7 +40,7 @@ import kariminf.faris.linguistic.Adverb;
 public class Quality {
 	
 	private Adjective adjective;
-	private Set<Adverb> adverbs = new HashSet<Adverb>();
+	private ArrayList<Adverb> adverbs = new ArrayList<Adverb>();
 
 	public Quality(Adjective adjective) {
 		this.adjective = adjective;
@@ -54,13 +56,13 @@ public class Quality {
 	/**
 	 * @return the adverbs
 	 */
-	public Set<Adverb> getAdverbs() {
+	public ArrayList<Adverb> getAdverbs() {
 		//Alert: Security problem
 		return adverbs;
 	}
 	
-	public Set<Integer> getAdverbsInt() {
-		HashSet<Integer> result = new HashSet<Integer>();
+	public ArrayList<Integer> getAdverbsInt() {
+		ArrayList<Integer> result = new ArrayList<Integer>();
 		for(Adverb adverb: adverbs)
 			result.add(adverb.getSynSet());
 		//Alert: Security problem
@@ -70,7 +72,7 @@ public class Quality {
 	/**
 	 * @param adverbs the adverbs to set
 	 */
-	public void setAdverbs(Set<Adverb> adverbs) {
+	public void setAdverbs(ArrayList<Adverb> adverbs) {
 		//Alert: Security problem
 		this.adverbs = adverbs;
 	}
@@ -78,7 +80,7 @@ public class Quality {
 	/**
 	 * @param adverbs the adverbs to set
 	 */
-	public void setAdverbsInt(Set<Integer> advSynSets) {
+	public void setAdverbsInt(List<Integer> advSynSets) {
 		if (advSynSets == null) return;
 		
 		for(int synSet: advSynSets){

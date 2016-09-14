@@ -125,8 +125,8 @@ public class Mind {
 			rq.addAction(actionId, verb.getSynSet());
 			numActions++;
 			
-			for (Set<Substance> subjects: action.getSubjects()){
-				Set<String> subjectsIDs = new HashSet<String>();
+			for (ArrayList<Substance> subjects: action.getSubjects()){
+				ArrayList<String> subjectsIDs = new ArrayList<String>();
 				for (Substance subject: subjects){
 
 
@@ -142,11 +142,11 @@ public class Mind {
 					}
 
 				}
-				rq.addSubjectConjunctions(actionId, subjectsIDs);
+				rq.addAgentConjunctions(actionId, subjectsIDs);
 			}
 
-			for (Set<Substance> objects: action.getObjects()){
-				Set<String> objectsIDs = new HashSet<String>();
+			for (ArrayList<Substance> objects: action.getObjects()){
+				ArrayList<String> objectsIDs = new ArrayList<String>();
 				for (Substance object: objects){
 					String roleId = "role-" + numRoles;
 
@@ -159,7 +159,7 @@ public class Mind {
 						numRoles++;
 					}
 				}
-				rq.addObjectConjunctions(actionId, objectsIDs);
+				rq.addThemeConjunctions(actionId, objectsIDs);
 				
 			}
 
@@ -189,12 +189,12 @@ public class Mind {
 			Action action = ((Thought) idea).getAction();
 			
 			//The subjects and the objects
-			Set<Set<Substance>> subjects = new HashSet<Set<Substance>>();
-			Set<Set<Substance>> objects = new HashSet<Set<Substance>>();
+			ArrayList<ArrayList<Substance>> subjects = new ArrayList<ArrayList<Substance>>();
+			ArrayList<ArrayList<Substance>> objects = new ArrayList<ArrayList<Substance>>();
 			
 			//boolean found = false;
-			for (Set<Substance> _subjects: action.getSubjects()){
-				Set<Substance> conjunctions = new HashSet<Substance>();
+			for (ArrayList<Substance> _subjects: action.getSubjects()){
+				ArrayList<Substance> conjunctions = new ArrayList<Substance>();
 				for (Substance subject: _subjects){
 					if (subject.getNounSynSet() != synSet)
 						continue;
@@ -215,8 +215,8 @@ public class Mind {
 				}
 			}
 
-			for (Set<Substance> _objects: action.getObjects()){
-				Set<Substance> conjunctions = new HashSet<Substance>();
+			for (ArrayList<Substance> _objects: action.getObjects()){
+				ArrayList<Substance> conjunctions = new ArrayList<Substance>();
 				for(Substance object: _objects){
 					if (object.getNounSynSet() != synSet)
 						continue;
@@ -244,10 +244,11 @@ public class Mind {
 				rq.addAction(actionId, verb.getSynSet());
 				numActions++;
 
-				Set<Set<Substance>> substances = (subjects.isEmpty())?action.getSubjects():subjects;
+				ArrayList<ArrayList<Substance>> substances = 
+						(subjects.isEmpty())?action.getSubjects():subjects;
 
-				for (Set<Substance> _subjects: substances){
-					Set<String> subjectsIDs = new HashSet<String>();
+				for (ArrayList<Substance> _subjects: substances){
+					ArrayList<String> subjectsIDs = new ArrayList<String>();
 					for (Substance subject: _subjects){
 						String roleId = "role-" + numRoles;
 
@@ -260,13 +261,13 @@ public class Mind {
 							numRoles++;
 						}
 					}
-					rq.addSubjectConjunctions(actionId, subjectsIDs);
+					rq.addAgentConjunctions(actionId, subjectsIDs);
 				}
 
 				substances = (objects.isEmpty())?action.getObjects():objects;
 
-				for (Set<Substance> _objects: substances){
-					Set<String> objectsIDs = new HashSet<String>();
+				for (ArrayList<Substance> _objects: substances){
+					ArrayList<String> objectsIDs = new ArrayList<String>();
 					for(Substance object: _objects){
 						String roleId = "role-" + numRoles;
 
@@ -279,7 +280,7 @@ public class Mind {
 							numRoles++;
 						}
 					}
-					rq.addSubjectConjunctions(actionId, objectsIDs);
+					rq.addThemeConjunctions(actionId, objectsIDs);
 				}
 
 

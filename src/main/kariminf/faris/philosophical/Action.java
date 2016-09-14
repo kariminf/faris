@@ -60,11 +60,11 @@ public class Action {
 		Before
 	}
 	
-	private static class ConjunctedSubstances extends HashSet<Substance> {
+	private static class ConjunctedSubstances extends ArrayList<Substance> {
 		private static final long serialVersionUID = 1L;
 		
-		public Set<Substance> getSubstances(){
-			Set<Substance> result = new HashSet<Substance>();
+		public ArrayList<Substance> getSubstances(){
+			ArrayList<Substance> result = new ArrayList<Substance>();
 			result.addAll(this);
 			return result;
 		}
@@ -112,11 +112,11 @@ public class Action {
 	
 	/**
 	 * Adds substances that are separated by the word "and". <br>
-	 * @param subjects
+	 * @param conjunctions2
 	 */
-	public void addConjunctSubjects(Set<Substance> subjects){
+	public void addConjunctSubjects(List<Substance> conjunctions2){
 		ConjunctedSubstances conjunctions = new ConjunctedSubstances();
-		conjunctions.addAll(subjects);
+		conjunctions.addAll(conjunctions2);
 		if (conjunctions.size()>0)
 			this.subjects.add(conjunctions);
 	}
@@ -125,9 +125,9 @@ public class Action {
 	 * Adds substances that are separated by the word "and". <br>
 	 * @param subjects
 	 */
-	public void addConjunctObjects(Set<Substance> objects){
+	public void addConjunctObjects(List<Substance> conjunctions2){
 		ConjunctedSubstances conjunctions = new ConjunctedSubstances();
-		conjunctions.addAll(objects);
+		conjunctions.addAll(conjunctions2);
 		if (conjunctions.size()>0)
 			this.objects.add(conjunctions);
 	}
@@ -170,19 +170,19 @@ public class Action {
 	
 	*/
 	
-	private Set<Set<Substance>> getDisjunctions(Set<ConjunctedSubstances> disjunctions){
-		Set<Set<Substance>> result = new HashSet<Set<Substance>>();
+	private ArrayList<ArrayList<Substance>> getDisjunctions(Set<ConjunctedSubstances> disjunctions){
+		ArrayList<ArrayList<Substance>> result = new ArrayList<ArrayList<Substance>>();
 		for (ConjunctedSubstances conjunctions: disjunctions)
 			result.add(conjunctions.getSubstances());
 		
 		return result;
 	}
 	
-	public Set<Set<Substance>> getSubjects(){
+	public ArrayList<ArrayList<Substance>> getSubjects(){
 		return getDisjunctions(subjects);
 	}
 	
-	public Set<Set<Substance>> getObjects(){
+	public ArrayList<ArrayList<Substance>> getObjects(){
 		return getDisjunctions(objects);
 	}
 	
