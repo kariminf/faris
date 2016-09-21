@@ -45,6 +45,9 @@ package kariminf.faris.philosophical;
  *         limitations under the License.
  */
 public class Quantity {
+	
+	private double nbr;
+	private Substance subs;
 
 	public Quantity() {
 		// TODO Auto-generated constructor stub

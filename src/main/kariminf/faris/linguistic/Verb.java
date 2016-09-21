@@ -38,7 +38,7 @@ package kariminf.faris.linguistic;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Verb extends PartOfSpeach {
+public class Verb extends POS {
 
 	public static enum Tense {
 		PAST,
@@ -112,8 +112,8 @@ public class Verb extends PartOfSpeach {
 	}
 
 	@Override
-	public POS getPOS() {
-		return POS.VERB;
+	public PosType getPosType() {
+		return PosType.VERB;
 	}
 
 }

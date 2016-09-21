@@ -38,15 +38,15 @@ package kariminf.faris.linguistic;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Adverb extends PartOfSpeach {
+public class Adverb extends POS {
 	
 	public Adverb(int advSynSet) {
 		super(advSynSet);
 	}
 
 	@Override
-	public POS getPOS() {
-		return POS.ADVERB;
+	public PosType getPosType() {
+		return PosType.ADVERB;
 	}
 
 }

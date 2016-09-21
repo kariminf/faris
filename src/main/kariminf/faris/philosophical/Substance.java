@@ -70,6 +70,7 @@ public class Substance {
 	private Set<State> states = new HashSet<State>();	
 	
 	//Quanity (one)
+	//TODO quantity not here
 	private Quantity quantity;
 	
 	
@@ -120,5 +121,28 @@ public class Substance {
 		//Alert: security problem
 		return qualities;
 	}
+	
+	public boolean hasQuality(Quality q){
+		return qualities.contains(q);
+	}
+	
+	public boolean hasNoun(Noun n){
+		return this.noun.equals(n);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Substance)) return false;
+		if (o == this) return true;
+		Substance os = (Substance) o;
+		if (! os.hasNoun(this.noun)) return false;
+		for (Quality q: qualities)
+			if (! os.hasQuality(q)) return false;
+		return true;
+	}
+
 
 }

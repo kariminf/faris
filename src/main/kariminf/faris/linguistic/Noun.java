@@ -25,7 +25,7 @@ package kariminf.faris.linguistic;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ package kariminf.faris.linguistic;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Noun extends PartOfSpeach {
+public class Noun extends POS {
+
 
 	public enum Gender {
 		COMMON, //we use it with things 
@@ -65,8 +66,47 @@ public class Noun extends PartOfSpeach {
 	}
 
 	@Override
-	public POS getPOS() {
-		return POS.NOUN;
+	public PosType getPosType() {
+		return PosType.NOUN;
 	}
+	
+	public void setAttributs(Gender g, boolean d){
+		gender = g;
+		defined = d;
+	}
+	
+	public boolean sameAttributs(Gender g, boolean d){
+		return (
+				gender == g
+				&& defined == d
+				);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Noun)) return false;
+        if (obj == this) return true;
+        
+        Noun n = (Noun) obj;
+        
+		return (
+				super.equals(obj) 
+				&& 
+				n.sameAttributs(gender, defined)
+				);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Noun [gender=" + gender + ", defined=" + defined + "]";
+	}
+	
+	
 
 }

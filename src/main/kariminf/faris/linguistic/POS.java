@@ -38,10 +38,9 @@ package kariminf.faris.linguistic;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public abstract class PartOfSpeach {
-	
-	
-	public static enum POS {
+public abstract class POS {
+
+	public static enum PosType {
 		NOUN,
 		VERB,
 		ADJECTIVE,
@@ -50,7 +49,7 @@ public abstract class PartOfSpeach {
 
 	private int synSet = -1;
 	
-	public PartOfSpeach(int synSet) {
+	public POS(int synSet) {
 		this.synSet = synSet;
 	}
 	
@@ -58,6 +57,33 @@ public abstract class PartOfSpeach {
 		return synSet;
 	}
 	
-	public abstract POS getPOS();
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof POS)) return false;
+        if (obj == this) return true;
+        POS pos = (POS) obj;
+		return (synSet == pos.getSynSet()
+				&& this.getPosType() == pos.getPosType()
+				);
+	}
+
+	
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		//A synset is an integer in 8 positions max
+		int result = synSet;
+		result += (getPosType() == null) ? 0 : 1E9 * (getPosType().ordinal() + 1) ;
+		return result;
+	}
+
+	public abstract PosType getPosType();
 
 }

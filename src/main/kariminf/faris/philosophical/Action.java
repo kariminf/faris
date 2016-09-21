@@ -83,10 +83,10 @@ public class Action {
 	
 	//Here, we use disjunctions of conjunctions 
 	//An Action can have many doers (we can't duplicate a doer)
-	private Set<ConjunctedSubstances> subjects = new HashSet<ConjunctedSubstances>(); 
+	private Set<ConjunctedSubstances> doer = new HashSet<ConjunctedSubstances>(); 
 	
 	//An Action can affect many predicates 
-	private Set<ConjunctedSubstances> objects = new HashSet<ConjunctedSubstances>();  
+	private Set<ConjunctedSubstances> receivers = new HashSet<ConjunctedSubstances>();  
 	
 	//An action can have relations with other Actions
 	
@@ -118,7 +118,7 @@ public class Action {
 		ConjunctedSubstances conjunctions = new ConjunctedSubstances();
 		conjunctions.addAll(conjunctions2);
 		if (conjunctions.size()>0)
-			this.subjects.add(conjunctions);
+			this.doer.add(conjunctions);
 	}
 	
 	/**
@@ -129,15 +129,15 @@ public class Action {
 		ConjunctedSubstances conjunctions = new ConjunctedSubstances();
 		conjunctions.addAll(conjunctions2);
 		if (conjunctions.size()>0)
-			this.objects.add(conjunctions);
+			this.receivers.add(conjunctions);
 	}
 	
 	public boolean hasSubjects(){
-		return (subjects.size() > 0);
+		return (doer.size() > 0);
 	}
 	
 	public boolean hasObjects(){
-		return (objects.size() > 0);
+		return (receivers.size() > 0);
 	}
 	
 	/*
@@ -179,11 +179,11 @@ public class Action {
 	}
 	
 	public ArrayList<ArrayList<Substance>> getSubjects(){
-		return getDisjunctions(subjects);
+		return getDisjunctions(doer);
 	}
 	
 	public ArrayList<ArrayList<Substance>> getObjects(){
-		return getDisjunctions(objects);
+		return getDisjunctions(receivers);
 	}
 	
 	public Verb getVerb(){

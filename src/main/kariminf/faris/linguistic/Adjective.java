@@ -38,7 +38,7 @@ package kariminf.faris.linguistic;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Adjective extends PartOfSpeach {
+public class Adjective extends POS {
 	
 	/*public static enum Graduation {
 		ABSOLUTE,
@@ -53,8 +53,8 @@ public class Adjective extends PartOfSpeach {
 	}
 
 	@Override
-	public POS getPOS() {
-		return POS.ADJECTIVE;
+	public PosType getPosType() {
+		return PosType.ADJECTIVE;
 	}
 
 }
