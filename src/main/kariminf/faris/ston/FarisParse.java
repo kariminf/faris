@@ -86,6 +86,10 @@ public class FarisParse extends Parser {
 		_actions.put(id, currentAction);
 		
 	}
+	
+	@Override
+	protected void endAction(String id, int synSet) {
+	}
 
 	@Override
 	protected void addVerbSpecif(String tense, String modality,
@@ -95,9 +99,7 @@ public class FarisParse extends Parser {
 		//verb.setAspect(Aspect.valueOf(aspect));
 	}
 
-	@Override
-	protected void endAction() {
-	}
+	
 
 	@Override
 	protected void actionFail() {
@@ -146,7 +148,7 @@ public class FarisParse extends Parser {
 	}
 
 	@Override
-	protected void endActions() {
+	protected void endActions(boolean mainClause) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -235,7 +237,7 @@ public class FarisParse extends Parser {
 	}
 
 	@Override
-	protected void endSentence() {
+	protected void endSentence(String type) {
 		// TODO Auto-generated method stub
 		
 	}
