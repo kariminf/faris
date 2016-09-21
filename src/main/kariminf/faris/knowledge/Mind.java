@@ -37,7 +37,7 @@ import kariminf.sentrep.ston.request.ReqCreator;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -53,11 +53,11 @@ import kariminf.sentrep.ston.request.ReqCreator;
  */
 public class Mind {
 
-	public static enum Truth {
+	public static enum MentalState {
 		THINK,
 		BELIEVE,
 		HOPE,
-		QUOTE, //a quote is a belief that someone said, replace it by saying
+		FEAR,
 		FACT
 	}
 
@@ -65,48 +65,48 @@ public class Mind {
 	private Substance owner;
 
 	//even conditional have a truth level: "I think if ..., then ... ."
-	private HashMap<Truth, List<Idea>> truthTable = new HashMap<Truth, List<Idea>>();
+	private HashMap<MentalState, List<Idea>> truthTable = new HashMap<>();
 
 	public Mind(String name) {
 		this.name = name;
 	}
 
-	private List<Idea> getIdeas(Truth truth){
+	private List<Idea> getIdeas(MentalState ms){
 		List<Idea> ideas;
-		if (truthTable.containsKey(truth)){
-			ideas = truthTable.get(truth);
+		if (truthTable.containsKey(ms)){
+			ideas = truthTable.get(ms);
 		}
 		else{
 			ideas = new ArrayList<Idea>();
-			truthTable.put(truth, ideas);
+			truthTable.put(ms, ideas);
 		}
 
 		return ideas;
 	}
 
-	public void addAction(Truth truth, Action action){
+	public void addAction(MentalState ms, Action action){
 		//TODO verify if the action exists already, and if other components have to be added
 
-		List<Idea> ideas = getIdeas(truth);
+		List<Idea> ideas = getIdeas(ms);
 
 		Thought thought = new Thought(action);
 
 		ideas.add(thought);
 	}
 
-	public void addOpinion(Truth truth, Mind othersThoughts){
+	public void addOpinion(MentalState ms, Mind othersThoughts){
 		//TODO verify if the action exists already, and if other components have to be added
 		//opinions.put(truth, othersThoughts);
 	}
 
-	public void addCondition(Truth truth, Conditional condition){
-		List<Idea> ideas = getIdeas(truth);
+	public void addCondition(MentalState ms, Conditional condition){
+		List<Idea> ideas = getIdeas(ms);
 
 		ideas.add(condition);
 	}
 
 	public String getNoAdjectives(){
-		if (! truthTable.containsKey(Truth.FACT))
+		if (! truthTable.containsKey(MentalState.FACT))
 			return "";
 		ReqCreator rq = new ReqCreator();
 		//Affecting a label for each substance: subjects and objects
@@ -114,7 +114,7 @@ public class Mind {
 		int numActions = 0;
 		HashMap<Substance, String> roles = new HashMap<Substance, String>();
 
-		List<Idea> ideas = getIdeas(Truth.FACT);
+		List<Idea> ideas = getIdeas(MentalState.FACT);
 
 		for (Idea idea : ideas){
 			if (! (idea instanceof Thought)) continue;
@@ -171,7 +171,7 @@ public class Mind {
 
 
 	public String getSynSetText(int synSet){
-		if (! truthTable.containsKey(Truth.FACT))
+		if (! truthTable.containsKey(MentalState.FACT))
 			return "";
 		ReqCreator rq = new ReqCreator();
 		//Affecting a label for each substance: subjects and objects
@@ -181,7 +181,7 @@ public class Mind {
 		//HashMap<Action, String> actions = new HashMap<Action, String>();
 
 		//Searching for substances that contain this synSet
-		List<Idea> ideas = getIdeas(Truth.FACT);
+		List<Idea> ideas = getIdeas(MentalState.FACT);
 
 		for (Idea idea : ideas){
 			//Ideas which are thoughts

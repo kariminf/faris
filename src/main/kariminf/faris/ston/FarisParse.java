@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import kariminf.faris.knowledge.Mind;
-import kariminf.faris.knowledge.Mind.Truth;
+import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.linguistic.Verb;
 import kariminf.faris.linguistic.Verb.Aspect;
@@ -139,7 +139,7 @@ public class FarisParse extends Parser {
 		for(Action action: _actions.values()){
 			actions.add(action);
 			Mind defaultMind = minds.get("Default");
-			defaultMind.addAction(Truth.FACT, action);
+			defaultMind.addAction(MentalState.FACT, action);
 		}
 		
 		
