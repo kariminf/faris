@@ -10,7 +10,7 @@ public class Concepts {
 	public static final int HOPE = 1826723;
 	public static final int FEAR = 1780729;
 	
-	public MentalState getMentalState(int synset){
+	public static MentalState getMentalState(int synset){
 		switch(synset){
 		case BELIEVE: return MentalState.BELIEVE;
 		case THINK: return MentalState.THINK;

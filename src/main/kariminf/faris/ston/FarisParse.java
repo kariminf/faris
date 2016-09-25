@@ -67,8 +67,18 @@ public class FarisParse extends Parser {
 	private HashMap<String, Substance> _players = new HashMap<String, Substance>();
 	
 	private Action currentAction;
+	private Mind currentMind;
 	//private String currentPlayerID;
-	private HashMap<String, Action> _actions = new HashMap<String, Action>();
+	
+	private class ActState {
+		Action action;
+		MentalState state;
+		List<Mind> thinkers;
+	}
+	
+	MentalState s = MentalState.FACT;
+			
+	private HashMap<String, ActState> _actions = new HashMap<String, ActState>();
 	
 	private ArrayList<Substance> conjunctions = new ArrayList<Substance>();
 	private boolean subject = true;
@@ -81,14 +91,37 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addAction(String id, int synSet) {
+		
+		MentalState pastState = s;
+		
+		s = Concepts.getMentalState(synSet);
+		
+		//We will need the action to save the subjects and the objects
+		//even if the sate is not a fact
 		Verb verb = new Verb(synSet);
 		currentAction = Action.getNew(verb);
-		_actions.put(id, currentAction);
+		
+		if (s == MentalState.FACT){
+			ActState actstate = new ActState();
+			actstate.action = currentAction;
+			actstate.state = pastState;
+			
+			_actions.put(id, actstate);
+			
+			pastState = MentalState.FACT;
+		}
+		
 		
 	}
 	
 	@Override
 	protected void endAction(String id, int synSet) {
+		
+		if (s != MentalState.FACT){
+			
+			
+			
+		}
 	}
 
 	@Override
