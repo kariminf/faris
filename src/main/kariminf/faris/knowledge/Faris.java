@@ -53,7 +53,8 @@ public class Faris {
 	
 	
 	public Faris() {
-		minds.put("Default", new Mind("Default"));
+		Substance s = new Substance(0);
+		minds.put("Default", new Mind("Default", s));
 	}
 	
 	public boolean addStonDescription(String description){
@@ -61,6 +62,8 @@ public class Faris {
 		parser.parse(description);
 		return parser.parsed();
 	}
+	
+	
 	
 	
 	public String getNoAdjectives(String mindLabel){

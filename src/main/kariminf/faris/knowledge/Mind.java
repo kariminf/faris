@@ -67,8 +67,17 @@ public class Mind {
 	//even conditional have a truth level: "I think if ..., then ... ."
 	private HashMap<MentalState, List<Idea>> truthTable = new HashMap<>();
 
-	public Mind(String name) {
+	public Mind(String name, Substance owner) {
 		this.name = name;
+		this.owner = owner;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public boolean hasOwner(Substance s){
+		return owner.equals(s);
 	}
 
 	private List<Idea> getIdeas(MentalState ms){

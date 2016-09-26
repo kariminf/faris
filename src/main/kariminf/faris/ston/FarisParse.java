@@ -64,24 +64,23 @@ public class FarisParse extends Parser {
 	
 	private Substance currentPlayer;
 	//private String currentPlayerID;
-	private HashMap<String, Substance> _players = new HashMap<String, Substance>();
+	private HashMap<String, Substance> _players = new HashMap<>();
 	
 	private Action currentAction;
-	private Mind currentMind;
+
 	//private String currentPlayerID;
 	
-	private class ActState {
-		Action action;
-		MentalState state;
-		List<Mind> thinkers;
-	}
 	
 	MentalState s = MentalState.FACT;
 			
-	private HashMap<String, ActState> _actions = new HashMap<String, ActState>();
+	private HashMap<String, Action> _actions = new HashMap<>();
 	
-	private ArrayList<Substance> conjunctions = new ArrayList<Substance>();
-	private boolean subject = true;
+	private HashMap<String, Mind> _minds = new HashMap<>();
+	
+	private ArrayList<List<String>> disj = new ArrayList<>();
+	
+	private List<String> mainActionsIDs = new ArrayList<>();
+	
 	
 	public FarisParse(HashSet<Substance> substances, HashSet<Action> actions, HashMap<String, Mind> minds){
 		this.substances = substances;
@@ -92,7 +91,7 @@ public class FarisParse extends Parser {
 	@Override
 	protected void addAction(String id, int synSet) {
 		
-		MentalState pastState = s;
+		//MentalState pastState = s;
 		
 		s = Concepts.getMentalState(synSet);
 		
@@ -102,26 +101,35 @@ public class FarisParse extends Parser {
 		currentAction = Action.getNew(verb);
 		
 		if (s == MentalState.FACT){
-			ActState actstate = new ActState();
-			actstate.action = currentAction;
-			actstate.state = pastState;
-			
-			_actions.put(id, actstate);
-			
-			pastState = MentalState.FACT;
+			_actions.put(id, currentAction);
+			//pastState = MentalState.FACT;
 		}
 		
 		
 	}
 	
+	/**
+	 * Adds a new mind of the substance if it doesn't exist
+	 * @param s the substance which we want
+	 * @return the mind of the substance
+	 */
+	private Mind addNewMind(Substance s){
+		for (Mind m: _minds.values()){
+			if(m.hasOwner(s))
+				return m;
+		}
+		
+		String n = s.getNounSynSet() + "-" + _minds.size();
+		Mind m = new Mind(n, s);
+		minds.put(n, m);
+		
+		return m;
+		
+	}
+	
 	@Override
 	protected void endAction(String id, int synSet) {
-		
-		if (s != MentalState.FACT){
-			
-			
-			
-		}
+		//
 	}
 
 	@Override
@@ -173,8 +181,15 @@ public class FarisParse extends Parser {
 		
 		for(Action action: _actions.values()){
 			actions.add(action);
-			Mind defaultMind = minds.get("Default");
+		}
+		
+		Mind defaultMind = minds.get("Default");
+		for(Action action: getActions(mainActionsIDs)){
 			defaultMind.addAction(MentalState.FACT, action);
+		}
+		
+		for(Mind mind: _minds.values()){
+			minds.put(mind.getName(), mind);
 		}
 		
 		
@@ -189,23 +204,43 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addConjunctions(List<String> IDs) {
-		for (String roleID: IDs)
-			if (_players.containsKey(roleID)){
-				Substance role = _players.get(roleID);
-				conjunctions.add(role);
-			}
+		
+		disj.add(IDs);
 	}
 
 
 	@Override
 	protected void beginAgents() {
-		conjunctions = new ArrayList<Substance>();
+		disj = new ArrayList<>();
 		
+	}
+	
+	private List<Substance> getSubstances(List<String> IDs){
+		List<Substance> result = new ArrayList<>();
+		for (String roleID: IDs)
+			if (_players.containsKey(roleID)){
+				Substance role = _players.get(roleID);
+				result.add(role);
+			}
+		return result;
+	}
+	
+	private List<Action> getActions(List<String> IDs){
+		List<Action> result = new ArrayList<>();
+		for (String actID: IDs)
+			if (_actions.containsKey(actID)){
+				Action action = _actions.get(actID);
+				result.add(action);
+			}
+		return result;
 	}
 
 	@Override
 	protected void endAgents() {
-		currentAction.addConjunctSubjects(conjunctions);
+		
+		for (List<String> IDs: disj){
+			currentAction.addConjunctSubjects(getSubstances(IDs));
+		}
 		
 	}
 
@@ -223,13 +258,35 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginThemes() {
-		conjunctions = new ArrayList<Substance>();
+		
+		disj = new ArrayList<>();
 		
 	}
 
 	@Override
 	protected void endThemes() {
-		currentAction.addConjunctObjects(conjunctions);
+		if (s == MentalState.FACT){
+			for (List<String> IDs: disj){
+				currentAction.addConjunctObjects(getSubstances(IDs));
+			}
+			return;
+		}
+		
+		//TODO he and she **or** me thinks that ...
+		for (List<Substance> agents: currentAction.getSubjects()){
+			for (Substance agent: agents){
+				Mind m = addNewMind(agent);
+				
+				//TODO he thinks that ... and that ... or that ...
+				for (List<String> IDs: disj){
+					for(Action act: getActions(IDs)){
+						m.addAction(s, act);
+					}
+				}
+				
+				_minds.put(m.getName(), m);
+			}
+		}
 		
 	}
 
@@ -265,13 +322,19 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginSentence(String type) {
-		// TODO Auto-generated method stub
+		disj = new ArrayList<>();
 		
 	}
 
 	@Override
 	protected void endSentence(String type) {
-		// TODO Auto-generated method stub
+		//Verify the main actions
+		for (List<String> actIDs: disj){
+			for(String actID: actIDs){
+				if (_actions.containsKey(actID))
+					mainActionsIDs.add(actID);
+			}
+		}
 		
 	}
 
@@ -292,13 +355,13 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginPRelatives() {
-		conjunctions = new ArrayList<Substance>();
+		disj = new ArrayList<>();
 	}
 
 	@Override
 	protected void endPRelatives() {
-		if(conjunctions.size() == 1){
-			currentPlayer = conjunctions.get(0);
+		if(disj.size() == 1){
+			currentPlayer = getSubstances(disj.get(0)).get(0);
 			_players.put(proleID, currentPlayer);
 			return;
 		}
