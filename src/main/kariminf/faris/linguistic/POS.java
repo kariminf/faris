@@ -57,6 +57,7 @@ public abstract class POS {
 		return synSet;
 	}
 	
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

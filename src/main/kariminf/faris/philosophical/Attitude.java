@@ -46,6 +46,7 @@ package kariminf.faris.philosophical;
  */
 public class Attitude {
 
+	//Karim: In this category, represent the -ing verbs describing a substance
 	public Attitude() {
 		// TODO Auto-generated constructor stub
 	}

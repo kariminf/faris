@@ -64,17 +64,6 @@ public class Faris {
 	}
 	
 	
-	
-	
-	public String getNoAdjectives(String mindLabel){
-		
-		if (! minds.containsKey(mindLabel)) return "";
-		
-		Mind mind = minds.get(mindLabel);
-		
-		return mind.getNoAdjectives();
-	}
-	
 	/**
 	 * 
 	 * @param mindLabel
@@ -87,6 +76,19 @@ public class Faris {
 		
 		return mind.getSynSetText(synSet);
 	}
+	
+	/**
+	 * Get all the thoughts in a mind
+	 * @param mindLabel the label of the mind
+	 * @return STON representation of the thoughts
+	 */
+	public String getMindThoughts (String mindLabel){
+		if (! minds.containsKey(mindLabel)) return "";
+		Mind mind = minds.get(mindLabel);
+		
+		return mind.getAllText();
+	}
+	
 	
 	/**
 	 * 
