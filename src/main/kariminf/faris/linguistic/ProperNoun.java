@@ -24,7 +24,7 @@ package kariminf.faris.linguistic;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -44,9 +44,19 @@ public class ProperNoun extends Noun {
 	
 	//a person, a company, a country, etc.
 	
-	public ProperNoun(int typeSynSet, String name) {
-		super(typeSynSet);
+	public ProperNoun(Noun noun, String name) {
+		super(noun);
 		this.name = name;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return super.toString() + "." + name;
+	}
+	
+	
 
 }

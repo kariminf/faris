@@ -24,14 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.linguistic.Verb;
-import kariminf.faris.linguistic.Verb.Aspect;
-import kariminf.faris.linguistic.Verb.Tense;
 import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.Quality;
 import kariminf.faris.philosophical.Substance;
@@ -39,10 +35,11 @@ import kariminf.sentrep.ston.Parser;
 
 
 /**
+ * To parse the STON specification and transform it to Faris knowledge format
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -292,7 +289,29 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addRoleSpecif(String name, String def, String quantity) {
-		// TODO Auto-generated method stub
+		currentPlayer.setNounSpecif(name, def);
+		
+		quantity = quantity.toLowerCase();
+		
+		if(quantity.length() < 1 || quantity.equals("1")) return;
+		
+		if (quantity.startsWith("o")){
+			quantity = quantity.substring(1);
+			
+			
+			if (! quantity.endsWith("pl")){
+				//np.addPreModifier(getOrdinal(quantity));
+				return;
+			}
+			quantity = quantity.substring(0, quantity.length()-2);
+			//quantity = getOrdinal(quantity);
+		}
+		
+		//np.setPlural(true);
+		
+		if(quantity.equals("pl")) return;
+		
+		//np.addPreModifier(quantity);
 		
 	}
 

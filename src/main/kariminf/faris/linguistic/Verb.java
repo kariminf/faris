@@ -24,7 +24,7 @@ package kariminf.faris.linguistic;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -100,9 +100,9 @@ public class Verb extends POS {
 		this.aspect = aspect;
 	}
 
-	private Tense tense;
+	private Tense tense = Tense.PRESENT;
 	
-	private Aspect aspect;
+	private Aspect aspect = Aspect.SIMPLE;
 	
 	//the mood (imperative, indicative, subjective)
 	//we don't need person, number, voice
@@ -115,5 +115,15 @@ public class Verb extends POS {
 	public PosType getPosType() {
 		return PosType.VERB;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "V@" + getSynSet() +  "." + tense + "." + aspect ;
+	}
+	
+	
 
 }

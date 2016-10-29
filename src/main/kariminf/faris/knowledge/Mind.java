@@ -22,16 +22,10 @@ package kariminf.faris.knowledge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import kariminf.faris.linguistic.Verb;
 import kariminf.faris.philosophical.Action;
-import kariminf.faris.philosophical.Quality;
 import kariminf.faris.philosophical.Substance;
 import kariminf.faris.ston.FarisGenerate;
-import kariminf.sentrep.ston.request.ReqCreator;
 
 
 /**
@@ -126,5 +120,26 @@ public class Mind {
 	public String getAllText(){
 		return "";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "==================\n";
+		result += "Name: " + name + "\n";
+		result += "Owner = " + owner + "\n";
+		
+		for (MentalState ms: truthTable.keySet()){
+			result += ms + "\n";
+			result += "--------------\n";
+			for (Idea i : truthTable.get(ms)){
+				result += i;
+			}
+		}
+		return result;
+	}
+	
+	
 
 }

@@ -7,6 +7,16 @@ public class Opinion extends Idea {
 	public Opinion(Mind otherMind) {
 		this.otherMind = otherMind;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Opinion [otherMind=" + otherMind + "]\n";
+	}
+	
+	
 	
 
 }

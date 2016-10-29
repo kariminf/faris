@@ -14,4 +14,14 @@ public class Thought extends Idea {
 		return action;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Thought [action=" + action + "]\n";
+	}
+	
+	
+
 }

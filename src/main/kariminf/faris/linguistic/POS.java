@@ -24,7 +24,7 @@ package kariminf.faris.linguistic;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -84,6 +84,8 @@ public abstract class POS {
 		result += (getPosType() == null) ? 0 : 1E9 * (getPosType().ordinal() + 1) ;
 		return result;
 	}
+	
+	
 
 	public abstract PosType getPosType();
 

@@ -55,4 +55,17 @@ public class Conditional extends Idea {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "Conditional:\n";
+		result += "... IF: " + condition + "\n";
+		result += "THEN: " + predicate2 + "\n";
+		return result;
+	}
+	
+	
+
 }

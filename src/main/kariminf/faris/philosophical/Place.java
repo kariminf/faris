@@ -20,13 +20,17 @@
 
 package kariminf.faris.philosophical;
 
+import java.util.ArrayList;
+
+import kariminf.faris.linguistic.Adverb;
+
 /**
  * Where or place (ποῦ, pou, where). Position in relation to the surrounding environment. 
  * Examples: in a marketplace, in the Lyceum.
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -41,9 +45,30 @@ package kariminf.faris.philosophical;
  *         limitations under the License.
  */
 public class Place {
+	
+	private Adverb adv;
+	private ArrayList<Substance> places = new ArrayList<>();
 
-	public Place() {
-		// TODO Auto-generated constructor stub
+	public Place(Adverb adv) {
+		this.adv = adv;
 	}
+	
+	public void addLocation(Substance loc){
+		places.add(loc);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		
+		String result = "P:";
+		result += adv;
+		result += (places.size() > 0)? places: "";
+		return result;
+	}
+	
+	
 
 }

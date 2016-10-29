@@ -37,7 +37,7 @@ import kariminf.faris.linguistic.Verb;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ public class Action {
 	
 	//Here, we use disjunctions of conjunctions 
 	//An Action can have many doers (we can't duplicate a doer)
-	private Set<ConjunctedSubstances> doer = new HashSet<ConjunctedSubstances>(); 
+	private Set<ConjunctedSubstances> doers = new HashSet<ConjunctedSubstances>(); 
 	
 	//An Action can affect many predicates 
 	private Set<ConjunctedSubstances> receivers = new HashSet<ConjunctedSubstances>();  
@@ -118,7 +118,7 @@ public class Action {
 		ConjunctedSubstances conjunctions = new ConjunctedSubstances();
 		conjunctions.addAll(conjunctions2);
 		if (conjunctions.size()>0)
-			this.doer.add(conjunctions);
+			this.doers.add(conjunctions);
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class Action {
 	}
 	
 	public boolean hasSubjects(){
-		return (doer.size() > 0);
+		return (doers.size() > 0);
 	}
 	
 	public boolean hasObjects(){
@@ -179,7 +179,7 @@ public class Action {
 	}
 	
 	public ArrayList<ArrayList<Substance>> getSubjects(){
-		return getDisjunctions(doer);
+		return getDisjunctions(doers);
 	}
 	
 	public ArrayList<ArrayList<Substance>> getObjects(){
@@ -189,13 +189,20 @@ public class Action {
 	public Verb getVerb(){
 		return verb;
 	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "";
+		result += doers ;
+		result += " " + verb ;
+		result += " " + receivers ;
+		
+		return result;
 	}
+	
+	
 
 }

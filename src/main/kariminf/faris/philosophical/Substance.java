@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import kariminf.faris.linguistic.Noun;
+import kariminf.faris.linguistic.ProperNoun;
 
 
 /**
@@ -70,12 +71,18 @@ public class Substance {
 	private Set<State> states = new HashSet<State>();	
 	
 	//Quanity (one)
-	//TODO quantity not here
+	//TODO quantity not here, in the action
 	private Quantity quantity;
 	
 	
 	public Substance(int nounSynSet) {
 		noun = Noun.getNew(nounSynSet);
+	}
+	
+	public void setNounSpecif(String name, String def){
+		noun.setAttributs(Noun.Gender.COMMON, def.equals("Y"));
+		if (name.trim().length() > 0)
+			noun = new ProperNoun(noun, name);
 	}
 	
 	public void addAction(Action action){
@@ -144,5 +151,18 @@ public class Substance {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "";
+		result += noun;
+		result += (qualities.isEmpty())? "": "-Q:" + qualities;
+		result += (states.isEmpty())? "": "-S:" + states;
+		return result;
+	}
+	
+	
 
 }

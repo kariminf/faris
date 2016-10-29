@@ -49,6 +49,7 @@ public class Faris {
 
 	private HashSet<Substance> substances = new HashSet<Substance>();
 	private HashSet<Action> actions = new HashSet<Action>();
+	
 	private HashMap<String, Mind> minds = new HashMap<String, Mind>();
 	
 	
@@ -103,6 +104,25 @@ public class Faris {
 		
 		return result;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result;
+		result = "Faris minds = ";
+		
+		result += minds.keySet() + "\n\n";
+		
+		for (Mind mind: minds.values()){
+			result += mind.toString();
+		}
+		
+		return result;
+	}
+	
+	
 
 
 }

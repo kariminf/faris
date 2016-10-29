@@ -18,6 +18,7 @@ public class FarisGenerate {
 	
 	
 	public static String getSynsetIdeas(Mind mind, int synSet){
+		
 		ReqCreator rq = new ReqCreator();
 		//Affecting a label for each substance: subjects and objects
 		int numRoles = 0;

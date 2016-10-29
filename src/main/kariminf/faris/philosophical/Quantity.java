@@ -47,10 +47,27 @@ package kariminf.faris.philosophical;
 public class Quantity {
 	
 	private double nbr;
-	private Substance subs;
+	private Substance unit; //mesure unit: kilogram, etc.
 
-	public Quantity() {
-		// TODO Auto-generated constructor stub
+	public Quantity(double nbr) {
+		this.nbr = nbr;
 	}
+	
+	public void addUnit(Substance unit){
+		this.unit = unit;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "";
+		result += nbr;
+		result += (unit != null)? ":" + unit: "";
+		return result;
+	}
+	
+	
 
 }

@@ -24,7 +24,7 @@ package kariminf.faris.linguistic;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -47,6 +47,16 @@ public class Adverb extends POS {
 	@Override
 	public PosType getPosType() {
 		return PosType.ADVERB;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "A@";
+		result += getSynSet();
+		return result;
 	}
 
 }

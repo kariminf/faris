@@ -27,10 +27,11 @@ import java.io.IOException;
 import kariminf.faris.knowledge.Faris;
 
 /**
+ * Testing faris
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -46,9 +47,9 @@ import kariminf.faris.knowledge.Faris;
  */
 public class FarisTest {
 	
-	//static String testFile = "../SentRep/ston/exp/pn_quant.ston";
+	static String testFile = "../SentRep/ston/exp/pn_quant.ston";
 	//static String testFile = "../SentRep/ston/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
-	static String testFile = "./res/think1.ston";
+	//static String testFile = "./res/think1.ston";
 
 	public static String readFile (String f) {
 		try {
@@ -79,8 +80,8 @@ public class FarisTest {
 		Faris faris = new Faris();
 		faris.addStonDescription(specif);
 		System.out.println(faris.info());
-		//System.out.print(faris.getNoAdjectives("Default"));
-		System.out.print(faris.getSynSetText("Default", 7846));
+		System.out.print(faris);
+		//System.out.print(faris.getSynSetText("Mother", 10332385));
 	}
 
 }

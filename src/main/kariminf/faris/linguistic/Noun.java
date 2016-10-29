@@ -61,6 +61,12 @@ public class Noun extends POS {
 		super(nounSynSet);
 	}
 	
+	protected Noun(Noun noun) {
+		super(noun.getSynSet());
+		gender = noun.gender;
+		defined = noun.defined;
+	}
+	
 	public static Noun getNew(int nounSynSet){
 		return new Noun(nounSynSet);
 	}
@@ -104,7 +110,10 @@ public class Noun extends POS {
 	 */
 	@Override
 	public String toString() {
-		return "Noun [gender=" + gender + ", defined=" + defined + "]";
+		String result = "N@" + getSynSet();
+		result += "." + gender;
+		result += (defined)? ".def": "";
+		return  result;
 	}
 	
 	
