@@ -282,6 +282,9 @@ public class Action {
 				adverbs.add(adv);
 		}
 		
+		//Delete the adverb: also
+		adverbs.remove(new Adverb(Concepts.ALSO));
+		
 		// Locations update
 		if (! locations.equals(act.locations)){
 			for (Place loc: act.locations)

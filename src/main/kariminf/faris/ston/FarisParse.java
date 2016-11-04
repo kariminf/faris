@@ -67,7 +67,7 @@ public class FarisParse extends Parser {
 	
 	
 	MentalState s = MentalState.FACT;
-			
+	
 	private HashMap<String, Action> _actions = new HashMap<>();
 	
 	private HashMap<String, Mind> _minds = new HashMap<>();
@@ -149,7 +149,7 @@ public class FarisParse extends Parser {
 			return;
 		}
 		
-		Substance sub = Search.getSubstance(substances, new Substance(synSet));
+		Substance sub = Search.getElement(substances, new Substance(synSet));
 		
 		currentPlayer = new QuantSubstance(sub, new Quantity(1.0));
 		_players.put(id, currentPlayer);
@@ -160,15 +160,13 @@ public class FarisParse extends Parser {
 	protected void endRole(String id) {
 		
 		//Here the role may exists in substances
-		Substance sub = Search.getSubstance(substances, currentPlayer.getSubstance());
+		Substance sub = Search.getElement(substances, currentPlayer.getSubstance());
 		
+		//When the substance if found in the set of substances
 		if (sub != currentPlayer.getSubstance()){
-			//TODO here we have to update the information
-			currentPlayer = new QuantSubstance(sub, currentPlayer.getQuantity());
-			
+			currentPlayer = QuantSubstance.withNewSubstance(currentPlayer, sub);
 			_players.put(id, currentPlayer);
 		}
-		
 		
 	}
 
@@ -198,7 +196,14 @@ public class FarisParse extends Parser {
 		}
 		
 		for(Action action: _actions.values()){
-			actions.add(action);
+			//If the action exists, we update the information 
+			if (actions.contains(action)){
+				Action act = Search.getElement(actions, action);
+				act.update(action);
+			} else {
+				actions.add(action);
+			}
+			
 		}
 		
 		Mind defaultMind = minds.get("$");

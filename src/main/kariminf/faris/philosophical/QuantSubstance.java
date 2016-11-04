@@ -9,18 +9,33 @@ public class QuantSubstance {
 	private Quantity quantity;
 	
 	//Here the substance is the subject (doer)
-	private Set<Action> actions = new HashSet<Action>();
+	private HashSet<Action> actions = new HashSet<>();
 
 	//Here the substance is the object (receiver of the action)
-	private Set<Action> affections = new HashSet<Action>();
+	private HashSet<Action> affections = new HashSet<>();
 		
 	//States
-	private Set<State> states = new HashSet<State>();
+	private HashSet<State> states = new HashSet<>();
 		
 	
 	public QuantSubstance(Substance substance, Quantity quantity) {
 		this.substance = substance;
 		this.quantity = quantity;
+	}
+	
+	/**
+	 * Creates the same QuantSubstance with a different Substance
+	 * @param orig The original Quantified Substance
+	 * @param newSubs The new Substance
+	 * @return A new Quantified Substance with a different substance than the original had.
+	 */
+	public static QuantSubstance withNewSubstance(QuantSubstance orig, Substance newSubs){
+		QuantSubstance result = new QuantSubstance(newSubs, orig.quantity);
+		result.actions = orig.actions;
+		result.affections = orig.affections;
+		result.states = orig.states;
+		
+		return result;
 	}
 
 

@@ -57,6 +57,10 @@ public abstract class POS {
 		return synSet;
 	}
 	
+	public boolean hasSynset(int synSet){
+		return (this.synSet == synSet);
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
