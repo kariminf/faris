@@ -22,6 +22,8 @@ package kariminf.faris.philosophical;
 
 import java.util.Date;
 
+import kariminf.faris.linguistic.Adverb;
+
 /**
  * When or time (πότε, pote, when). 
  * Position in relation to the course of events. Examples: yesterday, last year.
@@ -44,10 +46,12 @@ import java.util.Date;
  */
 public class Time {
 
+	//TODO complete the time
 	Date date ;
+	private Adverb adv;
 	
-	public Time() {
-		// TODO Auto-generated constructor stub
+	public Time(Adverb adv) {
+		this.adv = adv;
 	}
 
 }

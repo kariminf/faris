@@ -41,18 +41,11 @@ package kariminf.faris.knowledge;
 public class Conditional extends Idea {
 
 	private Idea condition;
-	private Idea predicate2;
+	private Idea predicate;
 	
-	public Conditional() {
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public Conditional(Idea condition, Idea predicate) {
+		this.condition = condition;
+		this.predicate = predicate;
 	}
 
 	/* (non-Javadoc)
@@ -60,9 +53,9 @@ public class Conditional extends Idea {
 	 */
 	@Override
 	public String toString() {
-		String result = "Conditional:\n";
-		result += "... IF: " + condition + "\n";
-		result += "THEN: " + predicate2 + "\n";
+		String result = "Conditional: ";
+		result += "IF:" + condition;
+		result += "-THEN:" + predicate + "\n";
 		return result;
 	}
 	

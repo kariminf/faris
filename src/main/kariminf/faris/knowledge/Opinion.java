@@ -13,7 +13,7 @@ public class Opinion extends Idea {
 	 */
 	@Override
 	public String toString() {
-		return "Opinion [otherMind=" + otherMind + "]\n";
+		return "Opinion: " + otherMind + "\n";
 	}
 	
 	

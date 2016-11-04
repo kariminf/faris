@@ -20,11 +20,6 @@
 
 package kariminf.faris.knowledge;
 
-import java.util.HashMap;
-
-import kariminf.faris.philosophical.Action;
-import kariminf.faris.philosophical.Substance;
-
 
 /**
  * 

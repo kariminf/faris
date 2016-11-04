@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import kariminf.faris.philosophical.Action;
+import kariminf.faris.philosophical.QuantSubstance;
+import kariminf.faris.philosophical.Quantity;
 import kariminf.faris.philosophical.Substance;
 import kariminf.faris.ston.FarisParse;
 
@@ -31,7 +33,7 @@ import kariminf.faris.ston.FarisParse;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -47,15 +49,16 @@ import kariminf.faris.ston.FarisParse;
  */
 public class Faris {
 
-	private HashSet<Substance> substances = new HashSet<Substance>();
+	private HashSet<Substance> substances = new HashSet<>();
+	
 	private HashSet<Action> actions = new HashSet<Action>();
 	
 	private HashMap<String, Mind> minds = new HashMap<String, Mind>();
 	
 	
 	public Faris() {
-		Substance s = new Substance(0);
-		minds.put("Default", new Mind("Default", s));
+		QuantSubstance s = new QuantSubstance(new Substance(0), new Quantity(1.0));
+		minds.put("$", new Mind("$", s));
 	}
 	
 	public boolean addStonDescription(String description){
@@ -76,6 +79,10 @@ public class Faris {
 		Mind mind = minds.get(mindLabel);
 		
 		return mind.getSynSetText(synSet);
+	}
+	
+	public String getSynSetText (int synSet){
+		return getSynSetText("$", synSet);
 	}
 	
 	/**

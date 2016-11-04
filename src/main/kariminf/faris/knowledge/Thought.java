@@ -19,7 +19,7 @@ public class Thought extends Idea {
 	 */
 	@Override
 	public String toString() {
-		return "Thought [action=" + action + "]\n";
+		return "Thought: " + action + "\n";
 	}
 	
 	

@@ -57,22 +57,8 @@ public class Substance {
 	//a substance is a noun
 	private Noun noun;
 	
-	
-	//Here the substance is the subject (doer)
-	private Set<Action> actions = new HashSet<Action>();
-	
-	//Here the substance is the object (receiver of the action)
-	private Set<Action> affections = new HashSet<Action>();
-	
 	//Qualities
-	private Set<Quality> qualities = new HashSet<Quality>();
-	
-	//States
-	private Set<State> states = new HashSet<State>();	
-	
-	//Quanity (one)
-	//TODO quantity not here, in the action
-	private Quantity quantity;
+	private Set<Quality> qualities = new HashSet<Quality>();	
 	
 	
 	public Substance(int nounSynSet) {
@@ -85,44 +71,17 @@ public class Substance {
 			noun = new ProperNoun(noun, name);
 	}
 	
-	public void addAction(Action action){
-		actions.add(action);
-	}
-	
-	public void addAffection(Action action){
-		affections.add(action);
-	}
 	
 	public void addQuality(Quality quality){
 		qualities.add(quality);
 	}
 	
-	public void setQuantity(Quantity quantity){
-		this.quantity = quantity;
-	}
 	
 	public int getNounSynSet(){
 		return noun.getSynSet();
 	}
 	
-	/**
-	 * @return the states
-	 */
-	public Set<State> getStates() {
-		//Alert: security problem
-		return states;
-	}
-
-	/**
-	 * @param states the states to set
-	 */
-	public void addStates(Set<State> states) {
-		this.states.addAll(states);
-	}
 	
-	public void addState(State state) {
-		this.states.add(state);
-	}
 
 	public Set<Quality> getQualities(){
 		//Alert: security problem
@@ -150,6 +109,21 @@ public class Substance {
 			if (! os.hasQuality(q)) return false;
 		return true;
 	}
+	
+	
+	//Probably won't be used, but let it here for now
+	/**
+	 * This function will assure the existence of one instance of the same substance
+	 * @param sub2 the other substance
+	 */
+	public Substance getOne(Substance sub2){
+		if(equals(sub2)) return this;
+		return sub2;
+	}
+	
+	public void update(Substance sub2){
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -159,7 +133,6 @@ public class Substance {
 		String result = "";
 		result += noun;
 		result += (qualities.isEmpty())? "": "-Q:" + qualities;
-		result += (states.isEmpty())? "": "-S:" + states;
 		return result;
 	}
 	

@@ -21,9 +21,7 @@
 package kariminf.faris.philosophical;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Having or state, condition (ἔχειν, echein, to have or be). 
@@ -77,23 +75,23 @@ public class State {
 	 * @param affected if true, then the haver is an object, otherwise it is a subject
 	 * @return true if the affectation is successful 
 	 */
-	public boolean affectState (Action action, Substance owner, List<List<Substance>> relatives, boolean affected){
+	public boolean affectState (Action action, QuantSubstance owner, List<List<QuantSubstance>> relatives, boolean affected){
 		if(action.hasObjects())
 			return false;
 		if(action.hasSubjects())
 			return false;
 		
-		List<Substance> _owner = new ArrayList<Substance>();
+		List<QuantSubstance> _owner = new ArrayList<>();
 		
 		if (affected){
 			
 			action.addConjunctObjects(_owner);
-			for(List<Substance> _relatives : relatives)
+			for(List<QuantSubstance> _relatives : relatives)
 				action.addConjunctSubjects(_relatives);
 		}
 		else {
 			action.addConjunctSubjects(_owner);
-			for(List<Substance> _relatives : relatives)
+			for(List<QuantSubstance> _relatives : relatives)
 				action.addConjunctObjects(_relatives);
 		}
 		

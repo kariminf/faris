@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import kariminf.faris.philosophical.Action;
+import kariminf.faris.philosophical.QuantSubstance;
 import kariminf.faris.philosophical.Substance;
 import kariminf.faris.ston.FarisGenerate;
 
@@ -57,12 +58,12 @@ public class Mind {
 	}
 
 	private String name;
-	private Substance owner;
+	private QuantSubstance owner;
 
 	//even conditional have a truth level: "I think if ..., then ... ."
 	private HashMap<MentalState, List<Idea>> truthTable = new HashMap<>();
 
-	public Mind(String name, Substance owner) {
+	public Mind(String name, QuantSubstance owner) {
 		this.name = name;
 		this.owner = owner;
 	}
@@ -71,8 +72,8 @@ public class Mind {
 		return name;
 	}
 	
-	public boolean hasOwner(Substance s){
-		return owner.equals(s);
+	public boolean hasOwner(QuantSubstance agent){
+		return owner.equals(agent);
 	}
 
 	public List<Idea> getIdeas(MentalState ms){

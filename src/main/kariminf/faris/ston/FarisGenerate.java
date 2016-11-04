@@ -11,9 +11,10 @@ import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.Verb;
 import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.Quality;
-import kariminf.faris.philosophical.Substance;
+import kariminf.faris.philosophical.QuantSubstance;
 import kariminf.sentrep.ston.request.ReqCreator;
 
+//TODO search a substance and generate just its actions 
 public class FarisGenerate {
 	
 	
@@ -23,7 +24,7 @@ public class FarisGenerate {
 		//Affecting a label for each substance: subjects and objects
 		int numRoles = 0;
 		int numActions = 0;
-		HashMap<Substance, String> roles = new HashMap<Substance, String>();
+		HashMap<QuantSubstance, String> roles = new HashMap<>();
 		//HashMap<Action, String> actions = new HashMap<Action, String>();
 
 		//Searching for substances that contain this synSet
@@ -35,22 +36,22 @@ public class FarisGenerate {
 			Action action = ((Thought) idea).getAction();
 			
 			//The subjects and the objects
-			ArrayList<ArrayList<Substance>> subjects = new ArrayList<ArrayList<Substance>>();
-			ArrayList<ArrayList<Substance>> objects = new ArrayList<ArrayList<Substance>>();
+			ArrayList<ArrayList<QuantSubstance>> subjects = new ArrayList<>();
+			ArrayList<ArrayList<QuantSubstance>> objects = new ArrayList<>();
 			
 			//boolean found = false;
-			for (ArrayList<Substance> _subjects: action.getSubjects()){
-				ArrayList<Substance> conjunctions = new ArrayList<Substance>();
-				for (Substance subject: _subjects){
-					if (subject.getNounSynSet() != synSet)
+			for (ArrayList<QuantSubstance> _subjects: action.getSubjects()){
+				ArrayList<QuantSubstance> conjunctions = new ArrayList<>();
+				for (QuantSubstance subject: _subjects){
+					if (subject.getSubstance().getNounSynSet() != synSet)
 						continue;
 					//found = true;
 					if(! roles.containsKey(subject)){
 						String roleId = "srole-" + numRoles;
 						roles.put(subject, roleId);
 						conjunctions.add(subject);
-						rq.addRolePlayer(roleId, subject.getNounSynSet());
-						for(Quality quality: subject.getQualities()){
+						rq.addRolePlayer(roleId, subject.getSubstance().getNounSynSet());
+						for(Quality quality: subject.getSubstance().getQualities()){
 							rq.addAdjective(roleId, quality.getAdjective().getSynSet(), quality.getAdverbsInt());
 						}
 
@@ -61,18 +62,18 @@ public class FarisGenerate {
 				}
 			}
 
-			for (ArrayList<Substance> _objects: action.getObjects()){
-				ArrayList<Substance> conjunctions = new ArrayList<Substance>();
-				for(Substance object: _objects){
-					if (object.getNounSynSet() != synSet)
+			for (ArrayList<QuantSubstance> _objects: action.getObjects()){
+				ArrayList<QuantSubstance> conjunctions = new ArrayList<>();
+				for(QuantSubstance object: _objects){
+					if (object.getSubstance().getNounSynSet() != synSet)
 						continue;
 					//found = true;
 					if(! roles.containsKey(object)){
 						String roleId = "srole-" + numRoles;
 						roles.put(object, roleId);
 						conjunctions.add(object);
-						rq.addRolePlayer(roleId, object.getNounSynSet());
-						for(Quality quality: object.getQualities()){
+						rq.addRolePlayer(roleId, object.getSubstance().getNounSynSet());
+						for(Quality quality: object.getSubstance().getQualities()){
 							rq.addAdjective(roleId, quality.getAdjective().getSynSet(), quality.getAdverbsInt());
 						}
 						numRoles++;
@@ -88,14 +89,19 @@ public class FarisGenerate {
 				//actions.put(action, actionId);
 				Verb verb = action.getVerb();
 				rq.addAction(actionId, verb.getSynSet());
+				
+				rq.addSentence("AFF");
+				ArrayList<String> act = new ArrayList<>();
+				act.add(actionId);
+				rq.addSentActionConjunctions(act);
 				numActions++;
 
-				ArrayList<ArrayList<Substance>> substances = 
+				ArrayList<ArrayList<QuantSubstance>> substances = 
 						(subjects.isEmpty())?action.getSubjects():subjects;
 
-				for (ArrayList<Substance> _subjects: substances){
+				for (ArrayList<QuantSubstance> _subjects: substances){
 					ArrayList<String> subjectsIDs = new ArrayList<String>();
-					for (Substance subject: _subjects){
+					for (QuantSubstance subject: _subjects){
 						String roleId = "role-" + numRoles;
 
 						if ( roles.containsKey(subject)){
@@ -103,7 +109,7 @@ public class FarisGenerate {
 						}
 						else{
 							roles.put(subject, roleId);
-							rq.addRolePlayer(roleId, subject.getNounSynSet());
+							rq.addRolePlayer(roleId, subject.getSubstance().getNounSynSet());
 							numRoles++;
 						}
 					}
@@ -112,9 +118,9 @@ public class FarisGenerate {
 
 				substances = (objects.isEmpty())?action.getObjects():objects;
 
-				for (ArrayList<Substance> _objects: substances){
+				for (ArrayList<QuantSubstance> _objects: substances){
 					ArrayList<String> objectsIDs = new ArrayList<String>();
-					for(Substance object: _objects){
+					for(QuantSubstance object: _objects){
 						String roleId = "role-" + numRoles;
 
 						if ( roles.containsKey(object)){
@@ -122,7 +128,7 @@ public class FarisGenerate {
 						}
 						else{
 							roles.put(object, roleId);
-							rq.addRolePlayer(roleId, object.getNounSynSet());
+							rq.addRolePlayer(roleId, object.getSubstance().getNounSynSet());
 							numRoles++;
 						}
 					}

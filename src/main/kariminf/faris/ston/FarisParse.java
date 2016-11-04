@@ -26,11 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
-import kariminf.faris.linguistic.Adjective;
-import kariminf.faris.linguistic.Verb;
-import kariminf.faris.philosophical.Action;
-import kariminf.faris.philosophical.Quality;
-import kariminf.faris.philosophical.Substance;
+import kariminf.faris.linguistic.*;
+import kariminf.faris.philosophical.*;
+import kariminf.faris.tools.Search;
 import kariminf.sentrep.ston.Parser;
 
 
@@ -59,9 +57,9 @@ public class FarisParse extends Parser {
 	private HashSet<Action> actions;
 	private HashMap<String, Mind> minds;
 	
-	private Substance currentPlayer;
+	private QuantSubstance currentPlayer;
 	//private String currentPlayerID;
-	private HashMap<String, Substance> _players = new HashMap<>();
+	private HashMap<String, QuantSubstance> _players = new HashMap<>();
 	
 	private Action currentAction;
 
@@ -107,17 +105,17 @@ public class FarisParse extends Parser {
 	
 	/**
 	 * Adds a new mind of the substance if it doesn't exist
-	 * @param s the substance which we want
+	 * @param agent the substance which we want
 	 * @return the mind of the substance
 	 */
-	private Mind addNewMind(Substance s){
+	private Mind addNewMind(QuantSubstance agent){
 		for (Mind m: _minds.values()){
-			if(m.hasOwner(s))
+			if(m.hasOwner(agent))
 				return m;
 		}
 		
-		String n = s.getNounSynSet() + "-" + _minds.size();
-		Mind m = new Mind(n, s);
+		String n = agent.getSubstance().getNounSynSet() + "-" + _minds.size();
+		Mind m = new Mind(n, agent);
 		minds.put(n, m);
 		
 		return m;
@@ -146,8 +144,31 @@ public class FarisParse extends Parser {
 	@Override
 	protected void addRole(String id, int synSet) {
 		
-		currentPlayer = (_players.containsKey(id))? _players.get(id): new Substance(synSet);
+		if (_players.containsKey(id)){
+			currentPlayer = _players.get(id);
+			return;
+		}
+		
+		Substance sub = Search.getSubstance(substances, new Substance(synSet));
+		
+		currentPlayer = new QuantSubstance(sub, new Quantity(1.0));
 		_players.put(id, currentPlayer);
+		
+	}
+	
+	@Override
+	protected void endRole(String id) {
+		
+		//Here the role may exists in substances
+		Substance sub = Search.getSubstance(substances, currentPlayer.getSubstance());
+		
+		if (sub != currentPlayer.getSubstance()){
+			//TODO here we have to update the information
+			currentPlayer = new QuantSubstance(sub, currentPlayer.getQuantity());
+			
+			_players.put(id, currentPlayer);
+		}
+		
 		
 	}
 
@@ -156,7 +177,7 @@ public class FarisParse extends Parser {
 		Adjective adj = new Adjective(synSet);
 		Quality quality = new Quality(adj);
 		quality.setAdverbsInt(advSynSets);
-		currentPlayer.addQuality(quality);
+		currentPlayer.getSubstance().addQuality(quality);
 		
 	}
 
@@ -172,15 +193,15 @@ public class FarisParse extends Parser {
 	@Override
 	protected void parseSuccess() {
 		
-		for(Substance sub : _players.values()){
-			substances.add(sub);
+		for(QuantSubstance sub : _players.values()){	
+			substances.add(sub.getSubstance());
 		}
 		
 		for(Action action: _actions.values()){
 			actions.add(action);
 		}
 		
-		Mind defaultMind = minds.get("Default");
+		Mind defaultMind = minds.get("$");
 		for(Action action: getActions(mainActionsIDs)){
 			defaultMind.addAction(MentalState.FACT, action);
 		}
@@ -212,11 +233,11 @@ public class FarisParse extends Parser {
 		
 	}
 	
-	private List<Substance> getSubstances(List<String> IDs){
-		List<Substance> result = new ArrayList<>();
+	private List<QuantSubstance> getSubstances(List<String> IDs){
+		List<QuantSubstance> result = new ArrayList<>();
 		for (String roleID: IDs)
 			if (_players.containsKey(roleID)){
-				Substance role = _players.get(roleID);
+				QuantSubstance role = _players.get(roleID);
 				result.add(role);
 			}
 		return result;
@@ -243,7 +264,25 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addActionAdverb(int advSynSet, List<Integer> advSynSets) {
-		// TODO Auto-generated method stub
+		
+		Adverb adv = new Adverb(advSynSet);
+		
+		switch (Concepts.getAdverbType(advSynSet)) {
+		
+		case PLACE:
+			Place place = new Place(adv);
+			currentAction.addLocation(place);
+			break;
+			
+		case TIME:
+			Time time = new Time(adv);
+			currentAction.addTime(time);
+			break;
+
+		default:
+			currentAction.addAdverb(adv, null);
+			break;
+		}
 		
 	}
 
@@ -270,8 +309,8 @@ public class FarisParse extends Parser {
 		}
 		
 		//TODO he and she **or** me thinks that ...
-		for (List<Substance> agents: currentAction.getSubjects()){
-			for (Substance agent: agents){
+		for (List<QuantSubstance> agents: currentAction.getSubjects()){
+			for (QuantSubstance agent: agents){
 				Mind m = addNewMind(agent);
 				
 				//TODO he thinks that ... and that ... or that ...
@@ -289,7 +328,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addRoleSpecif(String name, String def, String quantity) {
-		currentPlayer.setNounSpecif(name, def);
+		currentPlayer.getSubstance().setNounSpecif(name, def);
 		
 		quantity = quantity.toLowerCase();
 		
@@ -298,16 +337,9 @@ public class FarisParse extends Parser {
 		if (quantity.startsWith("o")){
 			quantity = quantity.substring(1);
 			
-			
-			if (! quantity.endsWith("pl")){
-				//np.addPreModifier(getOrdinal(quantity));
-				return;
-			}
-			quantity = quantity.substring(0, quantity.length()-2);
 			//quantity = getOrdinal(quantity);
 		}
 		
-		//np.setPlural(true);
 		
 		if(quantity.equals("pl")) return;
 		
@@ -385,7 +417,7 @@ public class FarisParse extends Parser {
 			return;
 		}
 			
-		//TODO where we have a lot of players
+		//TODO when we have a lot of players
 		
 		
 	}

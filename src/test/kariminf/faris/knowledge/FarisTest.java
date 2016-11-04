@@ -47,8 +47,8 @@ import kariminf.faris.knowledge.Faris;
  */
 public class FarisTest {
 	
-	static String testFile = "../SentRep/ston/exp/pn_quant.ston";
-	//static String testFile = "../SentRep/ston/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
+	//static String testFile = "../SentRep/ston/exp/pn_quant.ston";
+	static String testFile = "../SentRep/ston/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
 	//static String testFile = "./res/think1.ston";
 
 	public static String readFile (String f) {
@@ -79,9 +79,20 @@ public class FarisTest {
 		String specif = readFile(testFile);
 		Faris faris = new Faris();
 		faris.addStonDescription(specif);
+		
+		print(faris);
+		
+		search(faris);
+	}
+	
+	public static void search(Faris faris){
+		System.out.print(faris.getSynSetText(575741));
+	}
+	
+	
+	public static void print(Faris faris){
 		System.out.println(faris.info());
 		System.out.print(faris);
-		//System.out.print(faris.getSynSetText("Mother", 10332385));
 	}
 
 }

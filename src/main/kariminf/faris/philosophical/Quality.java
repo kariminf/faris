@@ -21,10 +21,7 @@
 package kariminf.faris.philosophical;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.linguistic.Adverb;
 
@@ -87,6 +84,17 @@ public class Quality {
 			Adverb adverb = new Adverb(synSet);
 			adverbs.add(adverb);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "";
+		result += adjective;
+		result += (adverbs.size() > 0)? adjective: "";
+		return result;
 	}
 	
 	

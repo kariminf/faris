@@ -48,7 +48,7 @@ public class Noun extends POS {
 		FEMININE
 	}
 	
-	private Gender gender;
+	private Gender gender = Gender.COMMON;
 	
 	//gender, number, person, case
 	
