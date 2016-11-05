@@ -21,6 +21,7 @@
 package kariminf.faris.ston;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +30,12 @@ import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
 import kariminf.faris.tools.Search;
+import kariminf.sentrep.UnivMap;
 import kariminf.sentrep.ston.Parser;
+import kariminf.sentrep.ston.Ston2UnivMap;
+import kariminf.sentrep.ston.StonLex;
+import kariminf.sentrep.univ.types.Relation.Adpositional;
+import kariminf.sentrep.univ.types.Relation.Adverbial;
 
 
 /**
@@ -62,6 +68,8 @@ public class FarisParse extends Parser {
 	private HashMap<String, QuantSubstance> _players = new HashMap<>();
 	
 	private Action currentAction;
+	
+	private Place currentPlace;
 
 	//private String currentPlayerID;
 	
@@ -74,7 +82,9 @@ public class FarisParse extends Parser {
 	
 	private ArrayList<List<String>> disj = new ArrayList<>();
 	
-	private List<String> mainActionsIDs = new ArrayList<>();
+	private HashSet<String> mainActionsIDs = new HashSet<>();
+	
+	private UnivMap uMap = new Ston2UnivMap();
 	
 	
 	public FarisParse(HashSet<Substance> substances, HashSet<Action> actions, HashMap<String, Mind> minds){
@@ -124,7 +134,7 @@ public class FarisParse extends Parser {
 	
 	@Override
 	protected void endAction(String id, int synSet) {
-		//
+		currentPlace = null;
 	}
 
 	@Override
@@ -168,6 +178,8 @@ public class FarisParse extends Parser {
 			_players.put(id, currentPlayer);
 		}
 		
+		
+		
 	}
 
 	@Override
@@ -195,19 +207,25 @@ public class FarisParse extends Parser {
 			substances.add(sub.getSubstance());
 		}
 		
-		for(Action action: _actions.values()){
+		
+		HashSet<Action> _mainactions = new HashSet<>();
+		for(String id: _actions.keySet()){
 			//If the action exists, we update the information 
-			if (actions.contains(action)){
-				Action act = Search.getElement(actions, action);
-				act.update(action);
-			} else {
-				actions.add(action);
+			Action action = _actions.get(id);
+			Action act = Search.getElement(actions, action);
+			act.update(action);
+			actions.add(act);
+			
+			if (mainActionsIDs.contains(id)){
+				_mainactions.add(act);
+				System.out.println(id);
 			}
+				
 			
 		}
 		
 		Mind defaultMind = minds.get("$");
-		for(Action action: getActions(mainActionsIDs)){
+		for(Action action: _mainactions){
 			defaultMind.addAction(MentalState.FACT, action);
 		}
 		
@@ -227,6 +245,15 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addConjunctions(List<String> IDs) {
+		
+		//TODO disjunctions and conjunctions
+		if (currentPlace != null){
+			for(String id: IDs){
+				if (_players.containsKey(id))
+					currentPlace.addLocation(_players.get(id).getSubstance());
+			}
+			return;
+		}
 		
 		disj.add(IDs);
 	}
@@ -248,7 +275,7 @@ public class FarisParse extends Parser {
 		return result;
 	}
 	
-	private List<Action> getActions(List<String> IDs){
+	private List<Action> getActions(Collection<String> IDs){
 		List<Action> result = new ArrayList<>();
 		for (String actID: IDs)
 			if (_actions.containsKey(actID)){
@@ -366,7 +393,19 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addRelative(String type) {
-		// TODO Auto-generated method stub
+		type = type.toUpperCase();
+		
+		System.out.println(type);
+		//If the predicate (destination) is a role
+		//We reach a role only by adpositionals
+		if (StonLex.isPredicateRole(type)){
+			
+			Adpositional adp = uMap.mapAdposition(type);
+			currentPlace = new Place(adp);
+			currentAction.addLocation(currentPlace);
+			return;
+		}
+		
 		
 	}
 

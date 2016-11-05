@@ -201,7 +201,8 @@ public class Action {
 		String result = "";
 		result += doers ;
 		result += " " + verb ;
-		//TODO locations and times in tostring
+		result += (locations.size()>0)? "@L:" + locations : "" ;
+		result += (times.size()>0)? "@T:" + times : "" ;
 		result += " " + receivers ;
 		
 		return result;

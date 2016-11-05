@@ -1,0 +1,70 @@
+< Karim parks his car. He parks it near the tree.>
+@r:[
+    r:{
+        id: karim;
+        syn: 7846;
+        nam: Karim;
+    r:}
+    
+    r:{
+        id: hiscar;
+        syn: 2958343;<car>
+        typ: PTSMFN;<his>
+        ref: [karim];
+        qnt: O1<first>
+    r:}
+    
+    r:{
+        id: he;
+        typ: STSMFN;<he>
+        ref: [karim];
+    r:}
+    
+    r:{
+        id: it;
+        typ: STSNFN;<it>
+        ref: [hiscar];
+    r:}
+    
+    r:{
+        id: tree;
+        syn: 13104059;
+        def: Y;
+    r:}
+    
+r:]
+
+@act: [
+    act:{
+        id: parks;
+        tns: PR;
+        syn: 1493380;
+        agt: [karim];
+        thm: [hiscar]
+    act:}
+    act:{
+        id: parks2;
+        tns: PR;
+        syn: 1493380;
+        agt: [he];
+        thm: [it];
+        @rel:[
+            rel:{
+                typ: BY;
+                ref: [tree];
+            rel:}
+        rel:]
+    act:}
+act:]
+
+@st:[
+    st:{
+        typ: AFF;
+        act:[parks]
+    st:}
+    st:{
+        typ: AFF;
+        act:[parks2]
+    st:}
+st:] 
+ 

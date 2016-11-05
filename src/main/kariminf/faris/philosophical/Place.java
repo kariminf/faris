@@ -23,6 +23,7 @@ package kariminf.faris.philosophical;
 import java.util.ArrayList;
 
 import kariminf.faris.linguistic.Adverb;
+import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
  * Where or place (ποῦ, pou, where). Position in relation to the surrounding environment. 
@@ -47,14 +48,20 @@ import kariminf.faris.linguistic.Adverb;
 public class Place {
 	
 	private Adverb adv;
+	private Adpositional relation;
 	private ArrayList<Substance> places = new ArrayList<>();
 
 	public Place(Adverb adv) {
 		this.adv = adv;
 	}
 	
+	public Place(Adpositional prep) {
+		this.relation = prep;
+	}
+	
 	public void addLocation(Substance loc){
-		places.add(loc);
+		if (relation != null)
+			places.add(loc);
 	}
 
 	/* (non-Javadoc)
@@ -64,8 +71,13 @@ public class Place {
 	public String toString() {
 		
 		String result = "P:";
-		result += adv;
-		result += (places.size() > 0)? places: "";
+		if (adv != null){
+			result += adv;
+		} else {
+			result += relation;
+			result += (places.size() > 0)? places: "";
+		}
+		
 		return result;
 	}
 	

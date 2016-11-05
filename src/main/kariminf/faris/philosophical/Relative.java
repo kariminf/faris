@@ -44,7 +44,7 @@ package kariminf.faris.philosophical;
 public class Relative {
 
 	public Relative() {
-		// TODO Auto-generated constructor stub
+		// TODO something of something (possessive) , comparison
 	}
 
 }
