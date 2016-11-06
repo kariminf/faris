@@ -34,6 +34,8 @@ import kariminf.sentrep.UnivMap;
 import kariminf.sentrep.ston.Parser;
 import kariminf.sentrep.ston.Ston2UnivMap;
 import kariminf.sentrep.ston.StonLex;
+import kariminf.sentrep.univ.types.Pronoun;
+import kariminf.sentrep.univ.types.Pronoun.Head;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 import kariminf.sentrep.univ.types.Relation.Adverbial;
 
@@ -169,6 +171,24 @@ public class FarisParse extends Parser {
 	@Override
 	protected void endRole(String id) {
 		
+		if (currentPronoun != null){
+			if(disj.size() > 0){
+				
+				if (currentPronoun.getHead() == Head.POSSESSIVE){
+					//TODO add relative here
+				} else {
+					//TODO for more than one player
+					currentPlayer = getSubstances(disj.get(0)).get(0);
+				}
+				
+				System.out.println(currentPlayer);
+				_players.put(proleID, currentPlayer);
+				return;
+			}
+			currentPronoun = null;
+			return;
+		}
+		
 		//Here the role may exists in substances
 		Substance sub = Search.getElement(substances, currentPlayer.getSubstance());
 		
@@ -177,7 +197,6 @@ public class FarisParse extends Parser {
 			currentPlayer = QuantSubstance.withNewSubstance(currentPlayer, sub);
 			_players.put(id, currentPlayer);
 		}
-		
 		
 		
 	}
@@ -218,7 +237,6 @@ public class FarisParse extends Parser {
 			
 			if (mainActionsIDs.contains(id)){
 				_mainactions.add(act);
-				System.out.println(id);
 			}
 				
 			
@@ -265,6 +283,9 @@ public class FarisParse extends Parser {
 		
 	}
 	
+	/*
+	 * 
+	 */
 	private List<QuantSubstance> getSubstances(List<String> IDs){
 		List<QuantSubstance> result = new ArrayList<>();
 		for (String roleID: IDs)
@@ -395,7 +416,7 @@ public class FarisParse extends Parser {
 	protected void addRelative(String type) {
 		type = type.toUpperCase();
 		
-		System.out.println(type);
+		//TODO relatives are different; implement 
 		//If the predicate (destination) is a role
 		//We reach a role only by adpositionals
 		if (StonLex.isPredicateRole(type)){
@@ -441,10 +462,14 @@ public class FarisParse extends Parser {
 
 
 	String proleID = "";
+	Pronoun currentPronoun = null;
 	
 	@Override
 	protected void addPRole(String id, String pronoun) {
 		proleID = id;
+		
+		currentPronoun = uMap.mapPronoun(pronoun);
+		
 		
 	}
 
@@ -455,12 +480,13 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endPRelatives() {
+		/*
 		if(disj.size() == 1){
 			currentPlayer = getSubstances(disj.get(0)).get(0);
 			_players.put(proleID, currentPlayer);
 			return;
 		}
-			
+		*/
 		//TODO when we have a lot of players
 		
 		

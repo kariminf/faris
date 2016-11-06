@@ -83,7 +83,7 @@ public class FarisTest {
 		
 		print(faris);
 		
-		search(faris);
+		//search(faris);
 	}
 	
 	public static void search(Faris faris){
