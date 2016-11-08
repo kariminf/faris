@@ -23,6 +23,8 @@ package kariminf.faris.philosophical;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import kariminf.faris.linguistic.Verb;
+
 /**
  * Being-in-a-position, posture, attitude (κεῖσθαι, keisthai, to lie). 
  * The examples Aristotle gives indicate that he meant a condition of rest resulting 
@@ -54,14 +56,14 @@ public class Attitude {
 	
 	private HashMap<QuantSubstance, HashSet<Action>> owners = new HashMap<>();
 	
-	private Action posture;
+	private Verb posture;
 	
 	/**
 	 * 
-	 * @param ingAction the -ing action; or the action which describes a substance while another action happens
+	 * @param ingVerb the -ing verb; or the action which describes a substance while another action happens
 	 */
-	public Attitude(Action ingAction) {
-		this.posture = ingAction;
+	public Attitude(Verb ingVerb) {
+		this.posture = ingVerb;
 	}
 	
 	public void addAttitudeOwner(QuantSubstance player, Action inAction){
@@ -82,7 +84,7 @@ public class Attitude {
 	@Override
 	public String toString() {
 		String result = "";
-		result += posture.getVerb().getSynSet();
+		result += posture.getSynSet();
 		result += "ING";
 		return result;
 	}

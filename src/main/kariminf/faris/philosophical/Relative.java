@@ -42,7 +42,13 @@ package kariminf.faris.philosophical;
  *         limitations under the License.
  */
 public class Relative {
-
+	
+	
+	//The relative is:
+	//  Possession: "son of someone"
+	//	Comparison: taller than
+	//Issue #9
+		
 	public Relative() {
 		// TODO something of something (possessive) , comparison
 	}
