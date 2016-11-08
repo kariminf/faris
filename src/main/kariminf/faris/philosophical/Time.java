@@ -20,9 +20,11 @@
 
 package kariminf.faris.philosophical;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import kariminf.faris.linguistic.Adverb;
+import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
  * When or time (πότε, pote, when). 
@@ -47,11 +49,41 @@ import kariminf.faris.linguistic.Adverb;
 public class Time {
 
 	//TODO complete the time
+	
 	Date date ;
 	private Adverb adv;
+	
+	private Adpositional relation;
+	private ArrayList<Substance> times = new ArrayList<>();
 	
 	public Time(Adverb adv) {
 		this.adv = adv;
 	}
+	
+	public Time(Adpositional prep) {
+		this.relation = prep;
+	}
+	
+	public void addTimeSubstance(Substance time){
+		if (relation != null)
+			times.add(time);
+	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		
+		String result = "T:";
+		
+		if (adv != null){
+			result += adv;
+		} else {
+			result += relation;
+			result += (times.size() > 0)? times: "";
+		}
+		
+		return result;
+	}
 }
