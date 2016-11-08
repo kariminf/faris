@@ -416,7 +416,7 @@ public class FarisParse extends Parser {
 	protected void addRelative(String type) {
 		type = type.toUpperCase();
 		
-		//TODO relatives are different; implement 
+		//TODO relatives are different: adpositional (action, role), relative; implement 
 		//If the predicate (destination) is a role
 		//We reach a role only by adpositionals
 		if (StonLex.isPredicateRole(type)){
