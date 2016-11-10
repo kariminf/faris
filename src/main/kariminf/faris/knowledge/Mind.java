@@ -20,13 +20,14 @@
 
 package kariminf.faris.knowledge;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.QuantSubstance;
-import kariminf.faris.philosophical.Substance;
 import kariminf.faris.ston.FarisGenerate;
+import kariminf.faris.tools.Search;
 
 
 /**
@@ -55,13 +56,18 @@ public class Mind {
 		HOPE,
 		FEAR,
 		FACT
-	}
+	} 
 
 	private String name;
 	private QuantSubstance owner;
 
+	private HashMap<MentalState, Set<Thought>> thoughts = new HashMap<>();
+	private HashMap<MentalState, Set<Opinion>> opinions = new HashMap<>();
 	//even conditional have a truth level: "I think if ..., then ... ."
-	private HashMap<MentalState, List<Idea>> truthTable = new HashMap<>();
+	private HashMap<MentalState, Set<Conditional>> conditions = new HashMap<>();
+	
+	private HashSet<MentalState> mentalStates = new HashSet<>();
+	
 
 	public Mind(String name, QuantSubstance owner) {
 		this.name = name;
@@ -75,14 +81,19 @@ public class Mind {
 	public boolean hasOwner(QuantSubstance agent){
 		return owner.equals(agent);
 	}
+	
+	public Set<Thought> getThoughts(MentalState ms){
 
-	public List<Idea> getIdeas(MentalState ms){
-		List<Idea> ideas;
+		return getIdeas(ms, thoughts);
+	}
+
+	private <E> Set<E> getIdeas(MentalState ms, HashMap<MentalState, Set<E>> truthTable){
+		Set<E> ideas;
 		if (truthTable.containsKey(ms)){
 			ideas = truthTable.get(ms);
 		}
 		else{
-			ideas = new ArrayList<Idea>();
+			ideas = new HashSet<E>();
 			truthTable.put(ms, ideas);
 		}
 
@@ -90,29 +101,41 @@ public class Mind {
 	}
 
 	public void addAction(MentalState ms, Action action){
-		//TODO verify if the action exists already, and if other components have to be added
 
-		List<Idea> ideas = getIdeas(ms);
-
-		Thought thought = new Thought(action);
+		Set<Thought> ideas = getIdeas(ms, thoughts);
+		
+		Thought newIdea = new Thought(action);
+		
+		Thought thought = Search.getElement(ideas, newIdea);
+		thought.update(newIdea);
 
 		ideas.add(thought);
+		mentalStates.add(ms);
 	}
 
-	public void addOpinion(MentalState ms, Mind othersThoughts){
-		//TODO verify if the action exists already, and if other components have to be added
-		//opinions.put(truth, othersThoughts);
+	public Mind addOpinion(MentalState ms, QuantSubstance other){
+		
+		Set<Opinion> ideas = getIdeas(ms, opinions);
+		
+		Opinion newIdea = new Opinion(name, other);
+		
+		Opinion opinion = Search.getElement(ideas, newIdea);
+		
+		mentalStates.add(ms);
+		
+		return opinion.getMind();
 	}
 
 	public void addCondition(MentalState ms, Conditional condition){
-		List<Idea> ideas = getIdeas(ms);
+		Set<Conditional> ideas = getIdeas(ms, conditions);
 
 		ideas.add(condition);
+		mentalStates.add(ms);
 	}
 
 
 	public String getSynSetText(int synSet){
-		if (! truthTable.containsKey(MentalState.FACT))
+		if (! thoughts.containsKey(MentalState.FACT))
 			return "";
 		
 		return FarisGenerate.getSynsetIdeas(this, synSet);
@@ -131,12 +154,27 @@ public class Mind {
 		result += "Name: " + name + "\n";
 		result += "Owner = " + owner + "\n";
 		
-		for (MentalState ms: truthTable.keySet()){
+		for (MentalState ms: MentalState.values()){
+			
+			if (! mentalStates.contains(ms)) continue;
+			
 			result += ms + "\n";
 			result += "--------------\n";
-			for (Idea i : truthTable.get(ms)){
-				result += i;
-			}
+			
+			if (thoughts.containsKey(ms))
+				for (Idea i : thoughts.get(ms)){
+					result += i;
+				}
+
+			if (conditions.containsKey(ms))
+				for (Idea i : conditions.get(ms)){
+					result += i;
+				}
+
+			if (opinions.containsKey(ms))
+				for (Idea i : opinions.get(ms)){
+					result += i;
+				}
 		}
 		return result;
 	}

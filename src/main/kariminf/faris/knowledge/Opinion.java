@@ -1,11 +1,18 @@
 package kariminf.faris.knowledge;
 
+import kariminf.faris.philosophical.QuantSubstance;
+
 public class Opinion extends Idea {
 
-	Mind otherMind;
+	private Mind otherMind;
 	
-	public Opinion(Mind otherMind) {
-		this.otherMind = otherMind;
+	public Opinion(String superMindName, QuantSubstance otherMindOwner) {
+		String name = superMindName + "." + otherMindOwner.getSubstance().getNounSynSet();
+		this.otherMind = new Mind(name, otherMindOwner);
+	}
+	
+	public Mind getMind(){
+		return otherMind;
 	}
 
 	/* (non-Javadoc)

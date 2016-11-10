@@ -37,7 +37,6 @@ import kariminf.sentrep.ston.StonLex;
 import kariminf.sentrep.univ.types.Pronoun;
 import kariminf.sentrep.univ.types.Pronoun.Head;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
-import kariminf.sentrep.univ.types.Relation.Adverbial;
 
 
 /**
@@ -181,7 +180,7 @@ public class FarisParse extends Parser {
 					currentPlayer = getSubstances(disj.get(0)).get(0);
 				}
 				
-				System.out.println(currentPlayer);
+				//System.out.println(currentPlayer);
 				_players.put(proleID, currentPlayer);
 				return;
 			}

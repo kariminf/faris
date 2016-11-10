@@ -1,5 +1,6 @@
 package kariminf.faris.tools;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 import kariminf.faris.philosophical.Substance;
@@ -21,14 +22,14 @@ public class Search {
 	}*/
 	
 	/**
-	 * Search for an element in a HashSet using another element as model<br>
+	 * Search for an element in a collection using another element as model<br>
 	 * If found: it returns the element equals to the model<br>
 	 * If not: it returns the model.
 	 * @param set the set in which we search the element
 	 * @param model the model used to compare when we search
 	 * @return the found element or the model itself
 	 */
-	public static <E> E getElement(HashSet<E> set, E model){
+	public static <E> E getElement(Collection<E> set, E model){
 
 		if (! set.contains(model)) return model;
 		

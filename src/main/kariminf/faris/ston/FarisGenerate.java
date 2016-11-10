@@ -3,6 +3,7 @@ package kariminf.faris.ston;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import kariminf.faris.knowledge.Idea;
 import kariminf.faris.knowledge.Mind;
@@ -28,7 +29,7 @@ public class FarisGenerate {
 		//HashMap<Action, String> actions = new HashMap<Action, String>();
 
 		//Searching for substances that contain this synSet
-		List<Idea> ideas = mind.getIdeas(MentalState.FACT);
+		Set<Thought> ideas = mind.getThoughts(MentalState.FACT);
 
 		for (Idea idea : ideas){
 			//Ideas which are thoughts
