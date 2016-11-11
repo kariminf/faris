@@ -48,12 +48,12 @@ import kariminf.faris.ston.FarisParse;
  *         limitations under the License.
  */
 public class Faris {
-
+	
 	private HashSet<Substance> substances = new HashSet<>();
 	
-	private HashSet<Action> actions = new HashSet<Action>();
+	private HashSet<Action> actions = new HashSet<>();
 	
-	private HashMap<String, Mind> minds = new HashMap<String, Mind>();
+	private HashMap<String, Mind> minds = new HashMap<>();
 	
 	
 	public Faris() {
@@ -61,6 +61,11 @@ public class Faris {
 		minds.put("$", new Mind("$", s));
 	}
 	
+	/**
+	 * 
+	 * @param description
+	 * @return
+	 */
 	public boolean addStonDescription(String description){
 		FarisParse parser = new FarisParse(substances, actions, minds);
 		parser.parse(description);
@@ -81,6 +86,11 @@ public class Faris {
 		return mind.getSynSetText(synSet);
 	}
 	
+	/**
+	 * 
+	 * @param synSet
+	 * @return
+	 */
 	public String getSynSetText (int synSet){
 		return getSynSetText("$", synSet);
 	}

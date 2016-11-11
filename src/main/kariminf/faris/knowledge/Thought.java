@@ -6,10 +6,18 @@ public class Thought extends Idea {
 
 	private Action action;
 	
+	/**
+	 * 
+	 * @param action
+	 */
 	public Thought(Action action) {
 		this.action = action;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Action getAction(){
 		return action;
 	}

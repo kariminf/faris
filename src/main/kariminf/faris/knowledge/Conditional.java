@@ -43,6 +43,11 @@ public class Conditional extends Idea {
 	private Idea condition;
 	private Idea predicate;
 	
+	/**
+	 * 
+	 * @param condition
+	 * @param predicate
+	 */
 	public Conditional(Idea condition, Idea predicate) {
 		this.condition = condition;
 		this.predicate = predicate;

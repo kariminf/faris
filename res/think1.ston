@@ -30,13 +30,6 @@ r:]
 
 @act: [
     act:{
-        id: think;
-        tns: PR;
-        syn: 631737;
-        agt: [mother];
-        thm: [was]
-    act:}
-    act:{
         id: eat;
         tns: PA;
         syn: 1168468;
@@ -49,6 +42,14 @@ r:]
         agt: [food];
         thm: [+goodfood]
     act:}
+    act:{
+        id: think;
+        tns: PR;
+        syn: 631737;
+        agt: [mother];
+        thm: [was]
+    act:}
+    
 act:]
 
 @st:[

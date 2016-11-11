@@ -57,10 +57,10 @@ public class Mind {
 		FEAR,
 		FACT
 	} 
-
+	
 	private String name;
 	private QuantSubstance owner;
-
+	
 	private HashMap<MentalState, Set<Thought>> thoughts = new HashMap<>();
 	private HashMap<MentalState, Set<Opinion>> opinions = new HashMap<>();
 	//even conditional have a truth level: "I think if ..., then ... ."
@@ -68,25 +68,50 @@ public class Mind {
 	
 	private HashSet<MentalState> mentalStates = new HashSet<>();
 	
-
+	
+	/**
+	 * 
+	 * @param name
+	 * @param owner
+	 */
 	public Mind(String name, QuantSubstance owner) {
 		this.name = name;
 		this.owner = owner;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getName(){
 		return name;
 	}
 	
+	/**
+	 * 
+	 * @param agent
+	 * @return
+	 */
 	public boolean hasOwner(QuantSubstance agent){
 		return owner.equals(agent);
 	}
 	
+	/**
+	 * 
+	 * @param ms
+	 * @return
+	 */
 	public Set<Thought> getThoughts(MentalState ms){
 
 		return getIdeas(ms, thoughts);
 	}
-
+	
+	/**
+	 * 
+	 * @param ms
+	 * @param truthTable
+	 * @return
+	 */
 	private <E> Set<E> getIdeas(MentalState ms, HashMap<MentalState, Set<E>> truthTable){
 		Set<E> ideas;
 		if (truthTable.containsKey(ms)){
@@ -100,6 +125,11 @@ public class Mind {
 		return ideas;
 	}
 
+	/**
+	 * 
+	 * @param ms
+	 * @param action
+	 */
 	public void addAction(MentalState ms, Action action){
 
 		Set<Thought> ideas = getIdeas(ms, thoughts);
@@ -113,6 +143,12 @@ public class Mind {
 		mentalStates.add(ms);
 	}
 
+	/**
+	 * 
+	 * @param ms
+	 * @param other
+	 * @return
+	 */
 	public Mind addOpinion(MentalState ms, QuantSubstance other){
 		
 		Set<Opinion> ideas = getIdeas(ms, opinions);
@@ -126,6 +162,11 @@ public class Mind {
 		return opinion.getMind();
 	}
 
+	/**
+	 * 
+	 * @param ms
+	 * @param condition
+	 */
 	public void addCondition(MentalState ms, Conditional condition){
 		Set<Conditional> ideas = getIdeas(ms, conditions);
 
@@ -134,6 +175,11 @@ public class Mind {
 	}
 
 
+	/**
+	 * 
+	 * @param synSet
+	 * @return
+	 */
 	public String getSynSetText(int synSet){
 		if (! thoughts.containsKey(MentalState.FACT))
 			return "";
@@ -141,6 +187,10 @@ public class Mind {
 		return FarisGenerate.getSynsetIdeas(this, synSet);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getAllText(){
 		return "";
 	}
