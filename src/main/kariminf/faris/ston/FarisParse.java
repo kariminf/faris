@@ -37,6 +37,8 @@ import kariminf.sentrep.ston.StonLex;
 import kariminf.sentrep.univ.types.Pronoun;
 import kariminf.sentrep.univ.types.Pronoun.Head;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
+import kariminf.sentrep.univ.types.Relation.Adverbial;
+import kariminf.sentrep.univ.types.Relation.Relative;
 
 
 /**
@@ -63,33 +65,32 @@ public class FarisParse extends Parser {
 	private HashSet<Substance> substances;
 	private HashSet<Action> actions;
 	private HashMap<String, Mind> minds;
-	
+
 	private QuantSubstance currentPlayer;
 
 	private HashMap<String, QuantSubstance> _players = new HashMap<>();
-	
+
 	private Action currentAction;
-	
+
 	private Place currentPlace;
 
 	private String currentActionID;
-	
-	
-	MentalState s = MentalState.FACT;
-	
+
+	private MentalState s = MentalState.FACT;
+
 	private HashMap<String, Action> _actions = new HashMap<>();
-	
+
 	private HashMap<String, Mind> _minds = new HashMap<>();
-	
+
 	private ArrayList<List<String>> disj = new ArrayList<>();
-	
+
 	private HashSet<String> mainActionsIDs = new HashSet<>();
-	
+
 	private HashSet<String> mainMindsIDs = new HashSet<>();
-	
+
 	private UnivMap uMap = new Ston2UnivMap();
-	
-	
+
+
 	public FarisParse(HashSet<Substance> substances, HashSet<Action> actions, HashMap<String, Mind> minds){
 		this.substances = substances;
 		this.actions = actions;
@@ -98,51 +99,51 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addAction(String id, int synSet) {
-		
+
 		//MentalState pastState = s;
-		
+
 		s = Concepts.getMentalState(synSet);
-		
+
 		//We will need the action to save the subjects and the objects
 		//even if the sate is not a fact
 		Verb verb = new Verb(synSet);
 		currentAction = Action.getNew(verb);
-		
+
 		if (s == MentalState.FACT){
 			_actions.put(id, currentAction);
 			//pastState = MentalState.FACT;
 		}
-		
+
 		currentActionID = id;
-		
-		
+
+
 	}
-	
+
 	/**
 	 * Adds a new mind of the substance if it doesn't exist
 	 * @param agent the substance which we want
 	 * @return the mind of the substance
 	 */
 	private Mind addNewMind(QuantSubstance agent){
-		
+
 		for (Mind m: _minds.values()){
 			if(m.hasOwner(agent))
 				return m;
 		}
-		
+
 		String n = agent.getSubstance().getNounSynSet() + "-" + _minds.size();
 		Mind m = new Mind(n, agent);
-		
+
 		//Here we put the label of the action as mind
-		
+
 		if (currentActionID != null)
 			n = currentActionID;
 		_minds.put(n, m);
-		
+
 		return m;
-		
+
 	}
-	
+
 	@Override
 	protected void endAction(String id, int synSet) {
 		currentPlace = null;
@@ -157,7 +158,7 @@ public class FarisParse extends Parser {
 		//verb.setAspect(Aspect.valueOf(aspect));
 	}
 
-	
+
 
 	@Override
 	protected void actionFail() {
@@ -165,32 +166,32 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addRole(String id, int synSet) {
-		
+
 		if (_players.containsKey(id)){
 			currentPlayer = _players.get(id);
 			return;
 		}
-		
+
 		Substance sub = Search.getElement(substances, new Substance(synSet));
-		
+
 		currentPlayer = new QuantSubstance(sub, new Quantity(1.0));
 		_players.put(id, currentPlayer);
-		
+
 	}
-	
+
 	@Override
 	protected void endRole(String id) {
-		
+
 		if (currentPronoun != null){
 			if(disj.size() > 0){
-				
+
 				if (currentPronoun.getHead() == Head.POSSESSIVE){
 					//TODO add relative here
 				} else {
 					//TODO for more than one player
 					currentPlayer = getSubstances(disj.get(0)).get(0);
 				}
-				
+
 				//System.out.println(currentPlayer);
 				_players.put(proleID, currentPlayer);
 				return;
@@ -198,17 +199,17 @@ public class FarisParse extends Parser {
 			currentPronoun = null;
 			return;
 		}
-		
+
 		//Here the role may exists in substances
 		Substance sub = Search.getElement(substances, currentPlayer.getSubstance());
-		
+
 		//When the substance if found in the set of substances
 		if (sub != currentPlayer.getSubstance()){
 			currentPlayer = QuantSubstance.withNewSubstance(currentPlayer, sub);
 			_players.put(id, currentPlayer);
 		}
-		
-		
+
+
 	}
 
 	@Override
@@ -217,7 +218,7 @@ public class FarisParse extends Parser {
 		Quality quality = new Quality(adj);
 		quality.setAdverbsInt(advSynSets);
 		currentPlayer.getSubstance().addQuality(quality);
-		
+
 	}
 
 	@Override
@@ -226,17 +227,17 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void roleFail() {
-		
+
 	}
 
 	@Override
 	protected void parseSuccess() {
-		
+
 		for(QuantSubstance sub : _players.values()){	
 			substances.add(sub.getSubstance());
 		}
-		
-		
+
+
 		HashSet<Action> _mainactions = new HashSet<>();
 		for(String id: _actions.keySet()){
 			//If the action exists, we update the information 
@@ -244,38 +245,38 @@ public class FarisParse extends Parser {
 			Action act = Search.getElement(actions, action);
 			act.update(action);
 			actions.add(act);
-			
+
 			if (mainActionsIDs.contains(id)){
 				_mainactions.add(act);
 			}
-				
-			
+
+
 		}
-		
+
 		Mind defaultMind = minds.get("$");
 		for(Action action: _mainactions){
 			defaultMind.addAction(MentalState.FACT, action);
 		}
-		
-		
+
+
 		for(String mindID: mainMindsIDs){
 			Mind mind = _minds.get(mindID);
 			minds.put(mind.getName(), mind);
 		}
-		
-		
+
+
 	}
 
 	@Override
 	protected void endActions(boolean mainClause) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	protected void addConjunctions(List<String> IDs) {
-		
+
 		//TODO disjunctions and conjunctions
 		if (currentPlace != null){
 			for(String id: IDs){
@@ -284,7 +285,7 @@ public class FarisParse extends Parser {
 			}
 			return;
 		}
-		
+
 		disj.add(IDs);
 	}
 
@@ -292,9 +293,9 @@ public class FarisParse extends Parser {
 	@Override
 	protected void beginAgents() {
 		disj = new ArrayList<>();
-		
+
 	}
-	
+
 	/*
 	 * 
 	 */
@@ -307,7 +308,7 @@ public class FarisParse extends Parser {
 			}
 		return result;
 	}
-	
+
 	private List<Action> getActions(Collection<String> IDs){
 		List<Action> result = new ArrayList<>();
 		for (String actID: IDs)
@@ -317,7 +318,7 @@ public class FarisParse extends Parser {
 			}
 		return result;
 	}
-	
+
 	private List<Mind> getMinds(Collection<String> IDs){
 		List<Mind> result = new ArrayList<>();
 		for (String actID: IDs)
@@ -330,25 +331,25 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endAgents() {
-		
+
 		for (List<String> IDs: disj){
 			currentAction.addConjunctSubjects(getSubstances(IDs));
 		}
-		
+
 	}
 
 	@Override
 	protected void addActionAdverb(int advSynSet, List<Integer> advSynSets) {
-		
+
 		Adverb adv = new Adverb(advSynSet);
-		
+
 		switch (Concepts.getAdverbType(advSynSet)) {
-		
+
 		case PLACE:
 			Place place = new Place(adv);
 			currentAction.addLocation(place);
 			break;
-			
+
 		case TIME:
 			Time time = new Time(adv);
 			currentAction.addTime(time);
@@ -358,117 +359,147 @@ public class FarisParse extends Parser {
 			currentAction.addAdverb(adv, null);
 			break;
 		}
-		
+
 	}
 
 	@Override
 	protected void adverbFail() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void beginThemes() {
-		
+
 		disj = new ArrayList<>();
-		
+
 	}
 
 	@Override
 	protected void endThemes() {
-		
+
 		if (s == MentalState.FACT){
 			for (List<String> IDs: disj){
 				currentAction.addConjunctObjects(getSubstances(IDs));
 			}
 			return;
 		}
-		
+
 		//TODO he and she **or** me thinks that ...
 		for (List<QuantSubstance> agents: currentAction.getSubjects()){
 			for (QuantSubstance agent: agents){
 				Mind m = addNewMind(agent);
-				
+
 				//TODO he thinks that ... and that ... or that ...
 				for (List<String> IDs: disj){
 					for(Action act: getActions(IDs)){
 						m.addAction(s, act);
 					}
-					
+
 					for(Mind m2: getMinds(IDs)){
 						m.addOpinion(s, m2);
 						System.out.println(m2.getName());
 					}
 				}
-				
+
 				//The mind is added in the function addNewMind()
 				//_minds.put(m.getName(), m);
 			}
 		}
-		
+
 	}
 
 	@Override
 	protected void addRoleSpecif(String name, String def, String quantity) {
 		currentPlayer.getSubstance().setNounSpecif(name, def);
-		
+
 		quantity = quantity.toLowerCase();
-		
+
 		if(quantity.length() < 1 || quantity.equals("1")) return;
-		
+
 		if (quantity.startsWith("o")){
 			quantity = quantity.substring(1);
-			
+
 			//quantity = getOrdinal(quantity);
 		}
-		
-		
+
+
 		if(quantity.equals("pl")) return;
-		
+
 		//np.addPreModifier(quantity);
-		
+
 	}
 
 	@Override
 	protected void parseFail() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void relativeFail() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void addRelative(String type) {
 		type = type.toUpperCase();
-		
-		//TODO relatives are different: adpositional (action, role), relative; implement 
-		//If the predicate (destination) is a role
-		//We reach a role only by adpositionals
+
+		//The destination is a role
 		if (StonLex.isPredicateRole(type)){
 			
 			Adpositional adp = uMap.mapAdposition(type);
+			
+			//TODO differentiate between Place and Time
 			currentPlace = new Place(adp);
-			currentAction.addLocation(currentPlace);
+			
+			//The main clause is an action
+			//eg. The man is IN the car
+			if (currentActionID != null){
+				currentAction.addLocation(currentPlace);
+				return;
+			}
+			
+			//The main clause is a role
+			//eg. The man IN the car
+			
+
 			return;
 		}
-		
-		
+
+		//The destination is an action
+
+		//The main clause is an action
+		//eg. He is where I can see him
+		if (currentActionID != null){
+			//from action to action (adverbials)
+			Adverbial adv = uMap.mapAdverbial(type);
+			
+			//System.out.println("Adverbial: " + adv);
+			return;
+		}
+
+		//The main clause is a role
+		//eg. The man who is driving
+		Relative rel = uMap.mapRelative(type);
+		//System.out.println("Complementizer: " + rel);
+
+
+
+
 	}
 
 	@Override
 	protected void addComparison(String type, List<Integer> adjSynSets) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void beginSentence(String type) {
 		disj = new ArrayList<>();
-		
+
 	}
 
 	@Override
@@ -478,31 +509,31 @@ public class FarisParse extends Parser {
 			for(String actID: actIDs){
 				if (_actions.containsKey(actID))
 					mainActionsIDs.add(actID);
-				
+
 				if (_minds.containsKey(actID))
 					mainMindsIDs.add(actID);
 			}
 		}
-		
+
 	}
 
 	@Override
 	protected void beginActions(boolean mainClause) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	String proleID = "";
 	Pronoun currentPronoun = null;
-	
+
 	@Override
 	protected void addPRole(String id, String pronoun) {
 		proleID = id;
-		
+
 		currentPronoun = uMap.mapPronoun(pronoun);
-		
-		
+
+
 	}
 
 	@Override
@@ -518,10 +549,10 @@ public class FarisParse extends Parser {
 			_players.put(proleID, currentPlayer);
 			return;
 		}
-		*/
+		 */
 		//TODO when we have a lot of players
-		
-		
+
+
 	}
 
 }
