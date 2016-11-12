@@ -65,14 +65,14 @@ public class FarisParse extends Parser {
 	private HashMap<String, Mind> minds;
 	
 	private QuantSubstance currentPlayer;
-	//private String currentPlayerID;
+
 	private HashMap<String, QuantSubstance> _players = new HashMap<>();
 	
 	private Action currentAction;
 	
 	private Place currentPlace;
 
-	//private String currentPlayerID;
+	private String currentActionID;
 	
 	
 	MentalState s = MentalState.FACT;
@@ -84,6 +84,8 @@ public class FarisParse extends Parser {
 	private ArrayList<List<String>> disj = new ArrayList<>();
 	
 	private HashSet<String> mainActionsIDs = new HashSet<>();
+	
+	private HashSet<String> mainMindsIDs = new HashSet<>();
 	
 	private UnivMap uMap = new Ston2UnivMap();
 	
@@ -111,6 +113,8 @@ public class FarisParse extends Parser {
 			//pastState = MentalState.FACT;
 		}
 		
+		currentActionID = id;
+		
 		
 	}
 	
@@ -120,6 +124,7 @@ public class FarisParse extends Parser {
 	 * @return the mind of the substance
 	 */
 	private Mind addNewMind(QuantSubstance agent){
+		
 		for (Mind m: _minds.values()){
 			if(m.hasOwner(agent))
 				return m;
@@ -127,7 +132,12 @@ public class FarisParse extends Parser {
 		
 		String n = agent.getSubstance().getNounSynSet() + "-" + _minds.size();
 		Mind m = new Mind(n, agent);
-		minds.put(n, m);
+		
+		//Here we put the label of the action as mind
+		
+		if (currentActionID != null)
+			n = currentActionID;
+		_minds.put(n, m);
 		
 		return m;
 		
@@ -136,6 +146,7 @@ public class FarisParse extends Parser {
 	@Override
 	protected void endAction(String id, int synSet) {
 		currentPlace = null;
+		currentActionID = null;
 	}
 
 	@Override
@@ -246,7 +257,9 @@ public class FarisParse extends Parser {
 			defaultMind.addAction(MentalState.FACT, action);
 		}
 		
-		for(Mind mind: _minds.values()){
+		
+		for(String mindID: mainMindsIDs){
+			Mind mind = _minds.get(mindID);
 			minds.put(mind.getName(), mind);
 		}
 		
@@ -304,6 +317,16 @@ public class FarisParse extends Parser {
 			}
 		return result;
 	}
+	
+	private List<Mind> getMinds(Collection<String> IDs){
+		List<Mind> result = new ArrayList<>();
+		for (String actID: IDs)
+			if (_minds.containsKey(actID)){
+				Mind mind = _minds.get(actID);
+				result.add(mind);
+			}
+		return result;
+	}
 
 	@Override
 	protected void endAgents() {
@@ -353,6 +376,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endThemes() {
+		
 		if (s == MentalState.FACT){
 			for (List<String> IDs: disj){
 				currentAction.addConjunctObjects(getSubstances(IDs));
@@ -370,9 +394,15 @@ public class FarisParse extends Parser {
 					for(Action act: getActions(IDs)){
 						m.addAction(s, act);
 					}
+					
+					for(Mind m2: getMinds(IDs)){
+						m.addOpinion(s, m2);
+						System.out.println(m2.getName());
+					}
 				}
 				
-				_minds.put(m.getName(), m);
+				//The mind is added in the function addNewMind()
+				//_minds.put(m.getName(), m);
 			}
 		}
 		
@@ -448,6 +478,9 @@ public class FarisParse extends Parser {
 			for(String actID: actIDs){
 				if (_actions.containsKey(actID))
 					mainActionsIDs.add(actID);
+				
+				if (_minds.containsKey(actID))
+					mainMindsIDs.add(actID);
 			}
 		}
 		

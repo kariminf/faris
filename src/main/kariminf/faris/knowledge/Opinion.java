@@ -16,6 +16,12 @@ public class Opinion extends Idea {
 		this.otherMind = new Mind(name, otherMindOwner);
 	}
 	
+	public Opinion(String superMindName, Mind otherMind) {
+		String name = superMindName + "." + otherMind.getName();
+		otherMind.name = name;
+		this.otherMind = otherMind;
+	}
+	
 	/**
 	 * 
 	 * @return

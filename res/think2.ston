@@ -1,0 +1,80 @@
+< The mother thinks that the food was very good food >
+@r:[
+    r:{
+        id: mother;
+        syn: 10332385;
+        def: Y
+    r:}
+     r:{
+        id: child;
+        syn: 9917593;
+        def: Y;
+        @adj:[
+            adj:{
+                syn: 1919931
+            adj:}
+            adj:{
+                syn: 1391351
+            adj:}
+        adj:]
+    r:}
+    r:{
+        id: food;
+        syn: 21265;
+        def: Y;
+        @rel:[
+            rel:{
+                typ: OBJ;
+                ref: [eat];
+            rel:}
+        rel:]
+    r:}
+    r:{
+        id: +goodfood;
+        syn: 21265;
+        @adj:[
+            adj:{
+                syn: 1123148;
+                adv: [89408]
+            adj:}
+        adj:]
+    r:}
+r:]
+
+@act: [
+    act:{
+        id: eat;
+        tns: PA;
+        syn: 1168468;
+        agt: [mother];
+    act:}
+    act:{
+        id: was;
+        syn: 2604760;
+        tns: PA;
+        agt: [food];
+        thm: [+goodfood]
+    act:}
+    act:{
+        id: believe;
+        tns: PR;
+        syn: 689344;
+        agt: [child];
+        thm: [was]
+    act:}
+    act:{
+        id: think;
+        tns: PR;
+        syn: 631737;
+        agt: [mother];
+        thm: [believe]
+    act:}
+    
+act:]
+
+@st:[
+    st:{
+        typ: AFF;
+        act:[think]
+    st:}
+st:] 

@@ -58,7 +58,7 @@ public class Mind {
 		FACT
 	} 
 	
-	private String name;
+	protected String name;
 	private QuantSubstance owner;
 	
 	private HashMap<MentalState, Set<Thought>> thoughts = new HashMap<>();
@@ -159,6 +159,29 @@ public class Mind {
 		
 		mentalStates.add(ms);
 		
+		ideas.add(opinion);
+		
+		return opinion.getMind();
+	}
+	
+	/**
+	 * 
+	 * @param ms
+	 * @param other
+	 * @return
+	 */
+	public Mind addOpinion(MentalState ms, Mind other){
+		
+		Set<Opinion> ideas = getIdeas(ms, opinions);
+		
+		Opinion newIdea = new Opinion(name, other);
+		
+		Opinion opinion = Search.getElement(ideas, newIdea);
+		
+		mentalStates.add(ms);
+		
+		ideas.add(opinion);
+		
 		return opinion.getMind();
 	}
 
@@ -209,7 +232,6 @@ public class Mind {
 			if (! mentalStates.contains(ms)) continue;
 			
 			result += ms + "\n";
-			result += "--------------\n";
 			
 			if (thoughts.containsKey(ms))
 				for (Idea i : thoughts.get(ms)){

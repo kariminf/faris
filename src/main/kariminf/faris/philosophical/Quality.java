@@ -93,7 +93,7 @@ public class Quality {
 	public String toString() {
 		String result = "";
 		result += adjective;
-		result += (adverbs.size() > 0)? adjective: "";
+		result += (adverbs.size() > 0)? adverbs: "";
 		return result;
 	}
 	
