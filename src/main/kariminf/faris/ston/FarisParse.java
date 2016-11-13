@@ -29,6 +29,7 @@ import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
+import kariminf.faris.ston.Concepts.AdvAdjType;
 import kariminf.faris.tools.Search;
 import kariminf.sentrep.UnivMap;
 import kariminf.sentrep.ston.Parser;
@@ -72,8 +73,6 @@ public class FarisParse extends Parser {
 
 	private Action currentAction;
 
-	private Place currentPlace;
-
 	private String currentActionID;
 
 	private MentalState s = MentalState.FACT;
@@ -83,6 +82,8 @@ public class FarisParse extends Parser {
 	private HashMap<String, Mind> _minds = new HashMap<>();
 
 	private ArrayList<List<String>> disj = new ArrayList<>();
+	
+	private ArrayList<List<String>> RelDisj = null;
 
 	private HashSet<String> mainActionsIDs = new HashSet<>();
 
@@ -146,7 +147,6 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endAction(String id, int synSet) {
-		currentPlace = null;
 		currentActionID = null;
 	}
 
@@ -276,13 +276,9 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addConjunctions(List<String> IDs) {
-
-		//TODO disjunctions and conjunctions
-		if (currentPlace != null){
-			for(String id: IDs){
-				if (_players.containsKey(id))
-					currentPlace.addLocation(_players.get(id).getSubstance());
-			}
+		
+		if (RelDisj != null){
+			RelDisj.add(IDs);
 			return;
 		}
 
@@ -444,50 +440,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addRelative(String type) {
-		type = type.toUpperCase();
-
-		//The destination is a role
-		if (StonLex.isPredicateRole(type)){
-			
-			Adpositional adp = uMap.mapAdposition(type);
-			
-			//TODO differentiate between Place and Time
-			currentPlace = new Place(adp);
-			
-			//The main clause is an action
-			//eg. The man is IN the car
-			if (currentActionID != null){
-				currentAction.addLocation(currentPlace);
-				return;
-			}
-			
-			//The main clause is a role
-			//eg. The man IN the car
-			
-
-			return;
-		}
-
-		//The destination is an action
-
-		//The main clause is an action
-		//eg. He is where I can see him
-		if (currentActionID != null){
-			//from action to action (adverbials)
-			Adverbial adv = uMap.mapAdverbial(type);
-			
-			//System.out.println("Adverbial: " + adv);
-			return;
-		}
-
-		//The main clause is a role
-		//eg. The man who is driving
-		Relative rel = uMap.mapRelative(type);
-		//System.out.println("Complementizer: " + rel);
-
-
-
-
+		RelDisj = new ArrayList<>();
 	}
 
 	@Override
@@ -553,6 +506,90 @@ public class FarisParse extends Parser {
 		//TODO when we have a lot of players
 
 
+	}
+
+	@Override
+	protected void endRelative(String type) {
+		
+		if (RelDisj.isEmpty() ||
+				RelDisj.get(0).isEmpty() ||
+				!_players.containsKey(RelDisj.get(0).get(0))) {
+			RelDisj = null;
+			return;
+		}
+		
+		type = type.toUpperCase();
+
+		//The destination is a role
+		if (StonLex.isPredicateRole(type)){
+			
+			Adpositional adp = uMap.mapAdposition(type);
+			
+			int firstSynset = _players.get(disj.get(0).get(0)).getSubstance().getNounSynSet();
+			
+			AdvAdjType adjType = Concepts.getAdjType(adp, firstSynset);
+			
+			//TODO differentiate between Place and Time
+			
+			
+			//The main clause is an action
+			//eg. The man is IN the car
+			if (currentActionID != null){
+				
+				switch (adjType) {
+				case PLACE:
+					Place p = new Place(adp);
+					for (List<String> conj: disj)
+						for (String subID: conj)
+							if (_players.containsKey(subID)){
+								p.addLocation(_players.get(subID));
+							}
+					currentAction.addLocation(p);
+					break;
+				case TIME:
+					Time t = new Time(adp);
+					for (List<String> conj: disj)
+						for (String subID: conj)
+							if (_players.containsKey(subID)){
+								t.addTimeSubstance(_players.get(subID));
+							}
+					currentAction.addTime(t);
+					break;
+				default:
+					break;
+				}
+				
+				RelDisj = null;
+				return;
+			}
+			
+			//The main clause is a role
+			//eg. The man IN the car
+			
+			RelDisj = null;
+			return;
+		}
+
+		//The destination is an action
+
+		//The main clause is an action
+		//eg. He is where I can see him
+		if (currentActionID != null){
+			//from action to action (adverbials)
+			Adverbial adv = uMap.mapAdverbial(type);
+			
+			//System.out.println("Adverbial: " + adv);
+			RelDisj = null;
+			return;
+		}
+
+		//The main clause is a role
+		//eg. The man who is driving
+		Relative rel = uMap.mapRelative(type);
+		//System.out.println("Complementizer: " + rel);
+		
+		RelDisj = null;
+		
 	}
 
 }

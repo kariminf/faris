@@ -20,6 +20,9 @@
 
 package kariminf.faris.philosophical;
 
+import kariminf.faris.linguistic.Adjective;
+import kariminf.sentrep.univ.types.Relation.Adpositional;
+
 /**
  * Relative or relation (πρός τι, pros ti, toward something). 
  * This is the way one object may be related to another. Examples: double, half, 
@@ -48,6 +51,14 @@ public class Relative {
 	//  Possession: "son of someone"
 	//	Comparison: taller than
 	//Issue #9
+	
+	private QuantSubstance origin; //son
+	
+	private Adpositional relation; //of
+	
+	private Adjective adj; //Taller, less tall
+	
+	private QuantSubstance dest; //someone
 		
 	public Relative() {
 		// TODO something of something (possessive) , comparison

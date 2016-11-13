@@ -49,7 +49,7 @@ public class Place {
 	
 	private Adverb adv;
 	private Adpositional relation;
-	private ArrayList<Substance> places = new ArrayList<>();
+	private ArrayList<QuantSubstance> places = new ArrayList<>();
 
 	public Place(Adverb adv) {
 		this.adv = adv;
@@ -59,7 +59,7 @@ public class Place {
 		this.relation = prep;
 	}
 	
-	public void addLocation(Substance loc){
+	public void addLocation(QuantSubstance loc){
 		if (relation != null)
 			places.add(loc);
 	}

@@ -54,7 +54,7 @@ public class Time {
 	private Adverb adv;
 	
 	private Adpositional relation;
-	private ArrayList<Substance> times = new ArrayList<>();
+	private ArrayList<QuantSubstance> times = new ArrayList<>();
 	
 	public Time(Adverb adv) {
 		this.adv = adv;
@@ -64,9 +64,9 @@ public class Time {
 		this.relation = prep;
 	}
 	
-	public void addTimeSubstance(Substance time){
+	public void addTimeSubstance(QuantSubstance quantSubstance){
 		if (relation != null)
-			times.add(time);
+			times.add(quantSubstance);
 	}
 
 	/* (non-Javadoc)
