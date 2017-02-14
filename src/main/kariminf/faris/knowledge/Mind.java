@@ -26,7 +26,7 @@ import java.util.Set;
 
 import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.QuantSubstance;
-import kariminf.faris.ston.FarisGenerate;
+import kariminf.faris.process.ston.FarisGenerate;
 import kariminf.faris.tools.Search;
 
 
@@ -215,7 +215,7 @@ public class Mind {
 	 * @return
 	 */
 	public String getAllText(){
-		return "";
+		return FarisGenerate.getAllIdeas(this);
 	}
 
 	/* (non-Javadoc)

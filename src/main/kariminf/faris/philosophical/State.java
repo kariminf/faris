@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class State {
 
-	private List<Action> mainActions = new ArrayList<Action>();
+	private List<Action> mainActions = new ArrayList<>();
 	
 	private Action stateAction;
 	

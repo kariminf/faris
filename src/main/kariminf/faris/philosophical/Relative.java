@@ -20,6 +20,8 @@
 
 package kariminf.faris.philosophical;
 
+import java.util.HashSet;
+
 import kariminf.faris.linguistic.Adjective;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
@@ -51,17 +53,80 @@ public class Relative {
 	//  Possession: "son of someone"
 	//	Comparison: taller than
 	//Issue #9
-	
-	private QuantSubstance origin; //son
-	
-	private Adpositional relation; //of
-	
-	private Adjective adj; //Taller, less tall
-	
-	private QuantSubstance dest; //someone
-		
-	public Relative() {
-		// TODO something of something (possessive) , comparison
+	public static enum RelativeType {
+		OTHER, // other relation defined by the preposition
+		PLACE, // a place relation defined by the preposition
+		TIME, // a time relation defined by the preposition
+		MORE,
+		LESS,
+		MOST,
+		LEAST,
+		EQUAL
 	}
+	
+	private static abstract class TheRelation {}
+	
+	private static class AdpRelation extends TheRelation {
+		private Adpositional adpositional; //of
+		private AdpRelation(Adpositional adp){
+			adpositional = adp;
+		}
+	}
+	
+	private static class AdjRelation extends TheRelation {
+		private Adjective adjective; //Taller, less tall
+		private AdjRelation (Adjective adj){
+			adjective = adj;
+		}
+		
+	}
+	
+	private HashSet<QuantSubstance> owners = new HashSet<>();
+	private RelativeType relationType;
+	private TheRelation relation;
+	private HashSet<QuantSubstance> relatives = new HashSet<>();
+		
+	protected Relative() {
+	}
+	
+	public static Relative getNew(RelativeType type, Adpositional relation){
+		
+		if (type.ordinal() > 2) return null;
+		
+		Relative result = new Relative();
+		result.relationType = type;
+		
+		AdpRelation adpr = new AdpRelation(relation);
+		
+		result.relation = adpr;
+		
+		
+		return result;
+	}
+	
+	public static Relative getNew(RelativeType type, Adjective relation){
+		
+		if (type.ordinal() < 3) return null;
+		
+		Relative result = new Relative();
+		result.relationType = type;
+		
+		AdjRelation adpr = new AdjRelation(relation);
+		
+		result.relation = adpr;
+		
+		
+		return result;
+	}
+	
+	public void addOwner(QuantSubstance owner){
+		owners.add(owner);
+	}
+	
+	public void addRelative(QuantSubstance relative){
+		owners.add(relative);
+	}
+	
+	
 
 }

@@ -1,4 +1,4 @@
-package kariminf.faris.ston;
+package kariminf.faris.process.ston;
 
 import kariminf.faris.linguistic.Verb.Tense;
 import kariminf.sentrep.ston.StonLex;

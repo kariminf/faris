@@ -25,7 +25,7 @@ import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.QuantSubstance;
 import kariminf.faris.philosophical.Quantity;
 import kariminf.faris.philosophical.Substance;
-import kariminf.faris.ston.FarisParse;
+import kariminf.faris.process.ston.FarisParse;
 
 
 /**
@@ -108,6 +108,7 @@ public class Faris {
 	}
 	
 	
+	
 	/**
 	 * 
 	 * @return
@@ -138,8 +139,5 @@ public class Faris {
 		
 		return result;
 	}
-	
-	
-
 
 }

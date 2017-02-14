@@ -16,6 +16,8 @@ public class QuantSubstance {
 		
 	//States
 	private HashSet<State> states = new HashSet<>();
+	
+	private HashSet<Relative> relatives = new HashSet<>();
 		
 	
 	public QuantSubstance(Substance substance, Quantity quantity) {

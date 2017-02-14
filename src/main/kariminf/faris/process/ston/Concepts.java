@@ -1,18 +1,13 @@
-package kariminf.faris.ston;
+package kariminf.faris.process.ston;
 
 import java.util.ArrayList;
 
 import kariminf.faris.knowledge.Mind.MentalState;
+import kariminf.faris.philosophical.Relative.RelativeType;
 import kariminf.langpi.wordnet.WNTools;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 public class Concepts {
-	
-	public static enum AdvAdjType {
-		OTHER,
-		PLACE,
-		TIME
-	}
 	
 	public static final int BELIEVE = 689344;
 	public static final int THINK = 631737;
@@ -106,10 +101,10 @@ public class Concepts {
 	 * @param advSynSet
 	 * @return
 	 */
-	public static AdvAdjType getAdverbType(int advSynSet){
-		if (placeAdv.contains(advSynSet)) return AdvAdjType.PLACE;
-		if (timeAdv.contains(advSynSet)) return AdvAdjType.TIME;
-		return AdvAdjType.OTHER;
+	public static RelativeType getAdverbType(int advSynSet){
+		if (placeAdv.contains(advSynSet)) return RelativeType.PLACE;
+		if (timeAdv.contains(advSynSet)) return RelativeType.TIME;
+		return RelativeType.OTHER;
 	}
 	
 	/**
@@ -118,11 +113,11 @@ public class Concepts {
 	 * @param nounSySet
 	 * @return
 	 */
-	public static AdvAdjType getAdjType(Adpositional adp, int nounSySet){
+	public static RelativeType getAdjType(Adpositional adp, int nounSySet){
 		
-		if(timeAdj.contains(adp)) return AdvAdjType.TIME;
-		if(placeAdj.contains(adp)) return AdvAdjType.PLACE;
-		if(otherAdj.contains(adp)) return AdvAdjType.OTHER;
+		if(timeAdj.contains(adp)) return RelativeType.TIME;
+		if(placeAdj.contains(adp)) return RelativeType.PLACE;
+		if(otherAdj.contains(adp)) return RelativeType.OTHER;
 		
 		/*
 		EXIST, // particular time or location in, at (time, place, situation)
@@ -138,8 +133,8 @@ public class Concepts {
 		
 		int lexNum = WNTools.getLexFileNumber(nounSySet, "NOUN");
 		
-		if (timeLex.contains(lexNum)) return AdvAdjType.TIME;
-		if (placeLex.contains(lexNum)) return AdvAdjType.PLACE;
+		if (timeLex.contains(lexNum)) return RelativeType.TIME;
+		if (placeLex.contains(lexNum)) return RelativeType.PLACE;
 		
 		// 07	noun.attribute	nouns denoting attributes of people and objects
 		// 09	noun.cognition	nouns denoting cognitive processes and contents
@@ -152,7 +147,7 @@ public class Concepts {
 		// 23	noun.quantity	nouns denoting quantities and units of measure
 		// 24	noun.relation	nouns denoting relations between people or things or ideas
 		// 26	noun.state	nouns denoting stable states of affairs
-		return AdvAdjType.OTHER;
+		return RelativeType.OTHER;
 	}
 	
 	

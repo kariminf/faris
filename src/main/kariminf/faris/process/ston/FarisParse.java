@@ -18,7 +18,7 @@
  */
 
 
-package kariminf.faris.ston;
+package kariminf.faris.process.ston;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
-import kariminf.faris.ston.Concepts.AdvAdjType;
+import kariminf.faris.philosophical.Relative.RelativeType;
 import kariminf.faris.tools.Search;
 import kariminf.sentrep.UnivMap;
 import kariminf.sentrep.ston.Parser;
@@ -37,9 +37,9 @@ import kariminf.sentrep.ston.Ston2UnivMap;
 import kariminf.sentrep.ston.StonLex;
 import kariminf.sentrep.univ.types.Pronoun;
 import kariminf.sentrep.univ.types.Pronoun.Head;
+import kariminf.sentrep.univ.types.Relation;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 import kariminf.sentrep.univ.types.Relation.Adverbial;
-import kariminf.sentrep.univ.types.Relation.Relative;
 
 
 /**
@@ -481,7 +481,7 @@ public class FarisParse extends Parser {
 	Pronoun currentPronoun = null;
 
 	@Override
-	protected void addPRole(String id, String pronoun) {
+	protected void addPRole(String id, int synSet, String pronoun) {
 		proleID = id;
 
 		currentPronoun = uMap.mapPronoun(pronoun);
@@ -519,15 +519,15 @@ public class FarisParse extends Parser {
 		}
 		
 		type = type.toUpperCase();
+		
+		Adpositional adp = uMap.mapAdposition(type);
+		
+		int firstSynset = _players.get(disj.get(0).get(0)).getSubstance().getNounSynSet();
+		
+		RelativeType adjType = Concepts.getAdjType(adp, firstSynset);
 
 		//The destination is a role
 		if (StonLex.isPredicateRole(type)){
-			
-			Adpositional adp = uMap.mapAdposition(type);
-			
-			int firstSynset = _players.get(disj.get(0).get(0)).getSubstance().getNounSynSet();
-			
-			AdvAdjType adjType = Concepts.getAdjType(adp, firstSynset);
 			
 			//TODO differentiate between Place and Time
 			
@@ -556,6 +556,15 @@ public class FarisParse extends Parser {
 					currentAction.addTime(t);
 					break;
 				default:
+					/*
+					Relative r = new Relative();
+					
+					for (List<String> conj: disj)
+						for (String subID: conj)
+							if (_players.containsKey(subID)){
+								p.addLocation(_players.get(subID));
+							}
+					currentAction.addLocation(p);*/
 					break;
 				}
 				
@@ -585,7 +594,7 @@ public class FarisParse extends Parser {
 
 		//The main clause is a role
 		//eg. The man who is driving
-		Relative rel = uMap.mapRelative(type);
+		Relation.Relative rel = uMap.mapRelative(type);
 		//System.out.println("Complementizer: " + rel);
 		
 		RelDisj = null;

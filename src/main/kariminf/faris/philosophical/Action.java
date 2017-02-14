@@ -28,7 +28,7 @@ import java.util.Set;
 
 import kariminf.faris.linguistic.Adverb;
 import kariminf.faris.linguistic.Verb;
-import kariminf.faris.ston.Concepts;
+import kariminf.faris.process.ston.Concepts;
 
 
 /**
