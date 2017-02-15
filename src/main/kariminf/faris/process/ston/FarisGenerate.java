@@ -41,7 +41,7 @@ public class FarisGenerate {
 			ArrayList<ArrayList<QuantSubstance>> objects = new ArrayList<>();
 			
 			//boolean found = false;
-			for (ArrayList<QuantSubstance> _subjects: action.getSubjects()){
+			for (ArrayList<QuantSubstance> _subjects: action.getAgents()){
 				ArrayList<QuantSubstance> conjunctions = new ArrayList<>();
 				for (QuantSubstance subject: _subjects){
 					if (subject.getSubstance().getNounSynSet() != synSet)
@@ -63,7 +63,7 @@ public class FarisGenerate {
 				}
 			}
 
-			for (ArrayList<QuantSubstance> _objects: action.getObjects()){
+			for (ArrayList<QuantSubstance> _objects: action.getThemes()){
 				ArrayList<QuantSubstance> conjunctions = new ArrayList<>();
 				for(QuantSubstance object: _objects){
 					if (object.getSubstance().getNounSynSet() != synSet)
@@ -98,7 +98,7 @@ public class FarisGenerate {
 				numActions++;
 
 				ArrayList<ArrayList<QuantSubstance>> substances = 
-						(subjects.isEmpty())?action.getSubjects():subjects;
+						(subjects.isEmpty())?action.getAgents():subjects;
 
 				for (ArrayList<QuantSubstance> _subjects: substances){
 					ArrayList<String> subjectsIDs = new ArrayList<String>();
@@ -117,7 +117,7 @@ public class FarisGenerate {
 					rq.addAgentConjunctions(actionId, subjectsIDs);
 				}
 
-				substances = (objects.isEmpty())?action.getObjects():objects;
+				substances = (objects.isEmpty())?action.getThemes():objects;
 
 				for (ArrayList<QuantSubstance> _objects: substances){
 					ArrayList<String> objectsIDs = new ArrayList<String>();
@@ -169,7 +169,7 @@ public static String getAllIdeas(Mind mind){
 			ArrayList<ArrayList<QuantSubstance>> objects = new ArrayList<>();
 			
 			//boolean found = false;
-			for (ArrayList<QuantSubstance> _subjects: action.getSubjects()){
+			for (ArrayList<QuantSubstance> _subjects: action.getAgents()){
 				ArrayList<QuantSubstance> conjunctions = new ArrayList<>();
 				for (QuantSubstance subject: _subjects){
 					//found = true;
@@ -189,7 +189,7 @@ public static String getAllIdeas(Mind mind){
 				}
 			}
 
-			for (ArrayList<QuantSubstance> _objects: action.getObjects()){
+			for (ArrayList<QuantSubstance> _objects: action.getThemes()){
 				ArrayList<QuantSubstance> conjunctions = new ArrayList<>();
 				for(QuantSubstance object: _objects){
 					//found = true;
@@ -222,7 +222,7 @@ public static String getAllIdeas(Mind mind){
 				numActions++;
 
 				ArrayList<ArrayList<QuantSubstance>> substances = 
-						(subjects.isEmpty())?action.getSubjects():subjects;
+						(subjects.isEmpty())?action.getAgents():subjects;
 
 				for (ArrayList<QuantSubstance> _subjects: substances){
 					ArrayList<String> subjectsIDs = new ArrayList<String>();
@@ -241,7 +241,7 @@ public static String getAllIdeas(Mind mind){
 					rq.addAgentConjunctions(actionId, subjectsIDs);
 				}
 
-				substances = (objects.isEmpty())?action.getObjects():objects;
+				substances = (objects.isEmpty())?action.getThemes():objects;
 
 				for (ArrayList<QuantSubstance> _objects: substances){
 					ArrayList<String> objectsIDs = new ArrayList<String>();

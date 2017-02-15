@@ -48,7 +48,7 @@ public class Conditional extends Idea {
 	 * @param condition
 	 * @param predicate
 	 */
-	public Conditional(Idea condition, Idea predicate) {
+	protected Conditional(Idea condition, Idea predicate) {
 		this.condition = condition;
 		this.predicate = predicate;
 	}
@@ -62,6 +62,12 @@ public class Conditional extends Idea {
 		result += "IF:" + condition;
 		result += "-THEN:" + predicate + "\n";
 		return result;
+	}
+
+	@Override
+	public String getText() {
+		// TODO Auto-generated method stub
+		return "";
 	}
 	
 	

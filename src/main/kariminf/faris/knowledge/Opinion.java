@@ -11,12 +11,12 @@ public class Opinion extends Idea {
 	 * @param superMindName
 	 * @param otherMindOwner
 	 */
-	public Opinion(String superMindName, QuantSubstance otherMindOwner) {
+	protected Opinion(String superMindName, QuantSubstance otherMindOwner) {
 		String name = superMindName + "." + otherMindOwner.getSubstance().getNounSynSet();
 		this.otherMind = new Mind(name, otherMindOwner);
 	}
 	
-	public Opinion(String superMindName, Mind otherMind) {
+	protected Opinion(String superMindName, Mind otherMind) {
 		String name = superMindName + "." + otherMind.getName();
 		otherMind.name = name;
 		this.otherMind = otherMind;
@@ -26,7 +26,7 @@ public class Opinion extends Idea {
 	 * 
 	 * @return
 	 */
-	public Mind getMind(){
+	protected Mind getMind(){
 		return otherMind;
 	}
 
@@ -36,6 +36,12 @@ public class Opinion extends Idea {
 	@Override
 	public String toString() {
 		return "Opinion: " + otherMind + "\n";
+	}
+
+	@Override
+	public String getText() {
+		
+		return null;
 	}
 	
 	

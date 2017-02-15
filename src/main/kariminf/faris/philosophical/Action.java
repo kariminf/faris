@@ -28,6 +28,7 @@ import java.util.Set;
 
 import kariminf.faris.linguistic.Adverb;
 import kariminf.faris.linguistic.Verb;
+import kariminf.faris.process.Generator;
 import kariminf.faris.process.ston.Concepts;
 
 
@@ -52,7 +53,7 @@ import kariminf.faris.process.ston.Concepts;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Action {
+public class Action extends Being{
 	
 	public static enum ActionRelation {
 		IMPLY,
@@ -181,16 +182,22 @@ public class Action {
 		return result;
 	}
 	
-	public ArrayList<ArrayList<QuantSubstance>> getSubjects(){
+	public ArrayList<ArrayList<QuantSubstance>> getAgents(){
 		return getDisjunctions(doers);
 	}
 	
-	public ArrayList<ArrayList<QuantSubstance>> getObjects(){
+	public ArrayList<ArrayList<QuantSubstance>> getThemes(){
 		return getDisjunctions(receivers);
 	}
 	
 	public Verb getVerb(){
 		return verb;
+	}
+	
+	public Set<Adverb> getAdverbs(){
+		HashSet<Adverb> result = new HashSet<Adverb>();
+		result.addAll(adverbs);
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -307,6 +314,12 @@ public class Action {
 		
 		
 		return true;
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		gr.addAction(this);
+		
 	}
 	
 

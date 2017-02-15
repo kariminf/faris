@@ -382,7 +382,7 @@ public class FarisParse extends Parser {
 		}
 
 		//TODO he and she **or** me thinks that ...
-		for (List<QuantSubstance> agents: currentAction.getSubjects()){
+		for (List<QuantSubstance> agents: currentAction.getAgents()){
 			for (QuantSubstance agent: agents){
 				Mind m = addNewMind(agent);
 

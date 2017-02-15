@@ -70,6 +70,10 @@ public class Noun extends POS {
 	public static Noun getNew(int nounSynSet){
 		return new Noun(nounSynSet);
 	}
+	
+	public static Noun getNew(Noun noun){
+		return new Noun(noun);
+	}
 
 	@Override
 	public PosType getPosType() {

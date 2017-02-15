@@ -20,6 +20,8 @@
 
 package kariminf.faris.philosophical;
 
+import kariminf.faris.process.Generator;
+
 /**
  * Of things said without any combination, each signifies either substance or quantity 
  * or qualification or a relative or where or when or being-in-a-position or having or 
@@ -45,11 +47,8 @@ package kariminf.faris.philosophical;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Being {
+public abstract class Being {
 
-	public Being() {
-		// TODO Auto-generated constructor stub
-	}
-
-
+	public abstract void generate(Generator gr);
+	
 }

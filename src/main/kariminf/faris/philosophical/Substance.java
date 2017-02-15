@@ -84,8 +84,9 @@ public class Substance {
 	
 
 	public Set<Quality> getQualities(){
-		//Alert: security problem
-		return qualities;
+		HashSet<Quality> result = new HashSet<>();
+		result.addAll(qualities);
+		return result;
 	}
 	
 	public boolean hasQuality(Quality q){
@@ -121,8 +122,13 @@ public class Substance {
 		return sub2;
 	}
 	
+	//TODO update a substance
 	public void update(Substance sub2){
 		
+	}
+	
+	public Noun getNoun(){
+		return Noun.getNew(noun);
 	}
 
 	/* (non-Javadoc)

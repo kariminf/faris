@@ -3,7 +3,9 @@ package kariminf.faris.philosophical;
 import java.util.HashSet;
 import java.util.Set;
 
-public class QuantSubstance {
+import kariminf.faris.process.Generator;
+
+public class QuantSubstance extends Being{
 	
 	private Substance substance;
 	private Quantity quantity;
@@ -82,8 +84,9 @@ public class QuantSubstance {
 	 * @return the states
 	 */
 	public Set<State> getStates() {
-		//Alert: security problem
-		return states;
+		HashSet<State> result = new HashSet<>();
+		result.addAll(states);
+		return result;
 	}
 
 	/**
@@ -95,6 +98,12 @@ public class QuantSubstance {
 	
 	public void addState(State state) {
 		this.states.add(state);
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		gr.addSubstance(this);
+		
 	}
 	
 	

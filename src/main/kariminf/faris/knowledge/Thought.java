@@ -61,4 +61,10 @@ public class Thought extends Idea {
 		return true;
 	}
 
+	@Override
+	public String getText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

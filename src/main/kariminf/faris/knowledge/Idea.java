@@ -46,10 +46,12 @@ public abstract class Idea {
 	 * @param idea STON representation of the sentence
 	 * @return
 	 */
-	public boolean addIdea(String idea){
+	protected boolean addIdea(String idea){
 		
 		return true;
 	}
+	
+	public abstract String getText();
 	
 
 }
