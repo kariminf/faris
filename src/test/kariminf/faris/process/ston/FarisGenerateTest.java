@@ -1,3 +1,5 @@
+package kariminf.faris.process.ston;
+
 /* FARIS : Factual Arrangement and Representation of Ideas in Sentences
  * FAris : Farabi & Aristotle
  * Faris : A knight (in Arabic)
@@ -18,22 +20,18 @@
  */
 
 
-package kariminf.faris.philosophical;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.Date;
-
-import kariminf.faris.linguistic.Adverb;
-import kariminf.faris.process.Generator;
-import kariminf.sentrep.univ.types.Relation.Adpositional;
+import kariminf.faris.knowledge.Faris;
 
 /**
- * When or time (πότε, pote, when). 
- * Position in relation to the course of events. Examples: yesterday, last year.
+ * Testing faris
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2016 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -47,50 +45,46 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Time extends Being{
+public class FarisGenerateTest {
+	
+	//static String testFile = "../SentRep/ston/exp/pn_quant.ston";
+	static String testFile = "../SentRep/ston/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
+	//static String testFile = "./res/think2.ston";
+	//static String testFile = "./res/update_info.ston";
 
-	//TODO complete the time
-	
-	Date date ;
-	private Adverb adv;
-	
-	private Adpositional relation;
-	private ArrayList<QuantSubstance> times = new ArrayList<>();
-	
-	public Time(Adverb adv) {
-		this.adv = adv;
-	}
-	
-	public Time(Adpositional prep) {
-		this.relation = prep;
-	}
-	
-	public void addTimeSubstance(QuantSubstance quantSubstance){
-		if (relation != null)
-			times.add(quantSubstance);
-	}
+	public static String readFile (String f) {
+		try {
+			String contents = "";
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+			BufferedReader input = new BufferedReader(new FileReader(f));
+
+			
+			for(String line = input.readLine(); line != null; line = input.readLine()) {
+				contents += line + "\n";
+			}
+			input.close();
+
+			return contents;
+
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+			return null;
+		} 
+	}
+	
+	/**
+	 * @param args
 	 */
-	@Override
-	public String toString() {
+	public static void main(String[] args) {
+		String specif = readFile(testFile);
+		Faris faris = new Faris();
+		faris.addStonDescription(specif);
 		
-		String result = "T:";
+		String ston = faris.getMindThoughts("$");
 		
-		if (adv != null){
-			result += adv;
-		} else {
-			result += relation;
-			result += (times.size() > 0)? times: "";
-		}
-		
-		return result;
+		System.out.println(ston);
 	}
+	
 
-	@Override
-	public void generate(Generator gr) {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -25,6 +25,7 @@ import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.QuantSubstance;
 import kariminf.faris.philosophical.Quantity;
 import kariminf.faris.philosophical.Substance;
+import kariminf.faris.process.Generator;
 import kariminf.faris.process.ston.FarisParse;
 
 
@@ -138,6 +139,13 @@ public class Faris {
 		}
 		
 		return result;
+	}
+	
+	
+	public void generate(Generator gr){
+		Mind mainMind = minds.get("$");
+		if (mainMind == null) return;
+		mainMind.generate(gr);
 	}
 
 }

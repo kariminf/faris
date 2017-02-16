@@ -1,6 +1,7 @@
 package kariminf.faris.knowledge;
 
 import kariminf.faris.philosophical.QuantSubstance;
+import kariminf.faris.process.Generator;
 
 public class Opinion extends Idea {
 
@@ -39,10 +40,11 @@ public class Opinion extends Idea {
 	}
 
 	@Override
-	public String getText() {
+	public void generate(Generator gr) {
+		// TODO Auto-generated method stub
 		
-		return null;
 	}
+
 	
 	
 	

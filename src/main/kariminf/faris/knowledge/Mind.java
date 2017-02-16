@@ -26,6 +26,7 @@ import java.util.Set;
 
 import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.QuantSubstance;
+import kariminf.faris.process.Generator;
 import kariminf.faris.process.ston.FarisGenerate;
 import kariminf.faris.tools.Search;
 
@@ -251,6 +252,15 @@ public class Mind {
 		return result;
 	}
 	
-	
+	public void generate(Generator gr){
+		//Process thoughts
+		gr.processMind(owner);
+		for(MentalState ms: mentalStates){
+			gr.processMentalState(ms);
+			for(Thought th: thoughts.get(ms))
+				th.generate(gr);
+		}
+		
+	}
 
 }

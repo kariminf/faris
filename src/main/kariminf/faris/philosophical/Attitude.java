@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import kariminf.faris.linguistic.Verb;
+import kariminf.faris.process.Generator;
 
 /**
  * Being-in-a-position, posture, attitude (κεῖσθαι, keisthai, to lie). 
@@ -49,7 +50,7 @@ import kariminf.faris.linguistic.Verb;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Attitude {
+public class Attitude extends Being{
 
 	//In this category, represent the -ing verbs describing a substance
 	//it is an adjective derived from the verb in a continuous state with another action.
@@ -87,6 +88,12 @@ public class Attitude {
 		result += posture.getSynSet();
 		result += "ING";
 		return result;
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

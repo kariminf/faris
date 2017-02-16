@@ -20,6 +20,8 @@
 
 package kariminf.faris.knowledge;
 
+import kariminf.faris.process.Generator;
+
 /**
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
@@ -65,11 +67,9 @@ public class Conditional extends Idea {
 	}
 
 	@Override
-	public String getText() {
+	public void generate(Generator gr) {
 		// TODO Auto-generated method stub
-		return "";
+		
 	}
-	
-	
 
 }

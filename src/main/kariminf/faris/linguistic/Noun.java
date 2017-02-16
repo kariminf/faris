@@ -92,6 +92,14 @@ public class Noun extends POS {
 				);
 	}
 	
+	public boolean isDefined(){
+		return defined;
+	}
+	
+	public Gender getGender(){
+		return gender;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

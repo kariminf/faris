@@ -20,6 +20,8 @@
 
 package kariminf.faris.philosophical;
 
+import kariminf.faris.process.Generator;
+
 /**
  * Quantity (ποσόν, poson, how much). This is the extension of an object, and may be 
  * either discrete or continuous. Further, its parts may or may not have relative 
@@ -44,7 +46,7 @@ package kariminf.faris.philosophical;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Quantity {
+public class Quantity extends Being{
 	
 	private double nbr;
 	private Substance unit; //mesure unit: kilogram, etc.
@@ -56,6 +58,14 @@ public class Quantity {
 	public void addUnit(Substance unit){
 		this.unit = unit;
 	}
+	
+	public double getNumber(){
+		return nbr;
+	}
+	
+	public Substance getUnit(){
+		return unit;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -66,6 +76,12 @@ public class Quantity {
 		result += nbr;
 		result += (unit != null)? ":" + unit: "";
 		return result;
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		gr.processQuantity(this);
+		
 	}
 	
 	

@@ -102,7 +102,7 @@ public class QuantSubstance extends Being{
 
 	@Override
 	public void generate(Generator gr) {
-		gr.addSubstance(this);
+		gr.processSubstance(this);
 		
 	}
 	

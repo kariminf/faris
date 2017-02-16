@@ -23,6 +23,7 @@ package kariminf.faris.philosophical;
 import java.util.ArrayList;
 
 import kariminf.faris.linguistic.Adverb;
+import kariminf.faris.process.Generator;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
@@ -45,7 +46,7 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Place {
+public class Place extends Being{
 	
 	private Adverb adv;
 	private Adpositional relation;
@@ -79,6 +80,12 @@ public class Place {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

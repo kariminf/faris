@@ -23,6 +23,7 @@ package kariminf.faris.philosophical;
 import java.util.HashSet;
 
 import kariminf.faris.linguistic.Adjective;
+import kariminf.faris.process.Generator;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
@@ -46,7 +47,7 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Relative {
+public class Relative extends Being{
 	
 	
 	//The relative is:
@@ -125,6 +126,12 @@ public class Relative {
 	
 	public void addRelative(QuantSubstance relative){
 		owners.add(relative);
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

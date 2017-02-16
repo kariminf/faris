@@ -1,6 +1,7 @@
 package kariminf.faris.knowledge;
 
 import kariminf.faris.philosophical.Action;
+import kariminf.faris.process.Generator;
 
 public class Thought extends Idea {
 
@@ -62,9 +63,9 @@ public class Thought extends Idea {
 	}
 
 	@Override
-	public String getText() {
-		// TODO Auto-generated method stub
-		return null;
+	public void generate(Generator gr) {
+		action.generate(gr);
+		
 	}
 
 }

@@ -20,6 +20,7 @@
 
 package kariminf.faris.knowledge;
 
+import kariminf.faris.process.Generator;
 
 /**
  * 
@@ -51,7 +52,7 @@ public abstract class Idea {
 		return true;
 	}
 	
-	public abstract String getText();
+	public abstract void generate(Generator gr);
 	
 
 }

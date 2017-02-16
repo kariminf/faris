@@ -1,10 +1,8 @@
-package kariminf.faris.ston;
-
 /* FARIS : Factual Arrangement and Representation of Ideas in Sentences
  * FAris : Farabi & Aristotle
  * Faris : A knight (in Arabic)
  * --------------------------------------------------------------------
- * Copyright (C) 2015 Abdelkrime Aries (kariminfo0@gmail.com)
+ * Copyright (C) 2017 Abdelkrime Aries (kariminfo0@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +16,7 @@ package kariminf.faris.ston;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package kariminf.faris.process.ston;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,28 +24,8 @@ import java.io.IOException;
 
 import kariminf.faris.knowledge.Faris;
 
-/**
- * Testing faris
- * 
- * @author Abdelkrime Aries (kariminfo0@gmail.com)
- *         <br>
- *         Copyright (c) 2015-2016 Abdelkrime Aries
- *         <br><br>
- *         Licensed under the Apache License, Version 2.0 (the "License");
- *         you may not use this file except in compliance with the License.
- *         You may obtain a copy of the License at
- *         <br><br>
- *         http://www.apache.org/licenses/LICENSE-2.0
- *         <br><br>
- *         Unless required by applicable law or agreed to in writing, software
- *         distributed under the License is distributed on an "AS IS" BASIS,
- *         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *         See the License for the specific language governing permissions and
- *         limitations under the License.
- */
-public class FarisGenerateTest {
-	
-	//static String testFile = "../SentRep/ston/exp/pn_quant.ston";
+public class StonGeneratorTest {
+
 	static String testFile = "../SentRep/ston/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
 	//static String testFile = "./res/think2.ston";
 	//static String testFile = "./res/update_info.ston";
@@ -81,10 +59,13 @@ public class FarisGenerateTest {
 		Faris faris = new Faris();
 		faris.addStonDescription(specif);
 		
-		String ston = faris.getMindThoughts("$");
+		StonGenerator sg = new StonGenerator();
+		
+		faris.generate(sg);
+		
+		String ston = sg.generate();
 		
 		System.out.println(ston);
 	}
-	
 
 }

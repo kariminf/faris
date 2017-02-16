@@ -23,6 +23,8 @@ package kariminf.faris.philosophical;
 import java.util.ArrayList;
 import java.util.List;
 
+import kariminf.faris.process.Generator;
+
 /**
  * Having or state, condition (ἔχειν, echein, to have or be). 
  * The examples Aristotle gives indicate that he meant a condition of rest resulting 
@@ -47,7 +49,7 @@ import java.util.List;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class State {
+public class State extends Being{
 
 	private List<Action> mainActions = new ArrayList<>();
 	
@@ -112,6 +114,12 @@ public class State {
 	 */
 	public Action getStateAction() {
 		return stateAction;
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

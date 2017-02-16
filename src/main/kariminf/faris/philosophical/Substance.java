@@ -25,6 +25,7 @@ import java.util.Set;
 
 import kariminf.faris.linguistic.Noun;
 import kariminf.faris.linguistic.ProperNoun;
+import kariminf.faris.process.Generator;
 
 
 /**
@@ -52,7 +53,7 @@ import kariminf.faris.linguistic.ProperNoun;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Substance {
+public class Substance extends Being{
 
 	//a substance is a noun
 	private Noun noun;
@@ -140,6 +141,12 @@ public class Substance {
 		result += noun;
 		result += (qualities.isEmpty())? "": "-Q:" + qualities;
 		return result;
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		gr.processSubstance(this);
+		
 	}
 	
 	

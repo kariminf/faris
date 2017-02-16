@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.linguistic.Adverb;
+import kariminf.faris.process.Generator;
 
 
 /**
@@ -34,7 +35,7 @@ import kariminf.faris.linguistic.Adverb;
  * @author kariminf
  *
  */
-public class Quality {
+public class Quality extends Being{
 	
 	private Adjective adjective;
 	private ArrayList<Adverb> adverbs = new ArrayList<Adverb>();
@@ -95,6 +96,12 @@ public class Quality {
 		result += adjective;
 		result += (adverbs.size() > 0)? adverbs: "";
 		return result;
+	}
+
+	@Override
+	public void generate(Generator gr) {
+		gr.processQuality(this);
+		
 	}
 	
 	

@@ -318,7 +318,7 @@ public class Action extends Being{
 
 	@Override
 	public void generate(Generator gr) {
-		gr.addAction(this);
+		gr.processAction(this);
 		
 	}
 	
