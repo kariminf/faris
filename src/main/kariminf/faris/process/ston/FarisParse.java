@@ -47,7 +47,7 @@ import kariminf.sentrep.univ.types.Relation.Adverbial;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015-2016 Abdelkrime Aries
+ *         Copyright (c) 2015-2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -70,6 +70,9 @@ public class FarisParse extends Parser {
 	private QuantSubstance currentPlayer;
 
 	private HashMap<String, QuantSubstance> _players = new HashMap<>();
+	
+	//pronouns which are pointed to conjunctios of players
+	private HashMap<String, List<String>> _pronouns = new HashMap<>();
 
 	private Action currentAction;
 
@@ -181,20 +184,28 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endRole(String id) {
-
+		System.out.println(id);
 		if (currentPronoun != null){
-			if(disj.size() > 0){
+			switch (currentPronoun.getHead()) {
 
-				if (currentPronoun.getHead() == Head.POSSESSIVE){
-					//TODO add relative here
-				} else {
-					//TODO for more than one player
-					currentPlayer = getSubstances(disj.get(0)).get(0);
-				}
-
-				//System.out.println(currentPlayer);
-				_players.put(proleID, currentPlayer);
-				return;
+			case POSSESSIVE:
+				//delete id from pronouns
+				//TODO add relative OF
+				_pronouns.remove(id);
+				break;
+			case DEMONSTRATIVE:
+				//delete id from pronouns
+				_pronouns.remove(id);
+				break;
+			case OBJECTIVE:
+				//delete id from pronouns
+				_pronouns.remove(id);
+				break;
+			case SUBJECTIVE:
+				
+				break;
+			default:
+				break;
 			}
 			currentPronoun = null;
 			return;
@@ -301,6 +312,11 @@ public class FarisParse extends Parser {
 			if (_players.containsKey(roleID)){
 				QuantSubstance role = _players.get(roleID);
 				result.add(role);
+			} else if (_pronouns.containsKey(roleID)){
+				List<QuantSubstance> result2 =
+						getSubstances(_pronouns.get(roleID));
+				if (! result2.isEmpty())
+					result.addAll(result2);
 			}
 		return result;
 	}
@@ -496,15 +512,15 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endPRelatives() {
-		/*
-		if(disj.size() == 1){
-			currentPlayer = getSubstances(disj.get(0)).get(0);
-			_players.put(proleID, currentPlayer);
-			return;
-		}
-		 */
-		//TODO when we have a lot of players
-
+		
+		
+		if(disj.isEmpty() || disj.get(0).isEmpty()) return;
+		
+		_pronouns.put(proleID, disj.get(0));
+		 
+		disj = null;
+		//TODO when we have a disjunction of players
+		
 
 	}
 
@@ -522,7 +538,7 @@ public class FarisParse extends Parser {
 		
 		Adpositional adp = uMap.mapAdposition(type);
 		
-		int firstSynset = _players.get(disj.get(0).get(0)).getSubstance().getNounSynSet();
+		int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
 		
 		RelativeType adjType = Concepts.getAdjType(adp, firstSynset);
 
