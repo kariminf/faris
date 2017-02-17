@@ -48,6 +48,10 @@ public class ProperNoun extends Noun {
 		super(noun);
 		this.name = name;
 	}
+	
+	public String getName(){
+		return name;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

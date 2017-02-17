@@ -32,7 +32,10 @@ import kariminf.faris.philosophical.*;
  * @author Abdelkrime Aries
  *
  */
-public abstract class Generator {
+public abstract class Generator<T> {
+	
+	public static final String ACTION = "a";
+	public static final String ROLE = "r";
 
 	private HashMap<Action, Integer> actionIDs = new HashMap<Action, Integer>();
 	private int actionsNbr = 0;
@@ -52,7 +55,7 @@ public abstract class Generator {
 		if (actionIDs.containsKey(action)) return;
 
 		actionIDs.put(action, actionsNbr);
-		String actID = "act" + actionsNbr;
+		String actID = ACTION + actionsNbr;
 		actionsNbr++;
 
 		beginActionHandler(actID, action.getVerb(), action.getAdverbs());
@@ -65,7 +68,7 @@ public abstract class Generator {
 		processDisjunctions(action.getThemes());
 		endThemesHandler();
 
-		endActionHandler();
+		endActionHandler(actID);
 
 
 	}
@@ -101,7 +104,7 @@ public abstract class Generator {
 	}
 
 	public void processSubstance(QuantSubstance qsub){
-		String id = "r" + substancesNbr;
+		String id = ROLE + substancesNbr;
 		if (qsubstanceIDs.containsKey(qsub)){
 			substanceFoundHandler(id);
 			return;
@@ -112,7 +115,7 @@ public abstract class Generator {
 	}
 
 	public void processSubstance(Substance sub){
-		String id = "r" + substancesNbr;
+		String id = ROLE + substancesNbr;
 		if (substanceIDs.containsKey(sub)){
 			substanceFoundHandler(id);
 			return;
@@ -132,41 +135,108 @@ public abstract class Generator {
 	
 	
 	//Abstract methods
+	//=====================
 	
+	/**
+	 * When an action is found, this method will be called
+	 * @param id the ID of the action
+	 * @param verb the verb describing the action
+	 * @param adverbs the adverbs modifying the verb
+	 */
 	protected abstract void beginActionHandler(String id, Verb verb, Set<Adverb> adverbs);
 
-	protected abstract void endActionHandler();
+	/**
+	 * This is called when the action ends (all its components have been processed
+	 * @param id The ID of the action
+	 */
+	protected abstract void endActionHandler(String id);
 
+	/**
+	 * This is called to mark the start of the current action's agents enumeration
+	 */
 	protected abstract void beginAgentsHandler();
 
+	/**
+	 * This is called to mark the end of current action's agents enumeration
+	 */
 	protected abstract void endAgentsHandler();
 
+	/**
+	 * This is called to mark the start of current action's themes enumeration
+	 */
 	protected abstract void beginThemesHandler();
 
+	/**
+	 * This is called to mark the end of current action's themes enumeration
+	 */
 	protected abstract void endThemesHandler();
 
+	/**
+	 * This is called whenever there is an enumeration; each time it is called 
+	 * it marks a disjunction "OR". The components called after are conjunctions "AND"
+	 */
 	protected abstract void beginDisjunctionHandler();
 
+	/**
+	 * This is called when the disjunction of elements is over, and to start a new disjunction
+	 * if there is any
+	 */
 	protected abstract void endDisjunctionHandler();
 
 	//If the substance has a noun with synset 0, so it is the pronoun it
 	//for example it is believed
+	/**
+	 * This is called when a substance is found; A substance and a quantified substance
+	 * identical to it are considered as two distinct substances
+	 * @param id the ID of the substance
+	 * @param noun the noun, which can of type ProperNoun as well
+	 */
 	protected abstract void beginSubstanceHandler(String id, Noun noun);
 	
-	//
+	/**
+	 * This is called when a substance is found, but it was already processed earlier
+	 * @param id the ID of the substance
+	 */
 	protected abstract void substanceFoundHandler(String id);
 	
+	/**
+	 * This is called when an action is found, but it was already processed earlier
+	 * @param id
+	 */
 	protected abstract void actionFoundHandler(String id);
 	
+	/**
+	 * This marks the end of a substance processing
+	 */
 	protected abstract void endSubstanceHandler();
 
+	/**
+	 * This is called when we want to add a quantity to the current substance
+	 * @param nbr The quantity
+	 * @param unit the unit of the quantity
+	 */
 	protected abstract void addQuantityHandler(double nbr, Noun unit);
 	
+	/**
+	 * This is called when we want to add a quality to the current substance
+	 * @param adjective the adjective that describes this quality
+	 * @param adverbs the adverbs modifying this adjective
+	 */
 	protected abstract void addQualityHandler(Adjective adjective, ArrayList<Adverb> adverbs);
 	
+	/**
+	 * This is called when an Idea has been found
+	 */
 	protected abstract void beginIdeaHandler();
 	
+	/**
+	 * This is called to mark the end of an idea
+	 */
 	protected abstract void endIdeaHandler();
 	
-	public abstract String generate();
+	/**
+	 * This is called to generate a representation of a given type 
+	 * @return
+	 */
+	public abstract T generate();
 }
