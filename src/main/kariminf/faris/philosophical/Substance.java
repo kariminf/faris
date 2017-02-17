@@ -129,6 +129,8 @@ public class Substance extends Being{
 	}
 	
 	public Noun getNoun(){
+		if (noun instanceof ProperNoun)
+			return ProperNoun.getNew((ProperNoun)noun);
 		return Noun.getNew(noun);
 	}
 

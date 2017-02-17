@@ -49,6 +49,11 @@ public class ProperNoun extends Noun {
 		this.name = name;
 	}
 	
+	public static ProperNoun getNew(ProperNoun noun){
+		Noun n = new Noun(noun);
+		return new ProperNoun(n, noun.name);
+	}
+	
 	public String getName(){
 		return name;
 	}

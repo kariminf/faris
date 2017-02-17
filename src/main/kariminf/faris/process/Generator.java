@@ -19,10 +19,12 @@
 
 package kariminf.faris.process;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
@@ -36,6 +38,8 @@ public abstract class Generator<T> {
 	
 	public static final String ACTION = "a";
 	public static final String ROLE = "r";
+	
+	private ArrayDeque<QuantSubstance> currentMinds = new ArrayDeque<>();
 
 	private HashMap<Action, Integer> actionIDs = new HashMap<Action, Integer>();
 	private int actionsNbr = 0;
@@ -44,6 +48,10 @@ public abstract class Generator<T> {
 	private HashMap<QuantSubstance, Integer> qsubstanceIDs = new HashMap<>();
 	
 	private int substancesNbr = 0;
+	
+	private MentalState mentalState;
+	
+	private boolean isMainIdea = false;
 
 	/**
 	 * 
@@ -57,6 +65,11 @@ public abstract class Generator<T> {
 		actionIDs.put(action, actionsNbr);
 		String actID = ACTION + actionsNbr;
 		actionsNbr++;
+		
+		if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
+			beginIdeaHandler();
+			endIdeaHandler();
+		}
 
 		beginActionHandler(actID, action.getVerb(), action.getAdverbs());
 
@@ -125,12 +138,42 @@ public abstract class Generator<T> {
 		addSubstance(id, sub, null);
 	}
 	
+	/**
+	 * This is called by {@link kariminf.faris.knowledge.Mind} to process the caller's mind
+	 * @param s the Mind of the caller as a substance
+	 */
 	public void processMind(QuantSubstance s){
-		//TODO When we already processed a substance, and found it was referenced again
+		currentMinds.push(s);
+		
+		//These cases when a substance or its noun are null may never happen
+		//but as a security measure, I added the two checks
+		Substance sub = s.getSubstance();
+		if (sub == null) return;
+		Noun n = sub.getNoun();
+		if (n == null) return;
+		
+		//If the synset is null (0), it is the main mind
+		if (n.getSynSet() == 0) return; 
+		
+		//Else, it is a new mind, so we have to process the substance
+		
+		s.generate(this);
+	}
+	
+	public void endMindProcessing(QuantSubstance s){
+		if (s == currentMinds.peek()) currentMinds.pop();
 	}
 	
 	public void processMentalState(MentalState ms){
 		//A mental state of a mind
+		mentalState = ms;
+	}
+	
+	/**
+	 * Called by different Ideas to mark the first action as the main action
+	 */
+	public void mainIdea(){
+		isMainIdea = true;
 	}
 	
 	

@@ -19,6 +19,7 @@ public class StonGenerator extends Generator<String> {
 	private ArrayDeque<String> currentActIDs = new ArrayDeque<>();
 	private ArrayDeque<String> currentRoleIDs = new ArrayDeque<>();
 	
+	
 	private static enum Block{
 		ACTION,
 		ROLE,
@@ -116,6 +117,7 @@ public class StonGenerator extends Generator<String> {
 		rc.addRolePlayer(id, noun.getSynSet());
 		if (noun instanceof ProperNoun){
 			rc.setRoleProperName(id, ((ProperNoun) noun).getName());
+			//System.out.println("proper:" + ((ProperNoun) noun).getName());
 		}
 		
 		currentRoleIDs.push(id);

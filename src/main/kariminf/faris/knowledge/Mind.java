@@ -257,9 +257,13 @@ public class Mind {
 		gr.processMind(owner);
 		for(MentalState ms: mentalStates){
 			gr.processMentalState(ms);
-			for(Thought th: thoughts.get(ms))
+			for(Thought th: thoughts.get(ms)){
 				th.generate(gr);
+			}
+				
 		}
+		
+		gr.endMindProcessing(owner);
 		
 	}
 
