@@ -64,6 +64,7 @@ public class Thought extends Idea {
 
 	@Override
 	public void generate(Generator gr) {
+		gr.mainIdea();
 		action.generate(gr);
 		
 	}

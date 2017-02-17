@@ -22,6 +22,7 @@ package kariminf.faris.process;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import kariminf.faris.knowledge.Mind;
@@ -60,16 +61,20 @@ public abstract class Generator<T> {
 	public void processAction(Action action){
 
 		//We don't add an action, already there
-		if (actionIDs.containsKey(action)) return;
+		if (actionIDs.containsKey(action)){
+			if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
+				System.out.println("main sentence1");
+				String actID = ACTION + actionIDs.get(action);
+				beginIdeaHandler(actID);
+				endIdeaHandler();
+				isMainIdea = false;
+			}
+			return;
+		}
 
 		actionIDs.put(action, actionsNbr);
 		String actID = ACTION + actionsNbr;
 		actionsNbr++;
-		
-		if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
-			beginIdeaHandler();
-			endIdeaHandler();
-		}
 
 		beginActionHandler(actID, action.getVerb(), action.getAdverbs());
 
@@ -82,8 +87,24 @@ public abstract class Generator<T> {
 		endThemesHandler();
 
 		endActionHandler(actID);
+		
+		if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
+			System.out.println("main sentence");
+			beginIdeaHandler(actID);
+			endIdeaHandler();
+			isMainIdea = false;
+		}
 
-
+	}
+	
+	/**
+	 * Called by a state 
+	 * @param stateAction the state action
+	 * @param mainActions the actions related to the state; i.e. the actions 
+	 * when a substance is having this state
+	 */
+	public void processState(Action stateAction, List<Action> mainActions){
+		
 	}
 
 	private void processDisjunctions(ArrayList<ArrayList<QuantSubstance>> disj){
@@ -270,7 +291,7 @@ public abstract class Generator<T> {
 	/**
 	 * This is called when an Idea has been found
 	 */
-	protected abstract void beginIdeaHandler();
+	protected abstract void beginIdeaHandler(String actionID);
 	
 	/**
 	 * This is called to mark the end of an idea

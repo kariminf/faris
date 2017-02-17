@@ -184,7 +184,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endRole(String id) {
-		System.out.println(id);
+		//System.out.println(id);
 		if (currentPronoun != null){
 			switch (currentPronoun.getHead()) {
 
@@ -410,7 +410,7 @@ public class FarisParse extends Parser {
 
 					for(Mind m2: getMinds(IDs)){
 						m.addOpinion(s, m2);
-						System.out.println(m2.getName());
+						//System.out.println(m2.getName());
 					}
 				}
 

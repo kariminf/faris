@@ -182,14 +182,13 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void beginIdeaHandler() {
+	protected void beginIdeaHandler(String actionID) {
 		//AFF, //Affirmation
 		//EXC, //exclamation
 		//QST, //Question
 		//IMP //imperative
-		
 		rc.addSentence("AFF");
-		
+		rc.addSentMainActConjunctions(new String[]{actionID});		
 	}
 
 	@Override
