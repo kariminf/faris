@@ -20,6 +20,10 @@
 
 package kariminf.faris.linguistic;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
@@ -89,7 +93,17 @@ public abstract class POS {
 		return result;
 	}
 	
+	public static List<Integer> getSynsets (List<? extends POS> elements){
+		ArrayList<Integer> result = new ArrayList<>();
+		for (POS pos: elements) result.add(pos.synSet);
+		return result;
+	}
 	
+	public static List<Integer> getSynsets (Set<? extends POS> elements){
+		ArrayList<Integer> result = new ArrayList<>();
+		for (POS pos: elements) result.add(pos.synSet);
+		return result;
+	}
 
 	public abstract PosType getPosType();
 

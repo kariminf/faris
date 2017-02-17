@@ -7,6 +7,7 @@ import java.util.Set;
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.linguistic.Adverb;
 import kariminf.faris.linguistic.Noun;
+import kariminf.faris.linguistic.POS;
 import kariminf.faris.linguistic.ProperNoun;
 import kariminf.faris.linguistic.Verb;
 import kariminf.faris.process.Generator;
@@ -36,7 +37,8 @@ public class StonGenerator extends Generator<String> {
 		rc.addAction(id, verb.getSynSet());
 		currentActIDs.push(id);
 		openBlocks.push(Block.ACTION);
-		//TODO action adverbs 
+		
+		rc.setActionAdverbs(id, POS.getSynsets(adverbs));
 		
 	}
 
@@ -152,9 +154,9 @@ public class StonGenerator extends Generator<String> {
 	protected void addQualityHandler(Adjective adjective, ArrayList<Adverb> adverbs) {
 		if (openBlocks.peek() != Block.ROLE) return;
 		if (currentRoleIDs.isEmpty()) return;
-		ArrayList<Integer> advSynSets = new ArrayList<>();
-		for (Adverb adv: adverbs) advSynSets.add(adv.getSynSet());
-		rc.addAdjective(currentRoleIDs.peek(), adjective.getSynSet(), advSynSets);
+		/*ArrayList<Integer> advSynSets = new ArrayList<>();
+		for (Adverb adv: adverbs) advSynSets.add(adv.getSynSet());*/
+		rc.addAdjective(currentRoleIDs.peek(), adjective.getSynSet(), POS.getSynsets(adverbs));
 		
 	}
 
