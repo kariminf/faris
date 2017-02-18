@@ -20,6 +20,7 @@
 
 package kariminf.faris.philosophical;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -51,7 +52,7 @@ public class Time extends Being{
 
 	//TODO complete the time
 	
-	Date date ;
+	LocalDateTime datetime ;
 	private Adverb adv;
 	
 	private Adpositional relation;
@@ -90,7 +91,6 @@ public class Time extends Being{
 
 	@Override
 	public void generate(Generator gr) {
-		// TODO Auto-generated method stub
-		
+		gr.processTime(relation, adv, datetime, times);
 	}
 }

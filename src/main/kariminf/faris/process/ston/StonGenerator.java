@@ -1,5 +1,8 @@
 package kariminf.faris.process.ston;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +15,7 @@ import kariminf.faris.linguistic.POS;
 import kariminf.faris.linguistic.ProperNoun;
 import kariminf.faris.linguistic.Verb;
 import kariminf.faris.process.Generator;
+import kariminf.sentrep.ston.Univ2StonMap;
 import kariminf.sentrep.ston.request.ReqCreator;
 import kariminf.sentrep.ston.request.ReqRolePlayer;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
@@ -19,6 +23,8 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
 public class StonGenerator extends Generator<String> {
 	
 	private ReqCreator rc = new ReqCreator();
+	
+	private Univ2StonMap u2sMap = new Univ2StonMap();
 	
 	private ArrayDeque<String> currentActIDs = new ArrayDeque<>();
 	private ArrayDeque<String> currentRoleIDs = new ArrayDeque<>();
@@ -29,7 +35,8 @@ public class StonGenerator extends Generator<String> {
 		ROLE,
 		AGENT,
 		THEME,
-		PLACE
+		PLACE,
+		TIME
 	}
 	private ArrayDeque<Block> openBlocks = new ArrayDeque<>();
 	
@@ -123,11 +130,24 @@ public class StonGenerator extends Generator<String> {
 		{
 			if (currentActIDs.isEmpty()) break;
 			String currentActID = currentActIDs.peek();
-			rc.addRelative(adpos.name(), currentActID);
+			//TODO verify the string in getAdposition
+			rc.addRelative(u2sMap.getAdposition(adpos, ""), currentActID);
 			rc.addRelativeConjunctions(conj);
 			conj = new ArrayList<>();
 			break;
 		}
+		
+		case TIME:
+		{
+			if (currentActIDs.isEmpty()) break;
+			String currentActID = currentActIDs.peek();
+			//TODO verify the string in getAdposition
+			rc.addRelative(u2sMap.getAdposition(adpos, ""), currentActID);
+			rc.addRelativeConjunctions(conj);
+			conj = new ArrayList<>();
+			break;
+		}
+		
 		default:
 			break;
 		}
@@ -218,7 +238,7 @@ public class StonGenerator extends Generator<String> {
 	protected void addStateHandler(boolean isAgent, String stateID) {
 		if(currentActIDs.isEmpty()) return;
 		if(currentRoleIDs.isEmpty()) return;
-		
+		//System.out.println("state:" + stateID);
 		if (isAgent){
 			statesSUB.add(stateID);
 			return;
@@ -290,6 +310,30 @@ public class StonGenerator extends Generator<String> {
 	protected void endPlaceHandler() {
 		if (openBlocks.peek() == Block.PLACE) openBlocks.pop();
 		adpos = null;
+	}
+
+	@Override
+	protected void beginTimeHandler(Adpositional relation, Adverb adv, LocalDateTime datetime) {
+		openBlocks.push(Block.TIME);
+		adpos = relation;
+		
+		if (currentActIDs.isEmpty()) return;
+		String currentActID = currentActIDs.peek();
+		
+		if (adv != null)
+			rc.addActionAdverb(currentActID, adv.getSynSet());
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String date = datetime.format(dtf);
+		//TODO create a new substance with this date
+		
+		
+	}
+
+	@Override
+	protected void endTimeHandler() {
+		if (openBlocks.peek() == Block.TIME) openBlocks.pop();
+		adpos = null;
+		
 	}
 	
 	

@@ -19,6 +19,7 @@
 
 package kariminf.faris.process;
 
+import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +66,13 @@ public abstract class Generator<T> {
 		ArrayList<ArrayList<QuantSubstance>> disj = new ArrayList<>();
 		disj.add(places);
 		endPlaceHandler();
+	}
+	
+	public void processTime(Adpositional relation, Adverb adv, LocalDateTime datetime, ArrayList<QuantSubstance> times){
+		beginTimeHandler(relation, adv, datetime);
+		ArrayList<ArrayList<QuantSubstance>> disj = new ArrayList<>();
+		disj.add(times);
+		endTimeHandler();
 	}
 
 	/**
@@ -384,6 +392,10 @@ public abstract class Generator<T> {
 	protected abstract void beginPlaceHandler(Adpositional relation, Adverb adv);
 	
 	protected abstract void endPlaceHandler();
+	
+	protected abstract void beginTimeHandler(Adpositional relation, Adverb adv, LocalDateTime datetime);
+	
+	protected abstract void endTimeHandler();
 	
 	/**
 	 * This is called to generate a representation of a given type 
