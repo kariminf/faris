@@ -14,6 +14,7 @@ import kariminf.faris.linguistic.Verb;
 import kariminf.faris.process.Generator;
 import kariminf.sentrep.ston.request.ReqCreator;
 import kariminf.sentrep.ston.request.ReqRolePlayer;
+import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 public class StonGenerator extends Generator<String> {
 	
@@ -28,6 +29,7 @@ public class StonGenerator extends Generator<String> {
 		ROLE,
 		AGENT,
 		THEME,
+		PLACE
 	}
 	private ArrayDeque<Block> openBlocks = new ArrayDeque<>();
 	
@@ -40,6 +42,8 @@ public class StonGenerator extends Generator<String> {
 	private int stateCounter = 0;
 	private HashMap<String, ReqRolePlayer> prevStates = new HashMap<>();
 	
+	private Adpositional adpos = null;
+	
 
 	@Override
 	protected void beginActionHandler(String id, Verb verb, Set<Adverb> adverbs) {
@@ -47,7 +51,7 @@ public class StonGenerator extends Generator<String> {
 		currentActIDs.push(id);
 		openBlocks.push(Block.ACTION);
 		
-		rc.setActionAdverbs(id, POS.getSynsets(adverbs));
+		rc.addActionAdverbs(id, POS.getSynsets(adverbs));
 		
 	}
 
@@ -111,6 +115,16 @@ public class StonGenerator extends Generator<String> {
 			if (currentActIDs.isEmpty()) break;
 			String currentActID = currentActIDs.peek();
 			rc.addThemeConjunctions(currentActID, conj);
+			conj = new ArrayList<>();
+			break;
+		}
+		
+		case PLACE:
+		{
+			if (currentActIDs.isEmpty()) break;
+			String currentActID = currentActIDs.peek();
+			rc.addRelative(adpos.name(), currentActID);
+			rc.addRelativeConjunctions(conj);
 			conj = new ArrayList<>();
 			break;
 		}
@@ -257,6 +271,25 @@ public class StonGenerator extends Generator<String> {
 		
 		
 		
+	}
+
+	@Override
+	protected void beginPlaceHandler(Adpositional relation, Adverb adv) {
+		openBlocks.push(Block.PLACE);
+		adpos = relation;
+		
+		if (adv == null) return;
+		if (currentActIDs.isEmpty()) return;
+		
+		String currentActID = currentActIDs.peek();
+		
+		rc.addActionAdverb(currentActID, adv.getSynSet());
+	}
+
+	@Override
+	protected void endPlaceHandler() {
+		if (openBlocks.peek() == Block.PLACE) openBlocks.pop();
+		adpos = null;
 	}
 	
 	

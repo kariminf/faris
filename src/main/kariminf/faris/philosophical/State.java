@@ -53,6 +53,8 @@ public class State extends Being{
 
 	private List<Action> mainActions = new ArrayList<>();
 	
+	
+	//TODO add something else so, it can reflect: in which, of which, etc.
 	private Action stateAction;
 	
 	/**

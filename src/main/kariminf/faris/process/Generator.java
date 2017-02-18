@@ -29,6 +29,7 @@ import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
+import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
  * A generator which generates a text or any thing from a Faris representation (model)
@@ -58,6 +59,13 @@ public abstract class Generator<T> {
 	
 	private QuantSubstance currentSubstance;
 	
+	
+	public void processPlace(Adpositional relation, Adverb adv, ArrayList<QuantSubstance> places){
+		beginPlaceHandler(relation, adv);
+		ArrayList<ArrayList<QuantSubstance>> disj = new ArrayList<>();
+		disj.add(places);
+		endPlaceHandler();
+	}
 
 	/**
 	 * 
@@ -95,7 +103,10 @@ public abstract class Generator<T> {
 		processDisjunctions(action.getThemes());
 		endThemesHandler();
 		
-
+		for(Place place: action.getPlaces()) place.generate(this);
+		
+		for(Time time: action.getTimes()) time.generate(this);
+			
 		endActionHandler(actID);
 		
 		if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
@@ -205,6 +216,8 @@ public abstract class Generator<T> {
 			state.generate(this);
 		}
 		endStateHandler(subID, actID);
+		
+		//TODO add more
 		
 		currentAction = tmpLastAction;
 		currentSubstance = tmpSubstance;
@@ -367,6 +380,10 @@ public abstract class Generator<T> {
 	protected abstract void beginStateHandler(String subID, String actID);
 	
 	protected abstract void endStateHandler(String subID, String actID);
+	
+	protected abstract void beginPlaceHandler(Adpositional relation, Adverb adv);
+	
+	protected abstract void endPlaceHandler();
 	
 	/**
 	 * This is called to generate a representation of a given type 

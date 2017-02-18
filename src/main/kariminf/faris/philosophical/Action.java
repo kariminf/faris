@@ -203,6 +203,8 @@ public class Action extends Being{
 		return getDisjunctions(receivers);
 	}
 	
+	
+	
 	public Verb getVerb(){
 		return verb;
 	}
@@ -210,6 +212,18 @@ public class Action extends Being{
 	public Set<Adverb> getAdverbs(){
 		HashSet<Adverb> result = new HashSet<Adverb>();
 		result.addAll(adverbs);
+		return result;
+	}
+	
+	public Set<Place> getPlaces(){
+		HashSet<Place> result = new HashSet<>();
+		result.addAll(locations);
+		return result;
+	}
+	
+	public Set<Time> getTimes(){
+		HashSet<Time> result = new HashSet<>();
+		result.addAll(times);
 		return result;
 	}
 
