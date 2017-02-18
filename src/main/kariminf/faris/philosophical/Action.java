@@ -157,12 +157,25 @@ public class Action extends Being{
 			this.receivers.add(conjunctions);
 	}
 	
-	public boolean hasSubjects(){
+	public boolean hasAgent(QuantSubstance agent){
+		
+		for (ConjunctedSubstances cs: doers)
+			if (cs.contains(agent)) return true;
+		return false;
+	}
+	
+	public boolean hasAgents(){
 		return (doers.size() > 0);
 	}
 	
-	public boolean hasObjects(){
+	public boolean hasThemes(){
 		return (receivers.size() > 0);
+	}
+	
+	public boolean hasTheme(QuantSubstance agent){
+		for (ConjunctedSubstances cs: receivers)
+			if (cs.contains(agent)) return true;
+		return false;
 	}
 	
 	

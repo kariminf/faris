@@ -53,24 +53,33 @@ public abstract class Generator<T> {
 	private MentalState mentalState;
 	
 	private boolean isMainIdea = false;
+	
+	private Action currentAction;
+	
+	private QuantSubstance currentSubstance;
+	
 
 	/**
 	 * 
 	 * @param action
 	 */
 	public void processAction(Action action){
-
+		currentAction = action;
 		//We don't add an action, already there
 		if (actionIDs.containsKey(action)){
-			if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
+			/*if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
 				System.out.println("main sentence1");
 				String actID = ACTION + actionIDs.get(action);
-				beginIdeaHandler(actID);
-				endIdeaHandler();
+				addIdeaHandler(actID);
 				isMainIdea = false;
-			}
+			}*/
+			String actID = ACTION + actionIDs.get(action);
+			actionFoundHandler(actID);
 			return;
 		}
+		
+		Action tmpLastAction = currentAction;
+		QuantSubstance tmpSubstance = currentSubstance;
 
 		actionIDs.put(action, actionsNbr);
 		String actID = ACTION + actionsNbr;
@@ -85,15 +94,18 @@ public abstract class Generator<T> {
 		beginThemesHandler();
 		processDisjunctions(action.getThemes());
 		endThemesHandler();
+		
 
 		endActionHandler(actID);
 		
 		if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
-			System.out.println("main sentence");
-			beginIdeaHandler(actID);
-			endIdeaHandler();
+			//System.out.println("main sentence");
+			addIdeaHandler(actID);
 			isMainIdea = false;
 		}
+		
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
 
 	}
 	
@@ -105,6 +117,37 @@ public abstract class Generator<T> {
 	 */
 	public void processState(Action stateAction, List<Action> mainActions){
 		
+		/*
+		//A state of a substance shows after generating its relative action
+		List<String> processedActions = new ArrayList<>();
+		
+		for(Action act: mainActions)
+			if (actionIDs.containsKey(act)){
+				String actID = ACTION + actionIDs.get(act);
+				processedActions.add(actID);
+			}
+		
+		//If the state has no action relative to it
+		if (processedActions.isEmpty()) return;
+		*/
+		
+		if(!mainActions.contains(currentAction)) return;
+		
+		boolean isAgent = stateAction.hasAgent(currentSubstance);
+		if(!(isAgent || stateAction.hasTheme(currentSubstance))) return;
+		
+		Action tmpLastAction = currentAction;
+		QuantSubstance tmpSubstance = currentSubstance;
+		
+		stateAction.generate(this);
+		
+		String actID = ACTION + actionIDs.get(stateAction);
+		
+		
+		addStateHandler(isAgent, actID);
+		
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
 	}
 
 	private void processDisjunctions(ArrayList<ArrayList<QuantSubstance>> disj){
@@ -138,14 +181,33 @@ public abstract class Generator<T> {
 	}
 
 	public void processSubstance(QuantSubstance qsub){
+		currentSubstance = qsub;
+		
+		Action tmpLastAction = currentAction;
+		QuantSubstance tmpSubstance = currentSubstance;
+		
 		String id = ROLE + substancesNbr;
 		if (qsubstanceIDs.containsKey(qsub)){
 			substanceFoundHandler(id);
 			return;
 		}
+		
 		substancesNbr++;
 		qsubstanceIDs.put(qsub, substancesNbr);
 		addSubstance(id, qsub.getSubstance(), qsub.getQuantity());
+		
+		String subID = ROLE + qsubstanceIDs.get(tmpSubstance);
+		String actID = ACTION + actionIDs.get(tmpLastAction);
+		
+		beginStateHandler(subID, actID);
+		for (State state: qsub.getStates()){
+			
+			state.generate(this);
+		}
+		endStateHandler(subID, actID);
+		
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
 	}
 
 	public void processSubstance(Substance sub){
@@ -291,12 +353,20 @@ public abstract class Generator<T> {
 	/**
 	 * This is called when an Idea has been found
 	 */
-	protected abstract void beginIdeaHandler(String actionID);
+	protected abstract void addIdeaHandler(String actionID);
 	
 	/**
-	 * This is called to mark the end of an idea
+	 * This is called when the current substance has a probable action state in one of 
+	 * the relative actions in a substance
+	 * @param isAgent if true, then the current substance is an agent, 
+	 * otherwise it is a theme
+	 * @param relIDs a list of probable relative actions
 	 */
-	protected abstract void endIdeaHandler();
+	protected abstract void addStateHandler(boolean isAgent, String stateID);
+	
+	protected abstract void beginStateHandler(String subID, String actID);
+	
+	protected abstract void endStateHandler(String subID, String actID);
 	
 	/**
 	 * This is called to generate a representation of a given type 

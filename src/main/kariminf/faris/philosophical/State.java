@@ -35,7 +35,7 @@ import kariminf.faris.process.Generator;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015,2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -78,12 +78,13 @@ public class State extends Being{
 	 * @return true if the affectation is successful 
 	 */
 	public boolean affectState (Action action, QuantSubstance owner, List<List<QuantSubstance>> relatives, boolean affected){
-		if(action.hasObjects())
+		if(action.hasAgents())
 			return false;
-		if(action.hasSubjects())
+		if(action.hasThemes())
 			return false;
 		
 		List<QuantSubstance> _owner = new ArrayList<>();
+		_owner.add(owner);
 		
 		if (affected){
 			
@@ -118,7 +119,7 @@ public class State extends Being{
 
 	@Override
 	public void generate(Generator gr) {
-		// TODO Auto-generated method stub
+		gr.processState(stateAction, mainActions);
 		
 	}
 

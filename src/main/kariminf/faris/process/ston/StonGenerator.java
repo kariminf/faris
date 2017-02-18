@@ -2,6 +2,7 @@ package kariminf.faris.process.ston;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 import kariminf.faris.linguistic.Adjective;
@@ -12,6 +13,7 @@ import kariminf.faris.linguistic.ProperNoun;
 import kariminf.faris.linguistic.Verb;
 import kariminf.faris.process.Generator;
 import kariminf.sentrep.ston.request.ReqCreator;
+import kariminf.sentrep.ston.request.ReqRolePlayer;
 
 public class StonGenerator extends Generator<String> {
 	
@@ -30,6 +32,13 @@ public class StonGenerator extends Generator<String> {
 	private ArrayDeque<Block> openBlocks = new ArrayDeque<>();
 	
 	private ArrayList<String> conj = null;
+	
+	private ArrayList<String> statesSUB = null;
+	private ArrayList<String> statesOBJ = null;
+	//This is used when a substance has been used with some action before
+	//So if it changes states with another, we must create new substance
+	private int stateCounter = 0;
+	private HashMap<String, ReqRolePlayer> prevStates = new HashMap<>();
 	
 
 	@Override
@@ -182,7 +191,7 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void beginIdeaHandler(String actionID) {
+	protected void addIdeaHandler(String actionID) {
 		//AFF, //Affirmation
 		//EXC, //exclamation
 		//QST, //Question
@@ -192,8 +201,61 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void endIdeaHandler() {
-		// TODO Auto-generated method stub
+	protected void addStateHandler(boolean isAgent, String stateID) {
+		if(currentActIDs.isEmpty()) return;
+		if(currentRoleIDs.isEmpty()) return;
+		
+		if (isAgent){
+			statesSUB.add(stateID);
+			return;
+		}
+		
+		statesOBJ.add(stateID);
+		
+	}
+
+	@Override
+	protected void beginStateHandler(String subID, String actID) {
+		statesSUB = new ArrayList<>();
+		statesOBJ = new ArrayList<>();
+		
+	}
+
+	@Override
+	protected void endStateHandler(String subID, String actID) {
+		
+		if (statesOBJ.isEmpty() && statesSUB.isEmpty()) return;
+		
+		String id = subID;
+		
+		
+		if (prevStates.containsKey(subID)){
+			id = subID + (stateCounter++);
+			ReqRolePlayer rrp = ReqRolePlayer.create(id, prevStates.get(subID));
+			rc.addRolePlayer(rrp);
+			rc.replaceRoleInAction(actID, subID, id);
+			
+		} else {
+			id = subID + (stateCounter++);
+			ReqRolePlayer rrp = rc.getReqRolePlayerCopie(subID, id);
+			id = subID;
+			//Here we save a copy of substance subID
+			if (rrp != null) prevStates.put(subID, rrp);
+		}
+		
+		if(!statesSUB.isEmpty()){
+			rc.addRelative("SBJ", id);
+			rc.addRelativeConjunctions(statesSUB);
+		}
+		
+		if(!statesOBJ.isEmpty()){
+			rc.addRelative("OBJ", id);
+			rc.addRelativeConjunctions(statesOBJ);
+		}
+		
+		
+		
+		
 		
 	}
 	
