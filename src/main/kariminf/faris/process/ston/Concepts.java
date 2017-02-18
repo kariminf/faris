@@ -133,6 +133,8 @@ public class Concepts {
 		
 		int lexNum = WNTools.getLexFileNumber(nounSySet, "NOUN");
 		
+		System.out.println(" LexNum: " + lexNum);
+		
 		if (timeLex.contains(lexNum)) return RelativeType.TIME;
 		if (placeLex.contains(lexNum)) return RelativeType.PLACE;
 		

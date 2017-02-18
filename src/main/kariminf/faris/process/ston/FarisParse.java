@@ -536,11 +536,15 @@ public class FarisParse extends Parser {
 		
 		type = type.toUpperCase();
 		
+		System.out.print("EndRelative: " + type);
+		
 		Adpositional adp = uMap.mapAdposition(type);
 		
 		int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
 		
 		RelativeType adjType = Concepts.getAdjType(adp, firstSynset);
+		
+		System.out.println(" which is " + adjType + "." + adp + ".syn:" + firstSynset);
 
 		//The destination is a role
 		if (StonLex.isPredicateRole(type)){
@@ -555,7 +559,7 @@ public class FarisParse extends Parser {
 				switch (adjType) {
 				case PLACE:
 					Place p = new Place(adp);
-					for (List<String> conj: disj)
+					for (List<String> conj: RelDisj)
 						for (String subID: conj)
 							if (_players.containsKey(subID)){
 								p.addLocation(_players.get(subID));
@@ -564,7 +568,7 @@ public class FarisParse extends Parser {
 					break;
 				case TIME:
 					Time t = new Time(adp);
-					for (List<String> conj: disj)
+					for (List<String> conj: RelDisj)
 						for (String subID: conj)
 							if (_players.containsKey(subID)){
 								t.addTimeSubstance(_players.get(subID));
