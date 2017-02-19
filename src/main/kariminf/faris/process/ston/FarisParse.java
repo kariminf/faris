@@ -536,7 +536,7 @@ public class FarisParse extends Parser {
 		
 		type = type.toUpperCase();
 		
-		System.out.print("EndRelative: " + type);
+		//System.out.print("EndRelative: " + type);
 		
 		Adpositional adp = uMap.mapAdposition(type);
 		
@@ -544,7 +544,7 @@ public class FarisParse extends Parser {
 		
 		RelativeType adjType = Concepts.getAdjType(adp, firstSynset);
 		
-		System.out.println(" which is " + adjType + "." + adp + ".syn:" + firstSynset);
+		//System.out.println(" which is " + adjType + "." + adp + ".syn:" + firstSynset);
 
 		//The destination is a role
 		if (StonLex.isPredicateRole(type)){

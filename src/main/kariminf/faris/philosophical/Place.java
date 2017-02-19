@@ -84,7 +84,7 @@ public class Place extends Being{
 
 	@Override
 	public void generate(Generator gr) {
-		// TODO Auto-generated method stub
+		gr.processPlace(relation, adv, places);
 		
 	}
 	

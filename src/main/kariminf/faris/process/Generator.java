@@ -64,7 +64,10 @@ public abstract class Generator<T> {
 	public void processPlace(Adpositional relation, Adverb adv, ArrayList<QuantSubstance> places){
 		beginPlaceHandler(relation, adv);
 		ArrayList<ArrayList<QuantSubstance>> disj = new ArrayList<>();
+		if (places == null) System.out.println("null palces");
+		else if (places.isEmpty()) System.out.println("empty palces");
 		disj.add(places);
+		processDisjunctions(disj);
 		endPlaceHandler();
 	}
 	
@@ -72,6 +75,7 @@ public abstract class Generator<T> {
 		beginTimeHandler(relation, adv, datetime);
 		ArrayList<ArrayList<QuantSubstance>> disj = new ArrayList<>();
 		disj.add(times);
+		processDisjunctions(disj);
 		endTimeHandler();
 	}
 

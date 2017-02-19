@@ -5,7 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import kariminf.faris.linguistic.Adjective;
@@ -38,6 +40,9 @@ public class StonGenerator extends Generator<String> {
 		PLACE,
 		TIME
 	}
+	
+	private static final List<Block> conjBlocks = 
+			Arrays.asList(Block.AGENT, Block.THEME, Block.PLACE, Block.TIME);
 	private ArrayDeque<Block> openBlocks = new ArrayDeque<>();
 	
 	private ArrayList<String> conj = null;
@@ -128,9 +133,11 @@ public class StonGenerator extends Generator<String> {
 		
 		case PLACE:
 		{
-			if (currentActIDs.isEmpty()) break;
+			if (currentActIDs.isEmpty()) {
+				break;
+			}
 			String currentActID = currentActIDs.peek();
-			//TODO verify the string in getAdposition
+			//System.out.println("place>>>" + u2sMap.getAdposition(adpos, ""));
 			rc.addRelative(u2sMap.getAdposition(adpos, ""), currentActID);
 			rc.addRelativeConjunctions(conj);
 			conj = new ArrayList<>();
@@ -141,7 +148,7 @@ public class StonGenerator extends Generator<String> {
 		{
 			if (currentActIDs.isEmpty()) break;
 			String currentActID = currentActIDs.peek();
-			//TODO verify the string in getAdposition
+			//System.out.println("time>>>" + u2sMap.getAdposition(adpos, ""));
 			rc.addRelative(u2sMap.getAdposition(adpos, ""), currentActID);
 			rc.addRelativeConjunctions(conj);
 			conj = new ArrayList<>();
@@ -167,8 +174,7 @@ public class StonGenerator extends Generator<String> {
 		
 		currentRoleIDs.push(id);
 		
-		Block type = openBlocks.peek();
-		if ( type == Block.AGENT || type == Block.THEME){
+		if (conjBlocks.contains(openBlocks.peek())){
 			conj.add(id);
 		}
 		
@@ -210,10 +216,8 @@ public class StonGenerator extends Generator<String> {
 
 	@Override
 	protected void substanceFoundHandler(String id) {
-		Block type = openBlocks.peek();
-		if ( type == Block.AGENT || type == Block.THEME){
+		if (conjBlocks.contains(openBlocks.peek())){
 			conj.add(id);
-			return;
 		}
 		
 	}
@@ -323,7 +327,7 @@ public class StonGenerator extends Generator<String> {
 		if (adv != null)
 			rc.addActionAdverb(currentActID, adv.getSynSet());
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String date = datetime.format(dtf);
+		//String date = datetime.format(dtf);
 		//TODO create a new substance with this date
 		
 		
