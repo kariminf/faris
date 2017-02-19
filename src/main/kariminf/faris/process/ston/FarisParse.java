@@ -177,7 +177,7 @@ public class FarisParse extends Parser {
 
 		Substance sub = Search.getElement(substances, new Substance(synSet));
 
-		currentPlayer = new QuantSubstance(sub, new Quantity(1.0));
+		currentPlayer = new QuantSubstance(sub);
 		_players.put(id, currentPlayer);
 
 	}
@@ -427,19 +427,25 @@ public class FarisParse extends Parser {
 
 		quantity = quantity.toLowerCase();
 
+		if(quantity.endsWith("pl")){
+			int len = quantity.length();
+			quantity = quantity.substring(0, len-2);
+			Quantity farisQuantity = new Quantity();
+			currentPlayer.setQuantity(farisQuantity);
+		}
+		
 		if(quantity.length() < 1 || quantity.equals("1")) return;
-
+		
+		boolean isOrdinal = false;
 		if (quantity.startsWith("o")){
 			quantity = quantity.substring(1);
-
-			//quantity = getOrdinal(quantity);
+			isOrdinal = true;
 		}
-
-
-		if(quantity.equals("pl")) return;
-
-		//np.addPreModifier(quantity);
-
+		
+		double numQuantity = Double.parseDouble(quantity);
+		Quantity farisQuantity = new Quantity(numQuantity);
+		if(isOrdinal) farisQuantity.setOrdinal();
+		currentPlayer.setQuantity(farisQuantity);
 	}
 
 	@Override

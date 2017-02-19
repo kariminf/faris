@@ -58,7 +58,7 @@ public class Faris {
 	
 	
 	public Faris() {
-		QuantSubstance s = new QuantSubstance(new Substance(0), new Quantity(1.0));
+		QuantSubstance s = new QuantSubstance(new Substance(0));
 		minds.put("$", new Mind("$", s));
 	}
 	

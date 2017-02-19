@@ -185,11 +185,14 @@ public abstract class Generator<T> {
 		}
 	}
 	
-	private void addSubstance(String id, Substance sub, Quantity q){
+	private void addSubstance(String id, Substance sub, Quantity pl, Quantity nbr){
 		
 		beginSubstanceHandler(id, sub.getNoun());
 		
-		if (q != null) q.generate(this);
+		if(pl != null) pl.generate(this);
+		
+		if(nbr != null) nbr.generate(this);
+		
 		for (Quality ql : sub.getQualities()) ql.generate(this);
 		endSubstanceHandler();
 	}
@@ -200,7 +203,8 @@ public abstract class Generator<T> {
 	
 	public void processQuantity(Quantity q){
 		Noun unit = (q.getUnit() == null)? null: q.getUnit().getNoun();
-		addQuantityHandler(q.getNumber(), unit);
+		if(q.isPlural()) addQuantityHandler(unit);
+		else addQuantityHandler(q.getNumber(), unit, q.isCardinal());
 	}
 
 	public void processSubstance(QuantSubstance qsub){
@@ -217,7 +221,15 @@ public abstract class Generator<T> {
 		
 		substancesNbr++;
 		qsubstanceIDs.put(qsub, substancesNbr);
-		addSubstance(id, qsub.getSubstance(), qsub.getQuantity());
+		addSubstance(id, qsub.getSubstance(), qsub.getPlQuanty(), qsub.getNbrQuanty());
+		
+		{
+			Quantity nbr = qsub.getNbrQuanty();
+			if (nbr != null) nbr.generate(this);
+			Quantity pl = qsub.getPlQuanty();
+			if (pl != null) pl.generate(this);
+		}
+		
 		
 		String subID = ROLE + qsubstanceIDs.get(tmpSubstance);
 		String actID = ACTION + actionIDs.get(tmpLastAction);
@@ -243,7 +255,7 @@ public abstract class Generator<T> {
 		}
 		substancesNbr++;
 		substanceIDs.put(sub, substancesNbr);
-		addSubstance(id, sub, null);
+		addSubstance(id, sub, null, null);
 	}
 	
 	/**
@@ -366,7 +378,14 @@ public abstract class Generator<T> {
 	 * @param nbr The quantity
 	 * @param unit the unit of the quantity
 	 */
-	protected abstract void addQuantityHandler(double nbr, Noun unit);
+	protected abstract void addQuantityHandler(double nbr, Noun unit, boolean cardinal);
+	
+	/**
+	 * This is called when we want to add a quantity to the current substance. 
+	 * It is used to say the substance is plural
+	 * @param unit the unit of the quantity
+	 */
+	protected abstract void addQuantityHandler(Noun unit);
 	
 	/**
 	 * This is called when we want to add a quality to the current substance

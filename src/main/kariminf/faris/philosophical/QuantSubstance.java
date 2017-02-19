@@ -8,23 +8,51 @@ import kariminf.faris.process.Generator;
 public class QuantSubstance extends Being{
 	
 	private Substance substance;
-	private Quantity quantity;
+	private Quantity plQuantity;
+	private Quantity nbrQuantity;
 	
 	//Here the substance is the subject (doer)
-	private HashSet<Action> actions = new HashSet<>();
+	private Set<Action> actions = new HashSet<>();
 
 	//Here the substance is the object (receiver of the action)
-	private HashSet<Action> affections = new HashSet<>();
+	private Set<Action> affections = new HashSet<>();
 		
 	//States
-	private HashSet<State> states = new HashSet<>();
+	private Set<State> states = new HashSet<>();
 	
-	private HashSet<Relative> relatives = new HashSet<>();
+	private Set<Relative> relatives = new HashSet<>();
 		
 	
-	public QuantSubstance(Substance substance, Quantity quantity) {
+	public QuantSubstance(Substance substance) {
 		this.substance = substance;
-		this.quantity = quantity;
+	}
+	
+	/**
+	 * Set the quantity
+	 * @param quantity if it is null; the two quantities will be set to null
+	 */
+	public void setQuantity(Quantity quantity){
+		
+		if (quantity == null){
+			plQuantity = null;
+			nbrQuantity = null;
+			return;
+		}
+		
+		if (quantity.isPlural()){
+			plQuantity = quantity;
+			return;
+		}
+		
+		nbrQuantity = quantity;
+	}
+	
+	public Quantity getPlQuanty(){
+		return plQuantity;
+	}
+	
+	public Quantity getNbrQuanty(){
+		return nbrQuantity;
 	}
 	
 	/**
@@ -34,7 +62,9 @@ public class QuantSubstance extends Being{
 	 * @return A new Quantified Substance with a different substance than the original had.
 	 */
 	public static QuantSubstance withNewSubstance(QuantSubstance orig, Substance newSubs){
-		QuantSubstance result = new QuantSubstance(newSubs, orig.quantity);
+		QuantSubstance result = new QuantSubstance(newSubs);
+		result.plQuantity = orig.plQuantity;
+		result.nbrQuantity = orig.nbrQuantity;
 		result.actions = orig.actions;
 		result.affections = orig.affections;
 		result.states = orig.states;
@@ -50,9 +80,8 @@ public class QuantSubstance extends Being{
 	public String toString() {
 		String result = "";
 		result += substance;
-		//States are related to actions
-		//result += (states.isEmpty())? "": "-S:" + states;
-		result += (quantity != null)? "-" + quantity : "";
+		result += (nbrQuantity == null)? "": "-" + nbrQuantity;
+		result += (plQuantity == null)? "": "-" + plQuantity;
 		return result;
 	}
 
@@ -64,13 +93,6 @@ public class QuantSubstance extends Being{
 		return substance;
 	}
 
-
-	/**
-	 * @return the quantity
-	 */
-	public Quantity getQuantity() {
-		return quantity;
-	}
 	
 	public void addAction(Action action){
 		actions.add(action);

@@ -50,9 +50,47 @@ public class Quantity extends Being{
 	
 	private double nbr;
 	private Substance unit; //mesure unit: kilogram, etc.
+	private boolean cardinal = true;
+	private boolean plural = false;
 
 	public Quantity(double nbr) {
 		this.nbr = nbr;
+	}
+	
+	public Quantity copy(){
+		Quantity result;
+		if(plural){
+			result = new Quantity();
+		} else {
+			result = new Quantity(nbr);
+		}
+		
+		result.unit = unit;
+		result.cardinal = cardinal;
+		
+		return result;
+	}
+	
+	/**
+	 * This means there are a lot (Plural): undefined plural quantity
+	 */
+	public Quantity() {
+		this.plural = true;
+	}
+	
+	/**
+	 * We can set ordinal for number quantities
+	 */
+	public void setOrdinal(){
+		if (! plural) cardinal = false;
+	}
+	
+	public boolean isPlural(){
+		return plural;
+	}
+	
+	public boolean isCardinal(){
+		return cardinal;
 	}
 	
 	public void addUnit(Substance unit){
@@ -73,7 +111,11 @@ public class Quantity extends Being{
 	@Override
 	public String toString() {
 		String result = "";
-		result += nbr;
+		if (plural) result += "PL";
+		else {
+			result += nbr;
+			result += (cardinal)? "": "O";
+		}
 		result += (unit != null)? ":" + unit: "";
 		return result;
 	}

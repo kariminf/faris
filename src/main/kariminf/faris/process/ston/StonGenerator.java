@@ -190,12 +190,21 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void addQuantityHandler(double nbr, Noun unit) {
-		if (nbr == 1.0) return;
+	protected void addQuantityHandler(double nbr, Noun unit, boolean cardinal) {
+		if (cardinal && (nbr == 1.0)) return;
 		if (openBlocks.peek() != Block.ROLE) return;
 		if (currentRoleIDs.isEmpty()) return;
 		String quantity = "" + nbr;
+		quantity += (cardinal)? "": "O";
 		rc.setQuantity(currentRoleIDs.peek(), quantity);
+		
+	}
+	
+	@Override
+	protected void addQuantityHandler(Noun unit) {
+		if (openBlocks.peek() != Block.ROLE) return;
+		if (currentRoleIDs.isEmpty()) return;
+		rc.setQuantity(currentRoleIDs.peek());
 		
 	}
 
@@ -290,10 +299,7 @@ public class StonGenerator extends Generator<String> {
 			rc.addRelative("OBJ", id);
 			rc.addRelativeConjunctions(statesOBJ);
 		}
-		
-		
-		
-		
+
 		
 	}
 
@@ -340,9 +346,5 @@ public class StonGenerator extends Generator<String> {
 		
 	}
 	
-	
-
-	
-
 
 }
