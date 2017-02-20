@@ -561,7 +561,8 @@ public class FarisParse extends Parser {
 			//The main clause is an action
 			//eg. The man is IN the car
 			if (currentActionID != null){
-				
+				//TODO the action can refer to an action:
+				//He is Where I can see him
 				switch (adjType) {
 				case PLACE:
 					Place p = new Place(adp);
@@ -613,6 +614,31 @@ public class FarisParse extends Parser {
 			//from action to action (adverbials)
 			Adverbial adv = uMap.mapAdverbial(type);
 			
+			switch (adv) {
+			case AFTER:
+				break;
+			case BEFORE:
+				break;
+			case CONDITION:
+				break;
+			case CONSESSION:
+				break;
+			case CONTINUUM:
+				break;
+			case MANNER:
+				break;
+			case PLACE:
+				break;
+			case PURPOSE:
+				break;
+			case REASON:
+				break;
+			case TIME:
+				break;
+			default:
+				break;
+			}
+			
 			//System.out.println("Adverbial: " + adv);
 			RelDisj = null;
 			return;
@@ -621,7 +647,10 @@ public class FarisParse extends Parser {
 		//The main clause is a role
 		//eg. The man who is driving
 		Relation.Relative rel = uMap.mapRelative(type);
-		//System.out.println("Complementizer: " + rel);
+		
+		//TODO a list of states must be retained
+		//This can't be handled here, because we didn't create the relative action yet
+		
 		
 		RelDisj = null;
 		

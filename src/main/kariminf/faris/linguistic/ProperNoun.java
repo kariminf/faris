@@ -67,5 +67,19 @@ public class ProperNoun extends Noun {
 	}
 	
 	
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ProperNoun)) return false;
+        if (!super.equals(obj)) return false;
+        
+        //TODO try to complete
+        return true;
+	}
+	
 
 }
