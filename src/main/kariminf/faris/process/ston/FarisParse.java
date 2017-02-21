@@ -155,7 +155,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addVerbSpecif(String tense, String modality,
-			boolean progressive, boolean negated) {
+			boolean progressive, boolean perfect, boolean negated) {
 		Verb verb = currentAction.getVerb();
 		verb.setTense(Ston2FarisLex.getTense(tense));
 		//verb.setAspect(Aspect.valueOf(aspect));
@@ -555,14 +555,9 @@ public class FarisParse extends Parser {
 		//The destination is a role
 		if (StonLex.isPredicateRole(type)){
 			
-			//TODO differentiate between Place and Time
-			
-			
 			//The main clause is an action
 			//eg. The man is IN the car
 			if (currentActionID != null){
-				//TODO the action can refer to an action:
-				//He is Where I can see him
 				switch (adjType) {
 				case PLACE:
 					Place p = new Place(adp);
@@ -601,6 +596,33 @@ public class FarisParse extends Parser {
 			
 			//The main clause is a role
 			//eg. The man IN the car
+			Verb toBe = new Verb(2604760);
+			Action stateAction = Action.getNew(toBe);//To be
+			State state = new State(stateAction);
+			switch (adjType) {
+			case PLACE:
+				Place p = new Place(adp);
+				for (List<String> conj: RelDisj)
+					for (String subID: conj)
+						if (_players.containsKey(subID)){
+							p.addLocation(_players.get(subID));
+						}
+				currentAction.addLocation(p);
+				break;
+			case TIME:
+				Time t = new Time(adp);
+				for (List<String> conj: RelDisj)
+					for (String subID: conj)
+						if (_players.containsKey(subID)){
+							t.addTimeSubstance(_players.get(subID));
+						}
+				currentAction.addTime(t);
+				break;
+				
+			default:
+				break;
+			}
+			
 			
 			RelDisj = null;
 			return;
@@ -608,8 +630,8 @@ public class FarisParse extends Parser {
 
 		//The destination is an action
 
-		//The main clause is an action
-		//eg. He is where I can see him
+		//TODO the action can refer to an action:
+		//He is Where I can see him
 		if (currentActionID != null){
 			//from action to action (adverbials)
 			Adverbial adv = uMap.mapAdverbial(type);

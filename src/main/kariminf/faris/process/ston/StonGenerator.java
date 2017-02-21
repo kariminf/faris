@@ -194,8 +194,8 @@ public class StonGenerator extends Generator<String> {
 		if (cardinal && (nbr == 1.0)) return;
 		if (openBlocks.peek() != Block.ROLE) return;
 		if (currentRoleIDs.isEmpty()) return;
-		String quantity = "" + nbr;
-		quantity += (cardinal)? "": "O";
+		String quantity = (cardinal)? "": "O";
+		quantity += nbr;
 		rc.setQuantity(currentRoleIDs.peek(), quantity);
 		
 	}
