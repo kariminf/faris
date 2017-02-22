@@ -68,6 +68,7 @@ public class QuantSubstance extends Being{
 		result.actions = orig.actions;
 		result.affections = orig.affections;
 		result.states = orig.states;
+		result.relatives = orig.relatives;
 		
 		return result;
 	}

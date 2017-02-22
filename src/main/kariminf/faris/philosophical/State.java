@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kariminf.faris.process.Generator;
+import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
  * Having or state, condition (ἔχειν, echein, to have or be). 
@@ -54,7 +55,7 @@ public class State extends Being{
 	private List<Action> mainActions = new ArrayList<>();
 	
 	
-	//TODO add something else so, it can reflect: in which, of which, etc.
+	
 	private Action stateAction;
 	
 	/**

@@ -20,11 +20,8 @@
 
 package kariminf.faris.philosophical;
 
-import java.util.HashSet;
-
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.process.Generator;
-import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
  * Relative or relation (πρός τι, pros ti, toward something). 
@@ -33,7 +30,7 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -55,9 +52,7 @@ public class Relative extends Being{
 	//	Comparison: taller than
 	//Issue #9
 	public static enum RelativeType {
-		OTHER, // other relation defined by the preposition
-		PLACE, // a place relation defined by the preposition
-		TIME, // a time relation defined by the preposition
+		OF, // other relation defined by the preposition
 		MORE,
 		LESS,
 		MOST,
@@ -65,68 +60,124 @@ public class Relative extends Being{
 		EQUAL
 	}
 	
-	private static abstract class TheRelation {}
+	//The owner can be a substance: the man is taller than the boy
+	private QuantSubstance owner;
+	//The owner can be an action: Karim worked harder than his colleague.
+	private Action actOwner;
 	
-	private static class AdpRelation extends TheRelation {
-		private Adpositional adpositional; //of
-		private AdpRelation(Adpositional adp){
-			adpositional = adp;
-		}
-	}
-	
-	private static class AdjRelation extends TheRelation {
-		private Adjective adjective; //Taller, less tall
-		private AdjRelation (Adjective adj){
-			adjective = adj;
-		}
-		
-	}
-	
-	private HashSet<QuantSubstance> owners = new HashSet<>();
 	private RelativeType relationType;
-	private TheRelation relation;
-	private HashSet<QuantSubstance> relatives = new HashSet<>();
+	private QuantSubstance relative;
+	
+	//He works more than Me.
+	private Adjective adjective;
 		
-	protected Relative() {
+	private Relative(RelativeType type, Adjective relation, QuantSubstance relative){
+		this.relationType = type;
+		this.adjective = relation;
+		this.relative = relative;
 	}
 	
-	public static Relative getNew(RelativeType type, Adpositional relation){
+	/**
+	 * Creates a Relative OF. For example: the mother of the child.
+	 * @param owner the owner of the relation; in the example: the mother
+	 * @param relative the relative; in the example: the child
+	 * @return null if the owner or the relative are null; or a new relative
+	 */
+	public static Relative getNew(QuantSubstance owner, QuantSubstance relative){
+
+		if (owner == null) return null;
+		if (relative == null) return null;
 		
-		if (type.ordinal() > 2) return null;
-		
-		Relative result = new Relative();
-		result.relationType = type;
-		
-		AdpRelation adpr = new AdpRelation(relation);
-		
-		result.relation = adpr;
-		
+		Relative result = new Relative(RelativeType.OF, null, relative);
+		result.owner = owner;
 		
 		return result;
 	}
 	
-	public static Relative getNew(RelativeType type, Adjective relation){
+	/**
+	 * Comparison relative: He is taller than me
+	 * @param type
+	 * @param relation
+	 * @return
+	 */
+	public static Relative getNew(RelativeType type, Adjective relation, 
+			Action owner, QuantSubstance relative){
 		
-		if (type.ordinal() < 3) return null;
+		//This type of relative is for comparison
+		if (type == RelativeType.OF) return null;
+		if (owner == null) return null;
 		
-		Relative result = new Relative();
-		result.relationType = type;
 		
-		AdjRelation adpr = new AdjRelation(relation);
-		
-		result.relation = adpr;
-		
+		Relative result = new Relative(type, relation, relative);
+		result.actOwner = owner;
 		
 		return result;
 	}
 	
-	public void addOwner(QuantSubstance owner){
-		owners.add(owner);
+	
+	/**
+	 * Comparison relative: He is taller than me
+	 * @param type
+	 * @param relation
+	 * @return
+	 */
+	public static Relative getNew(RelativeType type, Adjective relation, 
+			QuantSubstance owner, QuantSubstance relative){
+		
+		//This type of relative is for comparison
+		if (type == RelativeType.OF) return null;
+		if (owner == null) return null;
+		if (relative == null) return null;
+		//Here, we must have an adjective
+		if (relation == null) return null;
+		
+		
+		Relative result = new Relative(type, relation, relative);
+		result.owner = owner;
+		
+		return result;
 	}
 	
-	public void addRelative(QuantSubstance relative){
-		owners.add(relative);
+	public Action getOwnerAction(){
+		return actOwner;
 	}
+	
+	public QuantSubstance getOwnerSubstance(){
+		return owner;
+	}
+	
+	public QuantSubstance getRelative(){
+		return owner;
+	}
+	
+	public RelativeType getRelativeType(){
+		return relationType;
+	}
+	
+	public Adjective getAdjective(){
+		return adjective;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		
+		String result = "R:";
+		
+		if (relationType == RelativeType.OF){
+			result += "OF{" + owner + "}";
+			return result;
+		} 
+		
+		result += relationType + "{";
+		result += (adjective == null)? "": adjective;
+		result += "}." + relative;
+		
+		return result;
+	}
+	
 
 	@Override
 	public void generate(Generator gr) {

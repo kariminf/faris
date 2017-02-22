@@ -99,6 +99,9 @@ public class Action extends Being{
 	//An action can have relations with other Actions
 	private HashMap<Action, ActionRelation> relations = new HashMap<>();
 	
+	//An action can have relatives: He works harder than his brother
+	private Set<Relative> relatives = new HashSet<>();
+	
 	//An action can have locations
 	private Set<Place> locations = new HashSet<>(); 
 	
@@ -187,6 +190,12 @@ public class Action extends Being{
 		times.add(time);
 	}
 	
+	//The action must be set as owner before adding it
+	public void addRelative(Relative relative){
+		if (relative.getOwnerAction() != this) return;
+		relatives.add(relative);
+	}
+	
 	private ArrayList<ArrayList<QuantSubstance>> getDisjunctions(Set<ConjunctedSubstances> disjunctions){
 		ArrayList<ArrayList<QuantSubstance>> result = new ArrayList<>();
 		for (ConjunctedSubstances conjunctions: disjunctions)
@@ -224,6 +233,12 @@ public class Action extends Being{
 	public Set<Time> getTimes(){
 		HashSet<Time> result = new HashSet<>();
 		result.addAll(times);
+		return result;
+	}
+	
+	public Set<Relative> getRelatives(){
+		HashSet<Relative> result = new HashSet<>();
+		result.addAll(relatives);
 		return result;
 	}
 

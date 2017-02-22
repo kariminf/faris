@@ -17,6 +17,13 @@ public class Concepts {
 	
 	public static final int ALSO = 47534;
 	
+	
+	public static enum PlaceTime {
+		OTHER,
+		PLACE,
+		TIME
+	}
+	
 	private static ArrayList<Integer> placeAdv = initPlaceAdv();
 	private static ArrayList<Integer> initPlaceAdv() {
 		ArrayList<Integer> padv = new ArrayList<>();
@@ -101,10 +108,10 @@ public class Concepts {
 	 * @param advSynSet
 	 * @return
 	 */
-	public static RelativeType getAdverbType(int advSynSet){
-		if (placeAdv.contains(advSynSet)) return RelativeType.PLACE;
-		if (timeAdv.contains(advSynSet)) return RelativeType.TIME;
-		return RelativeType.OTHER;
+	public static PlaceTime getAdverbType(int advSynSet){
+		if (placeAdv.contains(advSynSet)) return PlaceTime.PLACE;
+		if (timeAdv.contains(advSynSet)) return PlaceTime.TIME;
+		return PlaceTime.OTHER;
 	}
 	
 	/**
@@ -113,11 +120,11 @@ public class Concepts {
 	 * @param nounSySet
 	 * @return
 	 */
-	public static RelativeType getAdjType(Adpositional adp, int nounSySet){
+	public static PlaceTime getAdjType(Adpositional adp, int nounSySet){
 		
-		if(timeAdj.contains(adp)) return RelativeType.TIME;
-		if(placeAdj.contains(adp)) return RelativeType.PLACE;
-		if(otherAdj.contains(adp)) return RelativeType.OTHER;
+		if(timeAdj.contains(adp)) return PlaceTime.TIME;
+		if(placeAdj.contains(adp)) return PlaceTime.PLACE;
+		if(otherAdj.contains(adp)) return PlaceTime.OTHER;
 		
 		/*
 		EXIST, // particular time or location in, at (time, place, situation)
@@ -135,8 +142,8 @@ public class Concepts {
 		
 		//System.out.println(" LexNum: " + lexNum);
 		
-		if (timeLex.contains(lexNum)) return RelativeType.TIME;
-		if (placeLex.contains(lexNum)) return RelativeType.PLACE;
+		if (timeLex.contains(lexNum)) return PlaceTime.TIME;
+		if (placeLex.contains(lexNum)) return PlaceTime.PLACE;
 		
 		// 07	noun.attribute	nouns denoting attributes of people and objects
 		// 09	noun.cognition	nouns denoting cognitive processes and contents
@@ -149,7 +156,7 @@ public class Concepts {
 		// 23	noun.quantity	nouns denoting quantities and units of measure
 		// 24	noun.relation	nouns denoting relations between people or things or ideas
 		// 26	noun.state	nouns denoting stable states of affairs
-		return RelativeType.OTHER;
+		return PlaceTime.OTHER;
 	}
 	
 	
