@@ -2,7 +2,7 @@
  * FAris : Farabi & Aristotle
  * Faris : A knight (in Arabic)
  * --------------------------------------------------------------------
- * Copyright (C) 2015 Abdelkrime Aries (kariminfo0@gmail.com)
+ * Copyright (C) 2015-2017 Abdelkrime Aries (kariminfo0@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kariminf.faris.process.Generator;
-import kariminf.sentrep.univ.types.Relation.Adpositional;
+import kariminf.sentrep.univ.types.Relation;
 
 /**
  * Having or state, condition (ἔχειν, echein, to have or be). 
@@ -36,7 +36,7 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015,2017 Abdelkrime Aries
+ *         Copyright (c) 2015-2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class State extends Being{
 
 	private List<Action> mainActions = new ArrayList<>();
 	
-	
+	Relation.Relative affectionType;
 	
 	private Action stateAction;
 	
@@ -65,8 +65,6 @@ public class State extends Being{
 	public State(Action mainAction) {
 		this.mainActions.add(mainAction);
 	}
-	
-	//TODO a state can be considered for a group or we just use a state for each Substance
 	
 	/**
 	 * 
@@ -80,7 +78,7 @@ public class State extends Being{
 	 * @param affected if true, then the haver is an object, otherwise it is a subject
 	 * @return true if the affectation is successful 
 	 */
-	public boolean affectState (Action action, QuantSubstance owner, List<List<QuantSubstance>> relatives, boolean affected){
+	public boolean affectState (Action action, QuantSubstance owner, List<List<QuantSubstance>> relatives, Relation.Relative affectionType){
 		if(action.hasAgents())
 			return false;
 		if(action.hasThemes())
@@ -89,7 +87,8 @@ public class State extends Being{
 		List<QuantSubstance> _owner = new ArrayList<>();
 		_owner.add(owner);
 		
-		if (affected){
+		this.affectionType = affectionType;
+		if (affectionType == Relation.Relative.SUBJECT){
 			
 			action.addConjunctObjects(_owner);
 			for(List<QuantSubstance> _relatives : relatives)
@@ -119,6 +118,8 @@ public class State extends Being{
 	public Action getStateAction() {
 		return stateAction;
 	}
+	
+	
 
 	@Override
 	public void generate(Generator gr) {

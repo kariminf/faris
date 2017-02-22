@@ -39,7 +39,7 @@ import kariminf.faris.process.ston.Concepts;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015-2016 Abdelkrime Aries
+ *         Copyright (c) 2015-2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public class Action extends Being{
 	public static enum ActionRelation {
 		IMPLY,
 		CAUSE,
-		After,
-		Before
+		AFTER,
+		BEFORE
 	}
 	
 	private static class ConjunctedSubstances extends HashSet<QuantSubstance> {
