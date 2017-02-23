@@ -83,6 +83,7 @@ public class QuantSubstance extends Being{
 		result += substance;
 		result += (nbrQuantity == null)? "": "-" + nbrQuantity;
 		result += (plQuantity == null)? "": "-" + plQuantity;
+		result += (relatives.isEmpty())? "": "-R" + relatives;
 		return result;
 	}
 
@@ -121,6 +122,10 @@ public class QuantSubstance extends Being{
 	
 	public void addState(State state) {
 		this.states.add(state);
+	}
+	
+	public void addRelative(Relative relative){
+		this.relatives.add(relative);
 	}
 
 	@Override

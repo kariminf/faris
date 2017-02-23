@@ -78,40 +78,41 @@ public class Relative extends Being{
 	}
 	
 	/**
-	 * Creates a Relative OF. For example: the mother of the child.
+	 * Creates a Relative OF. For example: the mother of the child. 
+	 * Then affect it to the owner
 	 * @param owner the owner of the relation; in the example: the mother
 	 * @param relative the relative; in the example: the child
-	 * @return null if the owner or the relative are null; or a new relative
 	 */
-	public static Relative getNew(QuantSubstance owner, QuantSubstance relative){
+	public static void affectRelative(QuantSubstance owner, QuantSubstance relative){
 
-		if (owner == null) return null;
-		if (relative == null) return null;
+		if (owner == null) return;
+		if (relative == null) return;
 		
 		Relative result = new Relative(RelativeType.OF, null, relative);
 		result.owner = owner;
-		
-		return result;
+		owner.addRelative(result);
 	}
 	
+
 	/**
-	 * Comparison relative: He is taller than me
+	 * Creates a relative and affect it to the owner
 	 * @param type
 	 * @param relation
-	 * @return
+	 * @param owner
+	 * @param relative
 	 */
-	public static Relative getNew(RelativeType type, Adjective relation, 
+	public static void affectRelative (RelativeType type, Adjective relation, 
 			Action owner, QuantSubstance relative){
 		
 		//This type of relative is for comparison
-		if (type == RelativeType.OF) return null;
-		if (owner == null) return null;
+		if (type == RelativeType.OF) return;
+		if (owner == null) return;
 		
 		
 		Relative result = new Relative(type, relation, relative);
 		result.actOwner = owner;
 		
-		return result;
+		owner.addRelative(result);
 	}
 	
 	
@@ -167,7 +168,7 @@ public class Relative extends Being{
 		String result = "R:";
 		
 		if (relationType == RelativeType.OF){
-			result += "OF{" + owner + "}";
+			result += "OF{" + relative + "}";
 			return result;
 		} 
 		

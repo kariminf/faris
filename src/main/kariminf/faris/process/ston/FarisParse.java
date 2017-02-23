@@ -610,6 +610,18 @@ public class FarisParse extends Parser {
 			case TIME:
 				break;
 				
+			case OTHER:
+				if (adp == Adpositional.POSSESSION){
+					//System.out.println("==> OF");
+					for (List<String> conj: RelDisj)
+						for (String subID: conj)
+							if (_players.containsKey(subID)){
+								QuantSubstance relative = _players.get(subID);
+								Relative.affectRelative(currentPlayer, relative);
+							}
+				}
+				break;
+				
 			default:
 				break;
 			}
