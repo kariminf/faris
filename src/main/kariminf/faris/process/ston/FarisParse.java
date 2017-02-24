@@ -79,6 +79,10 @@ public class FarisParse extends Parser {
 	private Action currentAction;
 
 	private String currentActionID;
+	
+	private String currentPlayerID;
+	
+	private HashMap<String, List<State>> _states = new HashMap<>();
 
 	private MentalState s = MentalState.FACT;
 
@@ -142,12 +146,22 @@ public class FarisParse extends Parser {
 
 	}//addNewMind
 	
+	/**
+	 * 
+	 * @param IDs
+	 * @return
+	 */
 	private List<QuantSubstance> getSubstances(List<String> IDs){
 		List<QuantSubstance> result = new ArrayList<>();
 		for (String roleID: IDs)
 			if (_players.containsKey(roleID)){
 				QuantSubstance role = _players.get(roleID);
 				result.add(role);
+				if (_states.containsKey(roleID)){
+					List<State> states = _states.get(roleID);
+					for (State state: states)
+						state.addMainAction(currentAction);
+				}
 			} else if (_pronouns.containsKey(roleID)){
 				List<QuantSubstance> result2 =
 						getSubstances(_pronouns.get(roleID));
@@ -358,6 +372,8 @@ public class FarisParse extends Parser {
 
 		currentPlayer = new QuantSubstance(sub);
 		_players.put(id, currentPlayer);
+		
+		currentPlayerID = id;
 
 	}//beginRole
 	
@@ -366,13 +382,16 @@ public class FarisParse extends Parser {
 		proleID = id;
 
 		currentPronoun = uMap.mapPronoun(pronoun);
-
+		
+		currentPlayerID = id;
 
 	}//beginRole (pronoun)
 
 	@Override
 	protected void endRole(String id, int synSet) {
 		//System.out.println(id);
+		currentPlayerID = null;
+		
 		if (currentPronoun != null){
 			switch (currentPronoun.getHead()) {
 
@@ -402,7 +421,7 @@ public class FarisParse extends Parser {
 		//Here the role may exists in substances
 		Substance sub = Search.getElement(substances, currentPlayer.getSubstance());
 
-		//When the substance if found in the set of substances
+		//When the substance is found in the set of substances
 		if (sub != currentPlayer.getSubstance()){
 			currentPlayer = QuantSubstance.withNewSubstance(currentPlayer, sub);
 			_players.put(id, currentPlayer);
@@ -603,31 +622,68 @@ public class FarisParse extends Parser {
 			//Here the destination must be defined before
 			//The main clause is a role
 			//=========================
+			//eg. The mother of the child
 			//eg. The man IN the car
-			Verb toBe = new Verb(2604760);
-			Action stateAction = Action.getNew(toBe);//To be
-			State state = new State(stateAction);
-			switch (adjType) {
-			case PLACE:
-				break;
-			case TIME:
-				break;
+			
+			if (currentPlayer == null){
+				RelDisj = null;
+				return;
+			}
+			
+			//The mother OF the child
+			if (adp == Adpositional.POSSESSION){
+				//System.out.println("==> OF");
+				for (List<String> conj: RelDisj)
+					for (String subID: conj)
+						if (_players.containsKey(subID)){
+							QuantSubstance relative = _players.get(subID);
+							Relative.affectRelative(currentPlayer, relative);
+						}
+				RelDisj = null;
+				return;
+			}
+			
+			//The man in the car
+			//This can be handled as "The man which is being in the car"
+			//As a state of a man <subject>, being in the car <no objects>
+						
+				Verb toBe = new Verb(2604760);
+				Action stateAction = Action.getNew(toBe);//To be
 				
-			case OTHER:
-				if (adp == Adpositional.POSSESSION){
-					//System.out.println("==> OF");
+				switch (adjType) {
+				case PLACE:{
+					Place p = new Place(adp);
 					for (List<String> conj: RelDisj)
 						for (String subID: conj)
 							if (_players.containsKey(subID)){
-								QuantSubstance relative = _players.get(subID);
-								Relative.affectRelative(currentPlayer, relative);
+								p.addLocation(_players.get(subID));
 							}
+					stateAction.addLocation(p);
+					break;
 				}
-				break;
+					
+				case TIME:{
+					Time t = new Time(adp);
+					for (List<String> conj: RelDisj)
+						for (String subID: conj)
+							if (_players.containsKey(subID)){
+								t.addTimeSubstance(_players.get(subID));
+							}
+					stateAction.addTime(t);
+					break;
+				}
+					
+				default:
+					RelDisj = null;
+					return;
+				}
 				
-			default:
-				break;
-			}
+				State state = new State();
+				state.affectState(stateAction, currentPlayer, null, Relation.Relative.SUBJECT);
+				
+				List<State> states = new ArrayList<State>();
+				states.add(state);
+				_states.put(currentPlayerID, states);
 			
 			
 			RelDisj = null;

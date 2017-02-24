@@ -62,7 +62,10 @@ public class State extends Being{
 	 * 
 	 * @param mainAction
 	 */
-	public State(Action mainAction) {
+	public State() {
+	}
+	
+	public void addMainAction(Action mainAction) {
 		this.mainActions.add(mainAction);
 	}
 	
@@ -75,7 +78,7 @@ public class State extends Being{
 	 * @param haver The substance which have this state
 	 * @param relatives The subjects or the objects that share this action with the haver.
 	 * If the haver is a subject, the relatives are objects, and vis-versa.
-	 * @param affected if true, then the haver is an object, otherwise it is a subject
+	 * @param affected if SUBJECT then the haver is a subject, otherwise it is an object
 	 * @return true if the affectation is successful 
 	 */
 	public boolean affectState (Action action, QuantSubstance owner, List<List<QuantSubstance>> relatives, Relation.Relative affectionType){
@@ -89,15 +92,14 @@ public class State extends Being{
 		
 		this.affectionType = affectionType;
 		if (affectionType == Relation.Relative.SUBJECT){
-			
-			action.addConjunctObjects(_owner);
-			for(List<QuantSubstance> _relatives : relatives)
-				action.addConjunctSubjects(_relatives);
-		}
-		else {
 			action.addConjunctSubjects(_owner);
 			for(List<QuantSubstance> _relatives : relatives)
 				action.addConjunctObjects(_relatives);
+		}
+		else {
+			action.addConjunctObjects(_owner);
+			for(List<QuantSubstance> _relatives : relatives)
+				action.addConjunctSubjects(_relatives);
 		}
 		
 		this.stateAction = action;
