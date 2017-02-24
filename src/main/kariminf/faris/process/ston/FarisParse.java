@@ -94,36 +94,28 @@ public class FarisParse extends Parser {
 	private HashSet<String> mainMindsIDs = new HashSet<>();
 
 	private UnivMap uMap = new Ston2UnivMap();
+	
+	String proleID = "";
+	Pronoun currentPronoun = null;
 
 
+	/**
+	 * Creates a new Faris Parser
+	 * @param substances
+	 * @param actions
+	 * @param minds
+	 */
 	public FarisParse(HashSet<Substance> substances, HashSet<Action> actions, HashMap<String, Mind> minds){
 		this.substances = substances;
 		this.actions = actions;
 		this.minds = minds;
 	}
-
-	@Override
-	protected void addAction(String id, int synSet) {
-
-		//MentalState pastState = s;
-
-		s = Concepts.getMentalState(synSet);
-
-		//We will need the action to save the subjects and the objects
-		//even if the sate is not a fact
-		Verb verb = new Verb(synSet);
-		currentAction = Action.getNew(verb);
-
-		if (s == MentalState.FACT){
-			_actions.put(id, currentAction);
-			//pastState = MentalState.FACT;
-		}
-
-		currentActionID = id;
-
-
-	}
-
+	
+	
+	//=====================================================================
+	//======================= PRIVATE METHODS =============================
+	//=====================================================================
+	
 	/**
 	 * Adds a new mind of the substance if it doesn't exist
 	 * @param agent the substance which we want
@@ -147,11 +139,85 @@ public class FarisParse extends Parser {
 
 		return m;
 
+	}//addNewMind
+	
+	private List<QuantSubstance> getSubstances(List<String> IDs){
+		List<QuantSubstance> result = new ArrayList<>();
+		for (String roleID: IDs)
+			if (_players.containsKey(roleID)){
+				QuantSubstance role = _players.get(roleID);
+				result.add(role);
+			} else if (_pronouns.containsKey(roleID)){
+				List<QuantSubstance> result2 =
+						getSubstances(_pronouns.get(roleID));
+				if (! result2.isEmpty())
+					result.addAll(result2);
+			}
+		return result;
+	}//getSubstances
+
+	private List<Action> getActions(Collection<String> IDs){
+		List<Action> result = new ArrayList<>();
+		for (String actID: IDs)
+			if (_actions.containsKey(actID)){
+				Action action = _actions.get(actID);
+				result.add(action);
+			}
+		return result;
+	}//getActions
+
+	private List<Mind> getMinds(Collection<String> IDs){
+		List<Mind> result = new ArrayList<>();
+		for (String actID: IDs)
+			if (_minds.containsKey(actID)){
+				Mind mind = _minds.get(actID);
+				result.add(mind);
+			}
+		return result;
+	}//getMinds
+	
+	
+	
+	
+	//=====================================================================
+	//================== Implementing methods =============================
+	//=====================================================================
+		
+		
+	//=====================================================================
+	//======================== ACTION METHODS =============================
+	//=====================================================================
+
+	@Override
+	protected void beginAction(String id, int synSet) {
+
+		//MentalState pastState = s;
+
+		s = Concepts.getMentalState(synSet);
+
+		//We will need the action to save the subjects and the objects
+		//even if the sate is not a fact
+		Verb verb = new Verb(synSet);
+		currentAction = Action.getNew(verb);
+
+		if (s == MentalState.FACT){
+			_actions.put(id, currentAction);
+			//pastState = MentalState.FACT;
+		}
+
+		currentActionID = id;
+
+
 	}
 
 	@Override
 	protected void endAction(String id, int synSet) {
 		currentActionID = null;
+	}
+	
+	@Override
+	protected boolean actionFailure() {
+		return true;
 	}
 
 	@Override
@@ -163,13 +229,109 @@ public class FarisParse extends Parser {
 	}
 
 
+	@Override
+	protected void addActionAdverb(int advSynSet, List<Integer> advSynSets) {
+
+		Adverb adv = new Adverb(advSynSet);
+
+		switch (Concepts.getAdverbType(advSynSet)) {
+
+		case PLACE:
+			Place place = new Place(adv);
+			currentAction.addLocation(place);
+			break;
+
+		case TIME:
+			Time time = new Time(adv);
+			currentAction.addTime(time);
+			break;
+
+		default:
+			currentAction.addAdverb(adv, null);
+			break;
+		}
+
+	}//addActionAdverb
+	
+	@Override
+	protected boolean adverbFailure() {
+		return true;
+	}//adverbFailure
+	
+	@Override
+	protected void beginAgents() {
+		disj = new ArrayList<>();
+
+	}//beginAgents
 
 	@Override
-	protected void actionFail() {
+	protected void endAgents() {
+
+		for (List<String> IDs: disj){
+			currentAction.addConjunctSubjects(getSubstances(IDs));
+		}
+
+	}//endAgents
+	
+	@Override
+	protected void beginThemes() {
+
+		disj = new ArrayList<>();
+
+	}//beginThemes
+
+	@Override
+	protected void endThemes() {
+
+		if (s == MentalState.FACT){
+			for (List<String> IDs: disj){
+				currentAction.addConjunctObjects(getSubstances(IDs));
+			}
+			return;
+		}
+
+		//TODO he and she **or** me thinks that ...
+		for (List<QuantSubstance> agents: currentAction.getAgents()){
+			for (QuantSubstance agent: agents){
+				Mind m = addNewMind(agent);
+
+				//TODO he thinks that ... and that ... or that ...
+				for (List<String> IDs: disj){
+					for(Action act: getActions(IDs)){
+						m.addAction(s, act);
+					}
+
+					for(Mind m2: getMinds(IDs)){
+						m.addOpinion(s, m2);
+						//System.out.println(m2.getName());
+					}
+				}
+
+				//The mind is added in the function addNewMind()
+				//_minds.put(m.getName(), m);
+			}
+		}
+
+	}//endThemes
+	
+	@Override
+	protected void beginComparison(String type, List<Integer> adjSynSets) {
+		// TODO Auto-generated method stub
+
 	}
+	
+	@Override
+	protected void endComparison(String type, List<Integer> adjSynSets) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	//=====================================================================
+	//========================= ROLE METHODS ==============================
+	//=====================================================================
 
 	@Override
-	protected void addRole(String id, int synSet) {
+	protected void beginRole(String id, int synSet) {
 
 		if (_players.containsKey(id)){
 			currentPlayer = _players.get(id);
@@ -181,10 +343,19 @@ public class FarisParse extends Parser {
 		currentPlayer = new QuantSubstance(sub);
 		_players.put(id, currentPlayer);
 
-	}
+	}//beginRole
+	
+	@Override
+	protected void beginRole(String id, int synSet, String pronoun) {
+		proleID = id;
+
+		currentPronoun = uMap.mapPronoun(pronoun);
+
+
+	}//beginRole (pronoun)
 
 	@Override
-	protected void endRole(String id) {
+	protected void endRole(String id, int synSet) {
 		//System.out.println(id);
 		if (currentPronoun != null){
 			switch (currentPronoun.getHead()) {
@@ -222,205 +393,13 @@ public class FarisParse extends Parser {
 		}
 
 
-	}
-
+	}//endRole
+	
+	
 	@Override
-	protected void addAdjective(int synSet, List<Integer> advSynSets) {
-		Adjective adj = new Adjective(synSet);
-		Quality quality = new Quality(adj);
-		quality.setAdverbsInt(advSynSets);
-		currentPlayer.getSubstance().addQuality(quality);
-
-	}
-
-	@Override
-	protected void adjectiveFail() {
-	}
-
-	@Override
-	protected void roleFail() {
-
-	}
-
-	@Override
-	protected void parseSuccess() {
-
-		for(QuantSubstance sub : _players.values()){	
-			substances.add(sub.getSubstance());
-		}
-
-
-		HashSet<Action> _mainactions = new HashSet<>();
-		for(String id: _actions.keySet()){
-			//If the action exists, we update the information 
-			Action action = _actions.get(id);
-			Action act = Search.getElement(actions, action);
-			act.update(action);
-			actions.add(act);
-
-			if (mainActionsIDs.contains(id)){
-				_mainactions.add(act);
-			}
-
-
-		}
-
-		Mind defaultMind = minds.get("$");
-		for(Action action: _mainactions){
-			defaultMind.addAction(MentalState.FACT, action);
-		}
-
-
-		for(String mindID: mainMindsIDs){
-			Mind mind = _minds.get(mindID);
-			minds.put(mind.getName(), mind);
-		}
-
-
-	}
-
-	@Override
-	protected void endActions(boolean mainClause) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	protected void addConjunctions(List<String> IDs) {
-		
-		if (RelDisj != null){
-			RelDisj.add(IDs);
-			return;
-		}
-
-		disj.add(IDs);
-	}
-
-
-	@Override
-	protected void beginAgents() {
-		disj = new ArrayList<>();
-
-	}
-
-	/*
-	 * 
-	 */
-	private List<QuantSubstance> getSubstances(List<String> IDs){
-		List<QuantSubstance> result = new ArrayList<>();
-		for (String roleID: IDs)
-			if (_players.containsKey(roleID)){
-				QuantSubstance role = _players.get(roleID);
-				result.add(role);
-			} else if (_pronouns.containsKey(roleID)){
-				List<QuantSubstance> result2 =
-						getSubstances(_pronouns.get(roleID));
-				if (! result2.isEmpty())
-					result.addAll(result2);
-			}
-		return result;
-	}
-
-	private List<Action> getActions(Collection<String> IDs){
-		List<Action> result = new ArrayList<>();
-		for (String actID: IDs)
-			if (_actions.containsKey(actID)){
-				Action action = _actions.get(actID);
-				result.add(action);
-			}
-		return result;
-	}
-
-	private List<Mind> getMinds(Collection<String> IDs){
-		List<Mind> result = new ArrayList<>();
-		for (String actID: IDs)
-			if (_minds.containsKey(actID)){
-				Mind mind = _minds.get(actID);
-				result.add(mind);
-			}
-		return result;
-	}
-
-	@Override
-	protected void endAgents() {
-
-		for (List<String> IDs: disj){
-			currentAction.addConjunctSubjects(getSubstances(IDs));
-		}
-
-	}
-
-	@Override
-	protected void addActionAdverb(int advSynSet, List<Integer> advSynSets) {
-
-		Adverb adv = new Adverb(advSynSet);
-
-		switch (Concepts.getAdverbType(advSynSet)) {
-
-		case PLACE:
-			Place place = new Place(adv);
-			currentAction.addLocation(place);
-			break;
-
-		case TIME:
-			Time time = new Time(adv);
-			currentAction.addTime(time);
-			break;
-
-		default:
-			currentAction.addAdverb(adv, null);
-			break;
-		}
-
-	}
-
-	@Override
-	protected void adverbFail() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void beginThemes() {
-
-		disj = new ArrayList<>();
-
-	}
-
-	@Override
-	protected void endThemes() {
-
-		if (s == MentalState.FACT){
-			for (List<String> IDs: disj){
-				currentAction.addConjunctObjects(getSubstances(IDs));
-			}
-			return;
-		}
-
-		//TODO he and she **or** me thinks that ...
-		for (List<QuantSubstance> agents: currentAction.getAgents()){
-			for (QuantSubstance agent: agents){
-				Mind m = addNewMind(agent);
-
-				//TODO he thinks that ... and that ... or that ...
-				for (List<String> IDs: disj){
-					for(Action act: getActions(IDs)){
-						m.addAction(s, act);
-					}
-
-					for(Mind m2: getMinds(IDs)){
-						m.addOpinion(s, m2);
-						//System.out.println(m2.getName());
-					}
-				}
-
-				//The mind is added in the function addNewMind()
-				//_minds.put(m.getName(), m);
-			}
-		}
-
-	}
+	protected boolean roleFailure() {
+		return true;
+	}//roleFailure
 
 	@Override
 	protected void addRoleSpecif(String name, String def, String quantity) {
@@ -447,30 +426,44 @@ public class FarisParse extends Parser {
 		Quantity farisQuantity = new Quantity(numQuantity);
 		if(isOrdinal) farisQuantity.setOrdinal();
 		currentPlayer.setQuantity(farisQuantity);
+	}//addRoleSpecif
+	
+	@Override
+	protected void addAdjective(int synSet, List<Integer> advSynSets) {
+		Adjective adj = new Adjective(synSet);
+		Quality quality = new Quality(adj);
+		quality.setAdverbsInt(advSynSets);
+		currentPlayer.getSubstance().addQuality(quality);
+
+	}//addAdjective
+
+	@Override
+	protected boolean adjectiveFailure() {
+		return true;
+	}//adjectiveFailure
+
+	@Override
+	protected void beginPRelatives() {
+		disj = new ArrayList<>();
 	}
 
 	@Override
-	protected void parseFail() {
-		// TODO Auto-generated method stub
+	protected void endPRelatives() {
+		
+		
+		if(disj.isEmpty() || disj.get(0).isEmpty()) return;
+		
+		_pronouns.put(proleID, disj.get(0));
+		 
+		disj = null;
+		//TODO when we have a disjunction of players
+		
 
 	}
-
-	@Override
-	protected void relativeFail() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void addRelative(String type) {
-		RelDisj = new ArrayList<>();
-	}
-
-	@Override
-	protected void addComparison(String type, List<Integer> adjSynSets) {
-		// TODO Auto-generated method stub
-
-	}
+	
+	//=====================================================================
+	//======================= SENTENCE METHODS ============================
+	//=====================================================================
 
 	@Override
 	protected void beginSentence(String type) {
@@ -498,39 +491,33 @@ public class FarisParse extends Parser {
 		// TODO Auto-generated method stub
 
 	}
-
-
-	String proleID = "";
-	Pronoun currentPronoun = null;
-
+	
 	@Override
-	protected void addPRole(String id, int synSet, String pronoun) {
-		proleID = id;
+	protected void endActions(boolean mainClause) {
+		// TODO Auto-generated method stub
 
-		currentPronoun = uMap.mapPronoun(pronoun);
-
-
-	}
-
+	}//endActions
+	
+	//=====================================================================
+	//======================== SHARED METHODS =============================
+	//=====================================================================
+	
 	@Override
-	protected void beginPRelatives() {
-		disj = new ArrayList<>();
-	}
+	protected void addConjunctions(List<String> IDs) {
+		
+		if (RelDisj != null){
+			RelDisj.add(IDs);
+			return;
+		}
 
+		disj.add(IDs);
+	}
+	
 	@Override
-	protected void endPRelatives() {
-		
-		
-		if(disj.isEmpty() || disj.get(0).isEmpty()) return;
-		
-		_pronouns.put(proleID, disj.get(0));
-		 
-		disj = null;
-		//TODO when we have a disjunction of players
-		
-
+	protected void beginRelative(String type) {
+		RelDisj = new ArrayList<>();
 	}
-
+	
 	@Override
 	protected void endRelative(String type) {
 		
@@ -679,6 +666,61 @@ public class FarisParse extends Parser {
 		
 		RelDisj = null;
 		
+	}//endRelative
+	
+	@Override
+	protected boolean relativeFailure() {
+		return true;
+
+	}
+	
+	//=====================================================================
+	//========================= PARSE METHODS =============================
+	//=====================================================================
+	
+	@Override
+	protected void parseSuccess() {
+
+		for(QuantSubstance sub : _players.values()){	
+			substances.add(sub.getSubstance());
+		}
+
+
+		HashSet<Action> _mainactions = new HashSet<>();
+		for(String id: _actions.keySet()){
+			//If the action exists, we update the information 
+			Action action = _actions.get(id);
+			Action act = Search.getElement(actions, action);
+			act.update(action);
+			actions.add(act);
+
+			if (mainActionsIDs.contains(id)){
+				_mainactions.add(act);
+			}
+
+
+		}
+
+		Mind defaultMind = minds.get("$");
+		for(Action action: _mainactions){
+			defaultMind.addAction(MentalState.FACT, action);
+		}
+
+
+		for(String mindID: mainMindsIDs){
+			Mind mind = _minds.get(mindID);
+			minds.put(mind.getName(), mind);
+		}
+
+
+	}//parseSuccess
+
+
+
+	@Override
+	protected void parseFailure() {
+		// TODO Auto-generated method stub
+
 	}
 
 }
