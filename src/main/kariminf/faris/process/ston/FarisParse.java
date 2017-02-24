@@ -36,6 +36,7 @@ import kariminf.sentrep.UnivMap;
 import kariminf.sentrep.ston.Parser;
 import kariminf.sentrep.ston.Ston2UnivMap;
 import kariminf.sentrep.ston.StonLex;
+import kariminf.sentrep.univ.types.Comparison;
 import kariminf.sentrep.univ.types.Pronoun;
 import kariminf.sentrep.univ.types.Pronoun.Head;
 import kariminf.sentrep.univ.types.Relation;
@@ -316,14 +317,29 @@ public class FarisParse extends Parser {
 	
 	@Override
 	protected void beginComparison(String type, List<Integer> adjSynSets) {
-		// TODO Auto-generated method stub
+		disj = new ArrayList<>();
 
 	}
 	
 	@Override
 	protected void endComparison(String type, List<Integer> adjSynSets) {
-		// TODO Auto-generated method stub
+
+		if (currentAction == null) return;
 		
+		Comparison cmp = uMap.mapComparison(type);
+		for (List<String> conj: disj)
+			for (String subID: conj)
+				if (_players.containsKey(subID)){
+					QuantSubstance relative = _players.get(subID);
+					for (int adjSynSet: adjSynSets){
+						Adjective adj = new Adjective(adjSynSet);
+						Relative.affectRelative (RelativeType.fromComparison(cmp), 
+								adj, currentAction, relative);
+					}
+					
+				}
+		disj = null;
+
 	}
 	
 	//=====================================================================

@@ -22,6 +22,7 @@ package kariminf.faris.philosophical;
 
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.process.Generator;
+import kariminf.sentrep.univ.types.Comparison;
 
 /**
  * Relative or relation (πρός τι, pros ti, toward something). 
@@ -57,7 +58,11 @@ public class Relative extends Being{
 		LESS,
 		MOST,
 		LEAST,
-		EQUAL
+		EQUAL;
+		
+		public static RelativeType fromComparison(Comparison cmp){
+			return RelativeType.valueOf(cmp.name());
+		}
 	}
 	
 	//The owner can be a substance: the man is taller than the boy
