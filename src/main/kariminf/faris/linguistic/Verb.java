@@ -59,7 +59,8 @@ public class Verb extends POS {
 	public static enum Aspect {
 		SIMPLE, //“I see” (simple aspect) expresses the act of seeing as a simple fact;
 		PROGRESSIVE, //“I am seeing” (progressive aspect) represents the action as continuous and ongoing; 
-		PERFECT; //“I have seen” (perfect aspect) represents the present situation as the result of past action. 
+		PERFECT, //“I have seen” (perfect aspect) represents the present situation as the result of past action.
+		PROGRESSIVEPERFECT;
 	
 		/*public static Aspect getAspect (int number){
 			switch (number){

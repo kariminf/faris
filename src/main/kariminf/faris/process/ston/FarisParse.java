@@ -28,6 +28,7 @@ import java.util.List;
 import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
+import kariminf.faris.linguistic.Verb.Aspect;
 import kariminf.faris.philosophical.*;
 import kariminf.faris.philosophical.Relative.RelativeType;
 import kariminf.faris.process.ston.Concepts.PlaceTime;
@@ -73,7 +74,7 @@ public class FarisParse extends Parser {
 
 	private HashMap<String, QuantSubstance> _players = new HashMap<>();
 	
-	//pronouns which are pointed to conjunctios of players
+	//pronouns which are pointed to conjunctions of players
 	private HashMap<String, List<String>> _pronouns = new HashMap<>();
 
 	private Action currentAction;
@@ -91,6 +92,9 @@ public class FarisParse extends Parser {
 	private HashMap<String, Mind> _minds = new HashMap<>();
 
 	private ArrayList<List<String>> disj = new ArrayList<>();
+	
+	private ArrayList<List<String>> mainActDisj;
+	private ArrayList<List<String>> secActDisj;
 	
 	private ArrayList<List<String>> RelDisj = null;
 
@@ -211,10 +215,11 @@ public class FarisParse extends Parser {
 		s = Concepts.getMentalState(synSet);
 
 		//We will need the action to save the subjects and the objects
-		//even if the sate is not a fact
+		//even if the state is not a fact
 		Verb verb = new Verb(synSet);
 		currentAction = Action.getNew(verb);
 
+		
 		if (s == MentalState.FACT){
 			_actions.put(id, currentAction);
 			//pastState = MentalState.FACT;
@@ -223,7 +228,7 @@ public class FarisParse extends Parser {
 		currentActionID = id;
 
 
-	}
+	}//beginAction
 
 	@Override
 	protected void endAction(String id, int synSet) {
@@ -240,7 +245,11 @@ public class FarisParse extends Parser {
 			boolean progressive, boolean perfect, boolean negated) {
 		Verb verb = currentAction.getVerb();
 		verb.setTense(Ston2FarisLex.getTense(tense));
-		//verb.setAspect(Aspect.valueOf(aspect));
+		
+		if (progressive && perfect) verb.setAspect(Aspect.PROGRESSIVEPERFECT);
+		else if (progressive) verb.setAspect(Aspect.PROGRESSIVE);
+		else if (perfect) verb.setAspect(Aspect.PERFECT);
+		
 	}
 
 
@@ -379,8 +388,11 @@ public class FarisParse extends Parser {
 	
 	@Override
 	protected void beginRole(String id, int synSet, String pronoun) {
+		
+		if (synSet > 0) beginRole(id, synSet);
+		
 		proleID = id;
-
+		
 		currentPronoun = uMap.mapPronoun(pronoun);
 		
 		currentPlayerID = id;
@@ -396,17 +408,29 @@ public class FarisParse extends Parser {
 			switch (currentPronoun.getHead()) {
 
 			case POSSESSIVE:
+				
+				if (synSet == 0 ){
+					return;
+				}
 				//delete id from pronouns
-				//TODO add relative OF
-				_pronouns.remove(id);
+				System.out.println("OF pronoun");
+				if (_pronouns.containsKey(id)){
+					for (String relID: _pronouns.get(id)){
+						if (_players.containsKey(relID)){
+							Relative.affectRelative(currentPlayer, _players.get(relID));
+						}
+					}
+					//_pronouns.remove(id);
+				}
+				
 				break;
 			case DEMONSTRATIVE:
 				//delete id from pronouns
-				_pronouns.remove(id);
+				//_pronouns.remove(id);
 				break;
 			case OBJECTIVE:
 				//delete id from pronouns
-				_pronouns.remove(id);
+				//_pronouns.remove(id);
 				break;
 			case SUBJECTIVE:
 				
@@ -502,14 +526,14 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginSentence(String type) {
-		disj = new ArrayList<>();
-
+		mainActDisj = null;
+		secActDisj = null;
 	}
 
 	@Override
 	protected void endSentence(String type) {
 		//Verify the main actions
-		for (List<String> actIDs: disj){
+		for (List<String> actIDs: mainActDisj){
 			for(String actID: actIDs){
 				if (_actions.containsKey(actID))
 					mainActionsIDs.add(actID);
@@ -523,14 +547,14 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginActions(boolean mainClause) {
-		// TODO Auto-generated method stub
-
+		disj = new ArrayList<>();
 	}
 	
 	@Override
 	protected void endActions(boolean mainClause) {
-		// TODO Auto-generated method stub
-
+		if (mainClause) mainActDisj = disj;
+		else secActDisj = disj;
+		disj = null;
 	}//endActions
 	
 	//=====================================================================

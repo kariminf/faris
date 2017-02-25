@@ -31,7 +31,7 @@ import kariminf.faris.knowledge.Faris;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015-2016 Abdelkrime Aries
+ *         Copyright (c) 2015-2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -47,10 +47,7 @@ import kariminf.faris.knowledge.Faris;
  */
 public class FarisTest {
 	
-	//static String testFile = "../SentRep/ston/exp/pn_quant.ston";
-	static String testFile = "../SentRep/ston/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
-	//static String testFile = "./res/think2.ston";
-	//static String testFile = "./res/update_info.ston";
+	static String testFile = "/home/kariminf/Github/Nolporas/STON/bio/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
 
 	public static String readFile (String f) {
 		try {
@@ -79,8 +76,9 @@ public class FarisTest {
 	public static void main(String[] args) {
 		String specif = readFile(testFile);
 		Faris faris = new Faris();
-		faris.addStonDescription(specif);
+		boolean success = faris.addStonDescription(specif);
 		
+		if (!success) System.out.println("NOT SUCCESS");
 		print(faris);
 		
 		//search(faris);
