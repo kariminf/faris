@@ -36,10 +36,13 @@ import kariminf.faris.philosophical.Place.PlaceWrapper;
 import kariminf.faris.philosophical.Quality.QualityWrapper;
 import kariminf.faris.philosophical.QuantSubstance.QSubstanceWrapper;
 import kariminf.faris.philosophical.Quantity.QuantityWrapper;
+import kariminf.faris.philosophical.Relative.RelativeType;
+import kariminf.faris.philosophical.Relative.RelativeWrapper;
 import kariminf.faris.philosophical.State.StateWrapper;
 import kariminf.faris.philosophical.Substance.SubstanceWrapper;
 import kariminf.faris.philosophical.Time.TimeWrapper;
 import kariminf.faris.tools.ConjunctedSubstances;
+import kariminf.sentrep.univ.types.Comparison;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
@@ -71,6 +74,32 @@ public abstract class Generator<T> {
 	private QuantSubstance currentSubstance;
 	
 	
+	public void processRelative(RelativeWrapper wrapper){
+		Comparison cmp = RelativeType.toComparison(wrapper.relationType);
+		
+		//System.out.println("Generator.processRelative: " + wrapper.relSubstance);
+		
+		//If the relative substance is not defined already, no need to process
+		if (! qsubstanceIDs.containsKey(wrapper.relSubstance)){
+			wrapper.relSubstance.generate(this);
+			//System.out.println("created substance" + qsubstanceIDs.get(wrapper.relSubstance));
+		}
+		
+		String relID = ROLE + qsubstanceIDs.get(wrapper.relSubstance);
+		
+		//It is an OF relation, between current substance and another
+		/*if (cmp == null){
+			//if (wrapper.owner == null || wrapper.owner != currentSubstance) return;
+			addRelative(null, null, relID);
+			//System.out.println("relative OF called");
+		}*/
+		
+		//if (wrapper.actOwner == null && wrapper.actOwner != currentAction) return;
+		
+		addRelative(cmp, wrapper.adjective, relID);
+		
+	}
+	
 	public void processPlace(PlaceWrapper wrapper){
 		beginPlaceHandler(wrapper.relation, wrapper.adv);
 		//System.out.println("Generator: Place=" + relation);
@@ -82,7 +111,7 @@ public abstract class Generator<T> {
 			processDisjunctions(disj);
 		}
 		
-		endPlaceHandler();
+		endPlaceHandler(wrapper.relation, wrapper.adv);
 	}
 	
 	public void processTime(TimeWrapper wrapper){
@@ -95,7 +124,7 @@ public abstract class Generator<T> {
 			disj.add(conj);
 			processDisjunctions(disj);
 		}
-		endTimeHandler();
+		endTimeHandler(wrapper.relation, wrapper.adv, wrapper.datetime);
 	}
 
 	/**
@@ -126,19 +155,25 @@ public abstract class Generator<T> {
 
 		beginActionHandler(actID, wrapper.verb, wrapper.adverbs);
 
-		beginAgentsHandler();
+		beginAgentsHandler(actID);
 		processDisjunctions(wrapper.doers);
-		endAgentsHandler();
+		endAgentsHandler(actID);
 
-		beginThemesHandler();
+		beginThemesHandler(actID);
 		processDisjunctions(wrapper.receivers);
-		endThemesHandler();
+		endThemesHandler(actID);
 		
 		for(Place place: wrapper.locations) place.generate(this);
 		
 		for(Time time: wrapper.times) time.generate(this);
+		
+		beginActionRelativeHandler(actID);
+		for (Relative relative: wrapper.relatives){
+			relative.generate(this);
+		}
+		endActionRelativeHandler(actID);
 			
-		endActionHandler(actID);
+		endActionHandler(actID, wrapper.verb, wrapper.adverbs);
 		
 		if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
 			//System.out.println("main sentence");
@@ -185,7 +220,7 @@ public abstract class Generator<T> {
 		}
 	}
 	
-	private void addSubstance(String id, Substance sub, Quantity pl, Quantity nbr){
+	/*private void addSubstance(String id, Substance sub, Quantity pl, Quantity nbr){
 		
 		beginSubstanceHandler(id, sub.getNoun());
 		
@@ -195,7 +230,7 @@ public abstract class Generator<T> {
 		
 		for (Quality ql : sub.getQualities()) ql.generate(this);
 		endSubstanceHandler();
-	}
+	}*/
 	
 	public void processQuality(QualityWrapper wrapper){
 		addQualityHandler(wrapper.adjective, wrapper.adverbs);
@@ -207,24 +242,31 @@ public abstract class Generator<T> {
 		else addQuantityHandler(wrapper.nbr, unit, wrapper.cardinal);
 	}
 
+	
 	public void processSubstance(QSubstanceWrapper wrapper){
 		currentSubstance = wrapper.qsubstance;
 		
 		Action tmpLastAction = currentAction;
 		QuantSubstance tmpSubstance = currentSubstance;
 		
-		String id = ROLE + substancesNbr;
+		String subID = ROLE + substancesNbr;
 		if (qsubstanceIDs.containsKey(wrapper.qsubstance)){
-			substanceFoundHandler(id);
+			substanceFoundHandler(subID);
 			return;
 		}
 		
-		substancesNbr++;
 		qsubstanceIDs.put(wrapper.qsubstance, substancesNbr);
-		addSubstance(id, wrapper.substance, wrapper.plQuantity, wrapper.nbrQuantity);
 		
+		substancesNbr++;
 		
-		String subID = ROLE + qsubstanceIDs.get(tmpSubstance);
+		beginSubstanceHandler(subID, wrapper.noun);
+		
+		if(wrapper.plQuantity != null) wrapper.plQuantity.generate(this);
+		
+		if(wrapper.nbrQuantity != null) wrapper.nbrQuantity.generate(this);
+		
+		for (Quality ql : wrapper.qualities) ql.generate(this);
+		
 		String actID = ACTION + actionIDs.get(tmpLastAction);
 		
 		beginStateHandler(subID, actID);
@@ -234,7 +276,14 @@ public abstract class Generator<T> {
 		}
 		endStateHandler(subID, actID);
 		
-		//TODO add more
+		beginSubstanceRelativeHandler(subID);
+		for (Relative relative: wrapper.relatives){
+			relative.generate(this);
+		}
+		endSubstanceRelativeHandler(subID);
+		
+		
+		endSubstanceHandler(subID, wrapper.noun);
 		
 		currentAction = tmpLastAction;
 		currentSubstance = tmpSubstance;
@@ -246,9 +295,13 @@ public abstract class Generator<T> {
 			substanceFoundHandler(id);
 			return;
 		}
-		substancesNbr++;
+		
 		substanceIDs.put(wrapper.substance, substancesNbr);
-		addSubstance(id, wrapper.substance, null, null);
+		substancesNbr++;
+		
+		beginSubstanceHandler(id, wrapper.noun);
+		for (Quality ql : wrapper.qualities) ql.generate(this);
+		endSubstanceHandler(id, wrapper.noun);
 	}
 	
 	/**
@@ -305,27 +358,27 @@ public abstract class Generator<T> {
 	 * This is called when the action ends (all its components have been processed
 	 * @param id The ID of the action
 	 */
-	protected abstract void endActionHandler(String id);
+	protected abstract void endActionHandler(String id, Verb verb, Set<Adverb> adverbs);
 
 	/**
 	 * This is called to mark the start of the current action's agents enumeration
 	 */
-	protected abstract void beginAgentsHandler();
+	protected abstract void beginAgentsHandler(String actID);
 
 	/**
 	 * This is called to mark the end of current action's agents enumeration
 	 */
-	protected abstract void endAgentsHandler();
+	protected abstract void endAgentsHandler(String actID);
 
 	/**
 	 * This is called to mark the start of current action's themes enumeration
 	 */
-	protected abstract void beginThemesHandler();
+	protected abstract void beginThemesHandler(String actID);
 
 	/**
 	 * This is called to mark the end of current action's themes enumeration
 	 */
-	protected abstract void endThemesHandler();
+	protected abstract void endThemesHandler(String actID);
 
 	/**
 	 * This is called whenever there is an enumeration; each time it is called 
@@ -364,7 +417,7 @@ public abstract class Generator<T> {
 	/**
 	 * This marks the end of a substance processing
 	 */
-	protected abstract void endSubstanceHandler();
+	protected abstract void endSubstanceHandler(String id, Noun noun);
 
 	/**
 	 * This is called when we want to add a quantity to the current substance
@@ -407,11 +460,27 @@ public abstract class Generator<T> {
 	
 	protected abstract void beginPlaceHandler(Adpositional relation, Adverb adv);
 	
-	protected abstract void endPlaceHandler();
+	protected abstract void endPlaceHandler(Adpositional relation, Adverb adv);
 	
 	protected abstract void beginTimeHandler(Adpositional relation, Adverb adv, LocalDateTime datetime);
 	
-	protected abstract void endTimeHandler();
+	protected abstract void endTimeHandler(Adpositional relation, Adverb adv, LocalDateTime datetime);
+	
+	protected abstract void beginActionRelativeHandler(String actID);
+	
+	protected abstract void endActionRelativeHandler(String actID);
+	
+	protected abstract void beginSubstanceRelativeHandler(String subID);
+	
+	protected abstract void endSubstanceRelativeHandler(String subID);
+	
+	/**
+	 * 
+	 * @param cmp if it is null, then it is a relative OF between a substance and another
+	 * @param adjective
+	 * @param relID
+	 */
+	protected abstract void addRelative (Comparison cmp, Adjective adjective, String relID);
 	
 	/**
 	 * This is called to generate a representation of a given type 

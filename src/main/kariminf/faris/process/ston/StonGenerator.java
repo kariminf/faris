@@ -19,6 +19,7 @@ import kariminf.faris.process.Generator;
 import kariminf.sentrep.ston.Univ2StonMap;
 import kariminf.sentrep.ston.request.ReqCreator;
 import kariminf.sentrep.ston.request.ReqRolePlayer;
+import kariminf.sentrep.univ.types.Comparison;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 public class StonGenerator extends Generator<String> {
@@ -57,41 +58,41 @@ public class StonGenerator extends Generator<String> {
 	
 
 	@Override
-	protected void beginActionHandler(String id, Verb verb, Set<Adverb> adverbs) {
-		rc.addAction(id, verb.getSynSet());
-		currentActIDs.push(id);
+	protected void beginActionHandler(String actID, Verb verb, Set<Adverb> adverbs) {
+		rc.addAction(actID, verb.getSynSet());
+		currentActIDs.push(actID);
 		openBlocks.push(Block.ACTION);
 		
-		rc.addActionAdverbs(id, POS.getSynsets(adverbs));
+		rc.addActionAdverbs(actID, POS.getSynsets(adverbs));
 		
 	}
 
 	@Override
-	protected void endActionHandler(String id) {
+	protected void endActionHandler(String actID, Verb verb, Set<Adverb> adverbs) {
 		if (openBlocks.peek() == Block.ACTION) openBlocks.pop();
 		currentActIDs.pop();
 	}
 
 	@Override
-	protected void beginAgentsHandler() {
+	protected void beginAgentsHandler(String actID) {
 		openBlocks.push(Block.AGENT);
 		conj = new ArrayList<>();
 	}
 
 	@Override
-	protected void endAgentsHandler() {
+	protected void endAgentsHandler(String actID) {
 		if (openBlocks.peek() == Block.AGENT) openBlocks.pop();
 		
 	}
 
 	@Override
-	protected void beginThemesHandler() {
+	protected void beginThemesHandler(String actID) {
 		openBlocks.push(Block.THEME);
 		conj = new ArrayList<>();
 	}
 
 	@Override
-	protected void endThemesHandler() {
+	protected void endThemesHandler(String actID) {
 		if (openBlocks.peek() == Block.THEME) openBlocks.pop();
 		
 	}
@@ -164,17 +165,17 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void beginSubstanceHandler(String id, Noun noun) {
-		rc.addRolePlayer(id, noun.getSynSet());
+	protected void beginSubstanceHandler(String subID, Noun noun) {
+		rc.addRolePlayer(subID, noun.getSynSet());
 		if (noun instanceof ProperNoun){
-			rc.setRoleProperName(id, ((ProperNoun) noun).getName());
+			rc.setRoleProperName(subID, ((ProperNoun) noun).getName());
 			//System.out.println("proper:" + ((ProperNoun) noun).getName());
 		}
 		
-		currentRoleIDs.push(id);
+		currentRoleIDs.push(subID);
 		
 		if (conjBlocks.contains(openBlocks.peek())){
-			conj.add(id);
+			conj.add(subID);
 		}
 		
 		openBlocks.push(Block.ROLE);
@@ -182,7 +183,7 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void endSubstanceHandler() {
+	protected void endSubstanceHandler(String subID, Noun noun) {
 		if (openBlocks.peek() == Block.ROLE) openBlocks.pop();
 		currentRoleIDs.pop();
 		
@@ -316,7 +317,7 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void endPlaceHandler() {
+	protected void endPlaceHandler(Adpositional relation, Adverb adv) {
 		if (openBlocks.peek() == Block.PLACE) openBlocks.pop();
 		adpos = null;
 	}
@@ -339,9 +340,46 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void endTimeHandler() {
+	protected void endTimeHandler(Adpositional relation, Adverb adv, LocalDateTime datetime) {
 		if (openBlocks.peek() == Block.TIME) openBlocks.pop();
 		adpos = null;
+		
+	}
+
+	@Override
+	protected void beginActionRelativeHandler(String actID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void endActionRelativeHandler(String actID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void beginSubstanceRelativeHandler(String subID) {
+		
+	}
+
+	@Override
+	protected void endSubstanceRelativeHandler(String subID) {
+		
+	}
+
+	@Override
+	protected void addRelative(Comparison cmp, Adjective adjective, String relID) {
+		
+		//Here it is a relative such as: the mother OF the child
+		if (cmp == null) {
+			//System.out.println("Relative OF: " + relID);
+			if (openBlocks.peek() != Block.ROLE) return;
+			String roleID = currentRoleIDs.peek();
+			
+			rc.addRelative(u2sMap.getAdposition(Adpositional.POSSESSION, ""), roleID);
+			rc.addRelativeConjunctions(new String[]{relID});
+		}
 		
 	}
 	

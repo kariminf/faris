@@ -48,6 +48,26 @@ import kariminf.sentrep.univ.types.Comparison;
 public class Relative extends Being{
 	
 	
+	public static final class RelativeWrapper {
+		public Relative relative;
+		public QuantSubstance owner;
+		public Action actOwner;
+		public RelativeType relationType;
+		public QuantSubstance relSubstance;
+		public Adjective adjective;
+		
+		public RelativeWrapper (Relative relative){
+			this.relative = relative;
+		}
+		
+		public void unsafeAddAll(){
+			owner = relative.owner;
+			actOwner = relative.actOwner;
+			relationType = relative.relationType;
+			relSubstance = relative.relSubstance;
+			adjective = relative.adjective;
+		}
+	}
 	//The relative is:
 	//  Possession: "son of someone"
 	//	Comparison: taller than
@@ -63,6 +83,12 @@ public class Relative extends Being{
 		public static RelativeType fromComparison(Comparison cmp){
 			return RelativeType.valueOf(cmp.name());
 		}
+		
+		public static Comparison toComparison(RelativeType rel){
+			if (rel == RelativeType.OF) return null;
+			
+			return Comparison.valueOf(rel.name());
+		}
 	}
 	
 	//The owner can be a substance: the man is taller than the boy
@@ -71,15 +97,16 @@ public class Relative extends Being{
 	private Action actOwner;
 	
 	private RelativeType relationType;
-	private QuantSubstance relative;
+	private QuantSubstance relSubstance;
 	
 	//He works more than Me.
 	private Adjective adjective;
+	
 		
-	private Relative(RelativeType type, Adjective relation, QuantSubstance relative){
+	private Relative(RelativeType type, Adjective relation, QuantSubstance relSubstance){
 		this.relationType = type;
 		this.adjective = relation;
-		this.relative = relative;
+		this.relSubstance = relSubstance;
 	}
 	
 	/**
@@ -173,21 +200,25 @@ public class Relative extends Being{
 		String result = "R:";
 		
 		if (relationType == RelativeType.OF){
-			result += "OF{" + relative + "}";
+			result += "OF{" + relSubstance + "}";
 			return result;
 		} 
 		
 		result += relationType + "{";
 		result += (adjective == null)? "": adjective;
-		result += "}." + relative;
+		result += "}." + relSubstance;
 		
 		return result;
 	}
 	
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void generate(Generator gr) {
-		// TODO Auto-generated method stub
+		
+		RelativeWrapper wrapper = new RelativeWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processRelative(wrapper);
 		
 	}
 	
