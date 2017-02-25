@@ -208,7 +208,7 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void addQualityHandler(Adjective adjective, ArrayList<Adverb> adverbs) {
+	protected void addQualityHandler(Adjective adjective, Set<Adverb> adverbs) {
 		if (openBlocks.peek() != Block.ROLE) return;
 		if (currentRoleIDs.isEmpty()) return;
 		/*ArrayList<Integer> advSynSets = new ArrayList<>();

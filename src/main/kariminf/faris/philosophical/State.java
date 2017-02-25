@@ -51,6 +51,24 @@ import kariminf.sentrep.univ.types.Relation;
  *         limitations under the License.
  */
 public class State extends Being{
+	
+	
+	public static final class StateWrapper {
+		public State state;
+		public List<Action> mainActions;
+		public Relation.Relative affectionType;
+		public  Action stateAction;
+		
+		public StateWrapper(State state){
+			this.state = state;
+		}
+		
+		public void unsafeAddAll(){
+			mainActions = state.mainActions;
+			affectionType = state.affectionType;
+			stateAction = state.stateAction;
+		}
+	}
 
 	private List<Action> mainActions = new ArrayList<>();
 	
@@ -93,13 +111,15 @@ public class State extends Being{
 		this.affectionType = affectionType;
 		if (affectionType == Relation.Relative.SUBJECT){
 			action.addConjunctSubjects(_owner);
-			for(List<QuantSubstance> _relatives : relatives)
-				action.addConjunctObjects(_relatives);
+			if (relatives != null)
+				for(List<QuantSubstance> _relatives : relatives)
+					action.addConjunctObjects(_relatives);
 		}
 		else {
 			action.addConjunctObjects(_owner);
-			for(List<QuantSubstance> _relatives : relatives)
-				action.addConjunctSubjects(_relatives);
+			if (relatives != null)
+				for(List<QuantSubstance> _relatives : relatives)
+					action.addConjunctSubjects(_relatives);
 		}
 		
 		this.stateAction = action;
@@ -125,7 +145,9 @@ public class State extends Being{
 
 	@Override
 	public void generate(Generator gr) {
-		gr.processState(stateAction, mainActions);
+		StateWrapper wrapper = new StateWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processState(wrapper);
 		
 	}
 

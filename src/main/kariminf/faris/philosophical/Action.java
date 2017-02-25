@@ -89,7 +89,7 @@ public class Action extends Being{
 			this.action = action;
 		}
 		
-		public void UnsafeAddAll(){
+		public void unsafeAddAll(){
 			verb = action.verb;
 			adverbs = action.adverbs;
 			doers = action.doers; 
@@ -380,11 +380,11 @@ public class Action extends Being{
 		return true;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public void generate(Generator gr) {
 		ActionWrapper wrapper = new ActionWrapper(this);
-		wrapper.UnsafeAddAll();
+		wrapper.unsafeAddAll();
 		gr.processAction(wrapper);
 		
 	}

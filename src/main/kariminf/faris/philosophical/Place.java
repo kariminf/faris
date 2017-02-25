@@ -32,7 +32,7 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015-2016 Abdelkrime Aries
+ *         Copyright (c) 2015-2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -46,7 +46,24 @@ import kariminf.sentrep.univ.types.Relation.Adpositional;
  *         See the License for the specific language governing permissions and
  *         limitations under the License.
  */
-public class Place extends Being{
+public class Place extends Being {
+	
+	public static final class PlaceWrapper {
+		Place place;
+		public Adverb adv;
+		public Adpositional relation;
+		public ArrayList<QuantSubstance> places;
+		
+		public PlaceWrapper (Place place) {
+			this.place = place;
+		}
+		
+		public void unsafeAddAll(){
+			adv = place.adv;
+			relation = place.relation;
+			places = place.places;
+		}
+	}
 	
 	private Adverb adv;
 	private Adpositional relation;
@@ -82,10 +99,12 @@ public class Place extends Being{
 		return result;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void generate(Generator gr) {
-		gr.processPlace(relation, adv, places);
-		
+		PlaceWrapper wrapper = new PlaceWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processPlace(wrapper);
 	}
 	
 	

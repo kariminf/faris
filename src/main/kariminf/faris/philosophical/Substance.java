@@ -54,6 +54,21 @@ import kariminf.faris.process.Generator;
  *         limitations under the License.
  */
 public class Substance extends Being{
+	
+	public static class SubstanceWrapper {
+		public Substance substance;
+		public Noun noun;
+		public Set<Quality> qualities;
+		
+		public SubstanceWrapper(Substance substance){
+			this.substance = substance;
+		}
+		
+		public void unsafeAddAll(){
+			noun = substance.noun;
+			qualities = substance.qualities;
+		}
+	}
 
 	//a substance is a noun
 	private Noun noun;
@@ -147,7 +162,9 @@ public class Substance extends Being{
 
 	@Override
 	public void generate(Generator gr) {
-		gr.processSubstance(this);
+		SubstanceWrapper wrapper = new SubstanceWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processSubstance(wrapper);
 		
 	}
 	

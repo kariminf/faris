@@ -90,6 +90,7 @@ public class Attitude extends Being{
 		return result;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void generate(Generator gr) {
 		// TODO Auto-generated method stub

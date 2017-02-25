@@ -3,9 +3,37 @@ package kariminf.faris.philosophical;
 import java.util.HashSet;
 import java.util.Set;
 
+import kariminf.faris.philosophical.Substance.SubstanceWrapper;
 import kariminf.faris.process.Generator;
 
 public class QuantSubstance extends Being{
+	
+	public static final class QSubstanceWrapper extends SubstanceWrapper {
+		
+		public QuantSubstance qsubstance;
+		public Quantity plQuantity;
+		public Quantity nbrQuantity;
+		public Set<Action> actions;
+		public Set<Action> affections;
+		public Set<State> states;
+		public Set<Relative> relatives;
+		
+		public QSubstanceWrapper(QuantSubstance qsub) {
+			super(qsub.substance);
+			this.qsubstance = qsub;
+		}
+		
+		public void unsafeAddAll(){
+			super.unsafeAddAll();
+			plQuantity = qsubstance.plQuantity;
+			nbrQuantity = qsubstance.nbrQuantity;
+			actions = qsubstance.actions;
+			affections = qsubstance.affections;
+			states = qsubstance.states;
+			relatives = qsubstance.relatives;
+		}
+		
+	}
 	
 	private Substance substance;
 	private Quantity plQuantity;
@@ -128,9 +156,12 @@ public class QuantSubstance extends Being{
 		this.relatives.add(relative);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void generate(Generator gr) {
-		gr.processSubstance(this);
+		QSubstanceWrapper wrapper = new QSubstanceWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processSubstance(wrapper);
 		
 	}
 	

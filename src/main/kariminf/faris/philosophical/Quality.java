@@ -21,7 +21,10 @@
 package kariminf.faris.philosophical;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.linguistic.Adverb;
 import kariminf.faris.process.Generator;
@@ -37,8 +40,25 @@ import kariminf.faris.process.Generator;
  */
 public class Quality extends Being{
 	
+	
+	public static final class QualityWrapper {
+		public Quality quality;
+		public Adjective adjective;
+		public Set<Adverb> adverbs;
+		
+		public QualityWrapper (Quality quality){
+			this.quality = quality;	
+		}
+		
+		public void unsafeAddAll(){
+			adjective = quality.adjective;
+			adverbs = quality.adverbs;
+		}
+		
+	}
+	
 	private Adjective adjective;
-	private ArrayList<Adverb> adverbs = new ArrayList<Adverb>();
+	private Set<Adverb> adverbs = new HashSet<Adverb>();
 
 	public Quality(Adjective adjective) {
 		this.adjective = adjective;
@@ -54,7 +74,7 @@ public class Quality extends Being{
 	/**
 	 * @return the adverbs
 	 */
-	public ArrayList<Adverb> getAdverbs() {
+	public Set<Adverb> getAdverbs() {
 		//Alert: Security problem
 		return adverbs;
 	}
@@ -70,7 +90,7 @@ public class Quality extends Being{
 	/**
 	 * @param adverbs the adverbs to set
 	 */
-	public void setAdverbs(ArrayList<Adverb> adverbs) {
+	public void setAdverbs(Set<Adverb> adverbs) {
 		//Alert: Security problem
 		this.adverbs = adverbs;
 	}
@@ -98,9 +118,12 @@ public class Quality extends Being{
 		return result;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void generate(Generator gr) {
-		gr.processQuality(this);
+		QualityWrapper wrapper = new QualityWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processQuality(wrapper);
 		
 	}
 	

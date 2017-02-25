@@ -32,6 +32,13 @@ import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
 import kariminf.faris.philosophical.Action.ActionWrapper;
+import kariminf.faris.philosophical.Place.PlaceWrapper;
+import kariminf.faris.philosophical.Quality.QualityWrapper;
+import kariminf.faris.philosophical.QuantSubstance.QSubstanceWrapper;
+import kariminf.faris.philosophical.Quantity.QuantityWrapper;
+import kariminf.faris.philosophical.State.StateWrapper;
+import kariminf.faris.philosophical.Substance.SubstanceWrapper;
+import kariminf.faris.philosophical.Time.TimeWrapper;
 import kariminf.faris.tools.ConjunctedSubstances;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
@@ -64,13 +71,13 @@ public abstract class Generator<T> {
 	private QuantSubstance currentSubstance;
 	
 	
-	public void processPlace(Adpositional relation, Adverb adv, ArrayList<QuantSubstance> places){
-		beginPlaceHandler(relation, adv);
-		System.out.println("Generator: Place=" + relation);
-		if (places != null && !places.isEmpty()){
+	public void processPlace(PlaceWrapper wrapper){
+		beginPlaceHandler(wrapper.relation, wrapper.adv);
+		//System.out.println("Generator: Place=" + relation);
+		if (wrapper.places != null && !wrapper.places.isEmpty()){
 			Set<ConjunctedSubstances> disj = new HashSet<>();
 			ConjunctedSubstances conj = new ConjunctedSubstances();
-			conj.addAll(places);
+			conj.addAll(wrapper.places);
 			disj.add(conj);
 			processDisjunctions(disj);
 		}
@@ -78,13 +85,13 @@ public abstract class Generator<T> {
 		endPlaceHandler();
 	}
 	
-	public void processTime(Adpositional relation, Adverb adv, LocalDateTime datetime, ArrayList<QuantSubstance> times){
-		beginTimeHandler(relation, adv, datetime);
+	public void processTime(TimeWrapper wrapper){
+		beginTimeHandler(wrapper.relation, wrapper.adv, wrapper.datetime);
 		
-		if (times != null && !times.isEmpty()){
+		if (wrapper.times != null && !wrapper.times.isEmpty()){
 			Set<ConjunctedSubstances> disj = new HashSet<>();
 			ConjunctedSubstances conj = new ConjunctedSubstances();
-			conj.addAll(times);
+			conj.addAll(wrapper.times);
 			disj.add(conj);
 			processDisjunctions(disj);
 		}
@@ -144,27 +151,20 @@ public abstract class Generator<T> {
 
 	}
 	
-	/**
-	 * Called by a state 
-	 * @param stateAction the state action
-	 * @param mainActions the actions related to the state; i.e. the actions 
-	 * when a substance is having this state
-	 */
-	public void processState(Action stateAction, List<Action> mainActions){
+
+	public void processState(StateWrapper wrapper){
 		
+		if(!wrapper.mainActions.contains(currentAction)) return;
 		
-		
-		if(!mainActions.contains(currentAction)) return;
-		
-		boolean isAgent = stateAction.hasAgent(currentSubstance);
-		if(!(isAgent || stateAction.hasTheme(currentSubstance))) return;
+		boolean isAgent = wrapper.stateAction.hasAgent(currentSubstance);
+		if(!(isAgent || wrapper.stateAction.hasTheme(currentSubstance))) return;
 		
 		Action tmpLastAction = currentAction;
 		QuantSubstance tmpSubstance = currentSubstance;
 		
-		stateAction.generate(this);
+		wrapper.stateAction.generate(this);
 		
-		String actID = ACTION + actionIDs.get(stateAction);
+		String actID = ACTION + actionIDs.get(wrapper.stateAction);
 		
 		
 		addStateHandler(isAgent, actID);
@@ -197,45 +197,38 @@ public abstract class Generator<T> {
 		endSubstanceHandler();
 	}
 	
-	public void processQuality(Quality ql){
-		addQualityHandler(ql.getAdjective(), ql.getAdverbs());
+	public void processQuality(QualityWrapper wrapper){
+		addQualityHandler(wrapper.adjective, wrapper.adverbs);
 	}
 	
-	public void processQuantity(Quantity q){
-		Noun unit = (q.getUnit() == null)? null: q.getUnit().getNoun();
-		if(q.isPlural()) addQuantityHandler(unit);
-		else addQuantityHandler(q.getNumber(), unit, q.isCardinal());
+	public void processQuantity(QuantityWrapper wrapper){
+		Noun unit = (wrapper.unit == null)? null: wrapper.unit.getNoun();
+		if(wrapper.plural) addQuantityHandler(unit);
+		else addQuantityHandler(wrapper.nbr, unit, wrapper.cardinal);
 	}
 
-	public void processSubstance(QuantSubstance qsub){
-		currentSubstance = qsub;
+	public void processSubstance(QSubstanceWrapper wrapper){
+		currentSubstance = wrapper.qsubstance;
 		
 		Action tmpLastAction = currentAction;
 		QuantSubstance tmpSubstance = currentSubstance;
 		
 		String id = ROLE + substancesNbr;
-		if (qsubstanceIDs.containsKey(qsub)){
+		if (qsubstanceIDs.containsKey(wrapper.qsubstance)){
 			substanceFoundHandler(id);
 			return;
 		}
 		
 		substancesNbr++;
-		qsubstanceIDs.put(qsub, substancesNbr);
-		addSubstance(id, qsub.getSubstance(), qsub.getPlQuanty(), qsub.getNbrQuanty());
-		
-		{
-			Quantity nbr = qsub.getNbrQuanty();
-			if (nbr != null) nbr.generate(this);
-			Quantity pl = qsub.getPlQuanty();
-			if (pl != null) pl.generate(this);
-		}
+		qsubstanceIDs.put(wrapper.qsubstance, substancesNbr);
+		addSubstance(id, wrapper.substance, wrapper.plQuantity, wrapper.nbrQuantity);
 		
 		
 		String subID = ROLE + qsubstanceIDs.get(tmpSubstance);
 		String actID = ACTION + actionIDs.get(tmpLastAction);
 		
 		beginStateHandler(subID, actID);
-		for (State state: qsub.getStates()){
+		for (State state: wrapper.states){
 			
 			state.generate(this);
 		}
@@ -247,15 +240,15 @@ public abstract class Generator<T> {
 		currentSubstance = tmpSubstance;
 	}
 
-	public void processSubstance(Substance sub){
+	public void processSubstance(SubstanceWrapper wrapper){
 		String id = ROLE + substancesNbr;
-		if (substanceIDs.containsKey(sub)){
+		if (substanceIDs.containsKey(wrapper.substance)){
 			substanceFoundHandler(id);
 			return;
 		}
 		substancesNbr++;
-		substanceIDs.put(sub, substancesNbr);
-		addSubstance(id, sub, null, null);
+		substanceIDs.put(wrapper.substance, substancesNbr);
+		addSubstance(id, wrapper.substance, null, null);
 	}
 	
 	/**
@@ -392,7 +385,7 @@ public abstract class Generator<T> {
 	 * @param adjective the adjective that describes this quality
 	 * @param adverbs the adverbs modifying this adjective
 	 */
-	protected abstract void addQualityHandler(Adjective adjective, ArrayList<Adverb> adverbs);
+	protected abstract void addQualityHandler(Adjective adjective, Set<Adverb> adverbs);
 	
 	/**
 	 * This is called when an Idea has been found

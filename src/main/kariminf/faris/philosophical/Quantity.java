@@ -32,7 +32,7 @@ import kariminf.faris.process.Generator;
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
  *         <br>
- *         Copyright (c) 2015 Abdelkrime Aries
+ *         Copyright (c) 2015-2017 Abdelkrime Aries
  *         <br><br>
  *         Licensed under the Apache License, Version 2.0 (the "License");
  *         you may not use this file except in compliance with the License.
@@ -47,6 +47,25 @@ import kariminf.faris.process.Generator;
  *         limitations under the License.
  */
 public class Quantity extends Being{
+	
+	public static final class QuantityWrapper {
+		public Quantity quantity;
+		public double nbr;
+		public Substance unit; //mesure unit: kilogram, etc.
+		public boolean cardinal = true;
+		public boolean plural = false;
+		
+		public QuantityWrapper (Quantity quantity){
+			this.quantity = quantity;
+		}
+		
+		public void unsafeAddAll(){
+			nbr = quantity.nbr;
+			unit = quantity.unit;
+			cardinal = quantity.cardinal;
+			plural = quantity.plural;
+		}
+	}
 	
 	private double nbr;
 	private Substance unit; //mesure unit: kilogram, etc.
@@ -120,9 +139,12 @@ public class Quantity extends Being{
 		return result;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void generate(Generator gr) {
-		gr.processQuantity(this);
+		QuantityWrapper wrapper = new QuantityWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processQuantity(wrapper);
 		
 	}
 	

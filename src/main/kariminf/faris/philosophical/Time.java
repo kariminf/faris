@@ -52,11 +52,32 @@ public class Time extends Being{
 
 	//TODO complete the time
 	
-	LocalDateTime datetime ;
+	public static final class TimeWrapper {
+		public Time time;
+		public LocalDateTime datetime ;
+		public Adverb adv;
+		
+		public Adpositional relation;
+		public ArrayList<QuantSubstance> times;
+		
+		public TimeWrapper(Time time){
+			this.time = time;
+		}
+		
+		public void unsafeAddAll(){
+			datetime = time.datetime;
+			adv = time.adv;
+			relation = time.relation;
+			times = time.times;
+		}
+	}
+	
+	private LocalDateTime datetime ;
 	private Adverb adv;
 	
 	private Adpositional relation;
 	private ArrayList<QuantSubstance> times = new ArrayList<>();
+	
 	
 	public Time(Adverb adv) {
 		this.adv = adv;
@@ -89,8 +110,11 @@ public class Time extends Being{
 		return result;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void generate(Generator gr) {
-		gr.processTime(relation, adv, datetime, times);
+		TimeWrapper wrapper = new TimeWrapper(this);
+		wrapper.unsafeAddAll();
+		gr.processTime(wrapper);
 	}
 }
