@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +31,8 @@ import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
+import kariminf.faris.philosophical.Action.ActionWrapper;
+import kariminf.faris.tools.ConjunctedSubstances;
 import kariminf.sentrep.univ.types.Relation.Adpositional;
 
 /**
@@ -63,19 +66,28 @@ public abstract class Generator<T> {
 	
 	public void processPlace(Adpositional relation, Adverb adv, ArrayList<QuantSubstance> places){
 		beginPlaceHandler(relation, adv);
-		ArrayList<ArrayList<QuantSubstance>> disj = new ArrayList<>();
-		if (places == null) System.out.println("null palces");
-		else if (places.isEmpty()) System.out.println("empty palces");
-		disj.add(places);
-		processDisjunctions(disj);
+		System.out.println("Generator: Place=" + relation);
+		if (places != null && !places.isEmpty()){
+			Set<ConjunctedSubstances> disj = new HashSet<>();
+			ConjunctedSubstances conj = new ConjunctedSubstances();
+			conj.addAll(places);
+			disj.add(conj);
+			processDisjunctions(disj);
+		}
+		
 		endPlaceHandler();
 	}
 	
 	public void processTime(Adpositional relation, Adverb adv, LocalDateTime datetime, ArrayList<QuantSubstance> times){
 		beginTimeHandler(relation, adv, datetime);
-		ArrayList<ArrayList<QuantSubstance>> disj = new ArrayList<>();
-		disj.add(times);
-		processDisjunctions(disj);
+		
+		if (times != null && !times.isEmpty()){
+			Set<ConjunctedSubstances> disj = new HashSet<>();
+			ConjunctedSubstances conj = new ConjunctedSubstances();
+			conj.addAll(times);
+			disj.add(conj);
+			processDisjunctions(disj);
+		}
 		endTimeHandler();
 	}
 
@@ -83,17 +95,17 @@ public abstract class Generator<T> {
 	 * 
 	 * @param action
 	 */
-	public void processAction(Action action){
-		currentAction = action;
+	public void processAction(ActionWrapper wrapper){
+		currentAction = wrapper.action;
 		//We don't add an action, already there
-		if (actionIDs.containsKey(action)){
+		if (actionIDs.containsKey(wrapper.action)){
 			/*if (isMainIdea && currentMinds.peek().getSubstance().getNounSynSet() == 0){
 				System.out.println("main sentence1");
 				String actID = ACTION + actionIDs.get(action);
 				addIdeaHandler(actID);
 				isMainIdea = false;
 			}*/
-			String actID = ACTION + actionIDs.get(action);
+			String actID = ACTION + actionIDs.get(wrapper.action);
 			actionFoundHandler(actID);
 			return;
 		}
@@ -101,23 +113,23 @@ public abstract class Generator<T> {
 		Action tmpLastAction = currentAction;
 		QuantSubstance tmpSubstance = currentSubstance;
 
-		actionIDs.put(action, actionsNbr);
+		actionIDs.put(wrapper.action, actionsNbr);
 		String actID = ACTION + actionsNbr;
 		actionsNbr++;
 
-		beginActionHandler(actID, action.getVerb(), action.getAdverbs());
+		beginActionHandler(actID, wrapper.verb, wrapper.adverbs);
 
 		beginAgentsHandler();
-		processDisjunctions(action.getAgents());
+		processDisjunctions(wrapper.doers);
 		endAgentsHandler();
 
 		beginThemesHandler();
-		processDisjunctions(action.getThemes());
+		processDisjunctions(wrapper.receivers);
 		endThemesHandler();
 		
-		for(Place place: action.getPlaces()) place.generate(this);
+		for(Place place: wrapper.locations) place.generate(this);
 		
-		for(Time time: action.getTimes()) time.generate(this);
+		for(Time time: wrapper.times) time.generate(this);
 			
 		endActionHandler(actID);
 		
@@ -140,19 +152,7 @@ public abstract class Generator<T> {
 	 */
 	public void processState(Action stateAction, List<Action> mainActions){
 		
-		/*
-		//A state of a substance shows after generating its relative action
-		List<String> processedActions = new ArrayList<>();
 		
-		for(Action act: mainActions)
-			if (actionIDs.containsKey(act)){
-				String actID = ACTION + actionIDs.get(act);
-				processedActions.add(actID);
-			}
-		
-		//If the state has no action relative to it
-		if (processedActions.isEmpty()) return;
-		*/
 		
 		if(!mainActions.contains(currentAction)) return;
 		
@@ -173,9 +173,9 @@ public abstract class Generator<T> {
 		currentSubstance = tmpSubstance;
 	}
 
-	private void processDisjunctions(ArrayList<ArrayList<QuantSubstance>> disj){
+	private void processDisjunctions(Set<ConjunctedSubstances> disjSub){
 		//Disjunctions 
-		for(ArrayList<QuantSubstance> conj: disj){
+		for(ConjunctedSubstances conj: disjSub){
 			beginDisjunctionHandler();
 			for (QuantSubstance substance: conj){
 				substance.generate(this);

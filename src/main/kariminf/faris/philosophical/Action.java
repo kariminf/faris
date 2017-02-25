@@ -30,6 +30,7 @@ import kariminf.faris.linguistic.Adverb;
 import kariminf.faris.linguistic.Verb;
 import kariminf.faris.process.Generator;
 import kariminf.faris.process.ston.Concepts;
+import kariminf.faris.tools.ConjunctedSubstances;
 
 
 /**
@@ -55,6 +56,11 @@ import kariminf.faris.process.ston.Concepts;
  */
 public class Action extends Being{
 	
+	/**
+	 * Relations between Actions
+	 * @author Abdelkrime Aries
+	 *
+	 */
 	public static enum ActionRelation {
 		IMPLY,
 		CAUSE,
@@ -62,21 +68,37 @@ public class Action extends Being{
 		BEFORE
 	}
 	
-	private static class ConjunctedSubstances extends HashSet<QuantSubstance> {
-		private static final long serialVersionUID = 1L;
+	/**
+	 * Used as a wrapper of action's attributes, which it may want to share with other classes
+	 * @author Abdelkrime Aries
+	 *
+	 */
+	public static final class ActionWrapper {
 		
-		public ArrayList<QuantSubstance> getSubstances(){
-			ArrayList<QuantSubstance> result = new ArrayList<>();
-			result.addAll(this);
-			return result;
+		public Action action;
+		public Verb verb;
+		public Set<Adverb> adverbs;
+		public Set<ConjunctedSubstances> doers; 
+		public Set<ConjunctedSubstances> receivers;  
+		public HashMap<Action, ActionRelation> relations;
+		public Set<Relative> relatives;
+		public Set<Place> locations; 
+		public Set<Time> times; 
+		
+		public ActionWrapper(Action action){
+			this.action = action;
 		}
 		
-		public ConjunctedSubstances fuse(ConjunctedSubstances cs){
-			ConjunctedSubstances result = new ConjunctedSubstances();
-			result.addAll(cs);
-			return result;
+		public void UnsafeAddAll(){
+			verb = action.verb;
+			adverbs = action.adverbs;
+			doers = action.doers; 
+			receivers = action.receivers;  
+			relations = action.relations;
+			relatives = action.relatives;
+			locations = action.locations; 
+			times = action.times; 
 		}
-		
 	}
 	
 	
@@ -358,9 +380,12 @@ public class Action extends Being{
 		return true;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void generate(Generator gr) {
-		gr.processAction(this);
+		ActionWrapper wrapper = new ActionWrapper(this);
+		wrapper.UnsafeAddAll();
+		gr.processAction(wrapper);
 		
 	}
 	

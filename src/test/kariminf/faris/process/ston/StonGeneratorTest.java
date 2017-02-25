@@ -26,7 +26,7 @@ import kariminf.faris.knowledge.Faris;
 
 public class StonGeneratorTest {
 
-	static String testFile = "../SentRep/ston/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
+	static String testFile = "/home/kariminf/Github/Nolporas/STON/bio/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
 	//static String testFile = "./res/think2.ston";
 	//static String testFile = "./res/update_info.ston";
 
