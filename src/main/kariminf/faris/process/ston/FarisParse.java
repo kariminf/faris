@@ -363,7 +363,7 @@ public class FarisParse extends Parser {
 				}
 		disj = null;
 
-	}
+	}//endComparison
 	
 	//=====================================================================
 	//========================= ROLE METHODS ==============================
@@ -413,7 +413,7 @@ public class FarisParse extends Parser {
 					return;
 				}
 				//delete id from pronouns
-				System.out.println("OF pronoun");
+				//System.out.println("OF pronoun");
 				if (_pronouns.containsKey(id)){
 					for (String relID: _pronouns.get(id)){
 						if (_players.containsKey(relID)){
@@ -768,7 +768,7 @@ public class FarisParse extends Parser {
 	protected boolean relativeFailure() {
 		return true;
 
-	}
+	}//relativeFailure
 	
 	//=====================================================================
 	//========================= PARSE METHODS =============================
