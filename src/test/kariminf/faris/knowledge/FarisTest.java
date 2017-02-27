@@ -79,7 +79,8 @@ public class FarisTest {
 		boolean success = faris.addStonDescription(specif);
 		
 		if (!success) System.out.println("NOT SUCCESS");
-		print(faris);
+		//print(faris);
+		faris.displayStates();
 		
 		//search(faris);
 	}

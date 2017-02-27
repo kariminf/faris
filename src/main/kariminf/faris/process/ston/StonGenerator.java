@@ -277,13 +277,13 @@ public class StonGenerator extends Generator<String> {
 		
 		
 		if (prevStates.containsKey(subID)){
-			id = subID + (stateCounter++);
+			id = subID + "S" + (stateCounter++);
 			ReqRolePlayer rrp = ReqRolePlayer.create(id, prevStates.get(subID));
 			rc.addRolePlayer(rrp);
 			rc.replaceRoleInAction(actID, subID, id);
 			
 		} else {
-			id = subID + (stateCounter++);
+			id = subID + "S" + (stateCounter++);
 			ReqRolePlayer rrp = rc.getReqRolePlayerCopie(subID, id);
 			id = subID;
 			//Here we save a copy of substance subID

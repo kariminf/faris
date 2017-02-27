@@ -143,6 +143,17 @@ public class State extends Being{
 	
 	
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String result = "State[" + affectionType + "]:";
+		result += stateAction;
+		result += "-IN{" + mainActions + "}";
+		return result;
+	}
+
 	@Override
 	public void generate(Generator gr) {
 		StateWrapper wrapper = new StateWrapper(this);

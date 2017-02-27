@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
+import kariminf.faris.knowledge.Faris.FarisWrapper;
 import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
@@ -66,23 +68,28 @@ import kariminf.sentrep.univ.types.Relation.Adverbial;
  */
 public class FarisParse extends Parser {
 
-	private HashSet<Substance> substances;
-	private HashSet<Action> actions;
-	private HashMap<String, Mind> minds;
+	private FarisWrapper wrapper;
+	
+	
+	private static class TmpRelative {
+		Relation.Relative rel;
+		ArrayList<List<String>> RelDisj;
+	}
+	private HashMap<QuantSubstance, List<TmpRelative>> subsRel = new HashMap<>();
 
 	private QuantSubstance currentPlayer;
 
 	private HashMap<String, QuantSubstance> _players = new HashMap<>();
-	
+
 	//pronouns which are pointed to conjunctions of players
 	private HashMap<String, List<String>> _pronouns = new HashMap<>();
 
 	private Action currentAction;
 
 	private String currentActionID;
-	
+
 	private String currentPlayerID;
-	
+
 	private HashMap<String, List<State>> _states = new HashMap<>();
 
 	private MentalState s = MentalState.FACT;
@@ -92,10 +99,10 @@ public class FarisParse extends Parser {
 	private HashMap<String, Mind> _minds = new HashMap<>();
 
 	private ArrayList<List<String>> disj = new ArrayList<>();
-	
+
 	private ArrayList<List<String>> mainActDisj;
 	private ArrayList<List<String>> secActDisj;
-	
+
 	private ArrayList<List<String>> RelDisj = null;
 
 	private HashSet<String> mainActionsIDs = new HashSet<>();
@@ -103,7 +110,7 @@ public class FarisParse extends Parser {
 	private HashSet<String> mainMindsIDs = new HashSet<>();
 
 	private UnivMap uMap = new Ston2UnivMap();
-	
+
 	String proleID = "";
 	Pronoun currentPronoun = null;
 
@@ -114,17 +121,15 @@ public class FarisParse extends Parser {
 	 * @param actions
 	 * @param minds
 	 */
-	public FarisParse(HashSet<Substance> substances, HashSet<Action> actions, HashMap<String, Mind> minds){
-		this.substances = substances;
-		this.actions = actions;
-		this.minds = minds;
+	public FarisParse(FarisWrapper wrapper){
+		this.wrapper = wrapper;
 	}
-	
-	
+
+
 	//=====================================================================
 	//======================= PRIVATE METHODS =============================
 	//=====================================================================
-	
+
 	/**
 	 * Adds a new mind of the substance if it doesn't exist
 	 * @param agent the substance which we want
@@ -149,7 +154,7 @@ public class FarisParse extends Parser {
 		return m;
 
 	}//addNewMind
-	
+
 	/**
 	 * 
 	 * @param IDs
@@ -194,15 +199,15 @@ public class FarisParse extends Parser {
 			}
 		return result;
 	}//getMinds
-	
-	
-	
-	
+
+
+
+
 	//=====================================================================
 	//================== Implementing methods =============================
 	//=====================================================================
-		
-		
+
+
 	//=====================================================================
 	//======================== ACTION METHODS =============================
 	//=====================================================================
@@ -219,7 +224,7 @@ public class FarisParse extends Parser {
 		Verb verb = new Verb(synSet);
 		currentAction = Action.getNew(verb);
 
-		
+
 		if (s == MentalState.FACT){
 			_actions.put(id, currentAction);
 			//pastState = MentalState.FACT;
@@ -234,7 +239,7 @@ public class FarisParse extends Parser {
 	protected void endAction(String id, int synSet) {
 		currentActionID = null;
 	}
-	
+
 	@Override
 	protected boolean actionFailure() {
 		return true;
@@ -245,11 +250,11 @@ public class FarisParse extends Parser {
 			boolean progressive, boolean perfect, boolean negated) {
 		Verb verb = currentAction.getVerb();
 		verb.setTense(Ston2FarisLex.getTense(tense));
-		
+
 		if (progressive && perfect) verb.setAspect(Aspect.PROGRESSIVEPERFECT);
 		else if (progressive) verb.setAspect(Aspect.PROGRESSIVE);
 		else if (perfect) verb.setAspect(Aspect.PERFECT);
-		
+
 	}
 
 
@@ -276,12 +281,12 @@ public class FarisParse extends Parser {
 		}
 
 	}//addActionAdverb
-	
+
 	@Override
 	protected boolean adverbFailure() {
 		return true;
 	}//adverbFailure
-	
+
 	@Override
 	protected void beginAgents() {
 		disj = new ArrayList<>();
@@ -296,7 +301,7 @@ public class FarisParse extends Parser {
 		}
 
 	}//endAgents
-	
+
 	@Override
 	protected void beginThemes() {
 
@@ -337,18 +342,18 @@ public class FarisParse extends Parser {
 		}
 
 	}//endThemes
-	
+
 	@Override
 	protected void beginComparison(String type, List<Integer> adjSynSets) {
 		disj = new ArrayList<>();
 
 	}
-	
+
 	@Override
 	protected void endComparison(String type, List<Integer> adjSynSets) {
 
 		if (currentAction == null) return;
-		
+
 		Comparison cmp = uMap.mapComparison(type);
 		for (List<String> conj: disj)
 			for (String subID: conj)
@@ -359,12 +364,12 @@ public class FarisParse extends Parser {
 						Relative.affectRelative (RelativeType.fromComparison(cmp), 
 								adj, currentAction, relative);
 					}
-					
+
 				}
 		disj = null;
 
 	}//endComparison
-	
+
 	//=====================================================================
 	//========================= ROLE METHODS ==============================
 	//=====================================================================
@@ -377,24 +382,24 @@ public class FarisParse extends Parser {
 			return;
 		}
 
-		Substance sub = Search.getElement(substances, new Substance(synSet));
+		Substance sub = Search.getElement(wrapper.substances, new Substance(synSet));
 
 		currentPlayer = new QuantSubstance(sub);
 		_players.put(id, currentPlayer);
-		
+
 		currentPlayerID = id;
 
 	}//beginRole
-	
+
 	@Override
 	protected void beginRole(String id, int synSet, String pronoun) {
-		
+
 		if (synSet > 0) beginRole(id, synSet);
-		
+
 		proleID = id;
-		
+
 		currentPronoun = uMap.mapPronoun(pronoun);
-		
+
 		currentPlayerID = id;
 
 	}//beginRole (pronoun)
@@ -403,12 +408,12 @@ public class FarisParse extends Parser {
 	protected void endRole(String id, int synSet) {
 		//System.out.println(id);
 		currentPlayerID = null;
-		
+
 		if (currentPronoun != null){
 			switch (currentPronoun.getHead()) {
 
 			case POSSESSIVE:
-				
+
 				if (synSet == 0 ){
 					return;
 				}
@@ -422,7 +427,7 @@ public class FarisParse extends Parser {
 					}
 					//_pronouns.remove(id);
 				}
-				
+
 				break;
 			case DEMONSTRATIVE:
 				//delete id from pronouns
@@ -433,7 +438,7 @@ public class FarisParse extends Parser {
 				//_pronouns.remove(id);
 				break;
 			case SUBJECTIVE:
-				
+
 				break;
 			default:
 				break;
@@ -443,7 +448,7 @@ public class FarisParse extends Parser {
 		}
 
 		//Here the role may exists in substances
-		Substance sub = Search.getElement(substances, currentPlayer.getSubstance());
+		Substance sub = Search.getElement(wrapper.substances, currentPlayer.getSubstance());
 
 		//When the substance is found in the set of substances
 		if (sub != currentPlayer.getSubstance()){
@@ -453,8 +458,8 @@ public class FarisParse extends Parser {
 
 
 	}//endRole
-	
-	
+
+
 	@Override
 	protected boolean roleFailure() {
 		return true;
@@ -472,21 +477,21 @@ public class FarisParse extends Parser {
 			Quantity farisQuantity = new Quantity();
 			currentPlayer.setQuantity(farisQuantity);
 		}
-		
+
 		if(quantity.length() < 1 || quantity.equals("1")) return;
-		
+
 		boolean isOrdinal = false;
 		if (quantity.startsWith("o")){
 			quantity = quantity.substring(1);
 			isOrdinal = true;
 		}
-		
+
 		double numQuantity = Double.parseDouble(quantity);
 		Quantity farisQuantity = new Quantity(numQuantity);
 		if(isOrdinal) farisQuantity.setOrdinal();
 		currentPlayer.setQuantity(farisQuantity);
 	}//addRoleSpecif
-	
+
 	@Override
 	protected void addAdjective(int synSet, List<Integer> advSynSets) {
 		Adjective adj = new Adjective(synSet);
@@ -508,18 +513,18 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endPRelatives() {
-		
-		
+
+
 		if(disj.isEmpty() || disj.get(0).isEmpty()) return;
-		
+
 		_pronouns.put(proleID, disj.get(0));
-		 
+
 		disj = null;
 		//TODO when we have a disjunction of players
-		
+
 
 	}
-	
+
 	//=====================================================================
 	//======================= SENTENCE METHODS ============================
 	//=====================================================================
@@ -549,21 +554,21 @@ public class FarisParse extends Parser {
 	protected void beginActions(boolean mainClause) {
 		disj = new ArrayList<>();
 	}
-	
+
 	@Override
 	protected void endActions(boolean mainClause) {
 		if (mainClause) mainActDisj = disj;
 		else secActDisj = disj;
 		disj = null;
 	}//endActions
-	
+
 	//=====================================================================
 	//======================== SHARED METHODS =============================
 	//=====================================================================
-	
+
 	@Override
 	protected void addConjunctions(List<String> IDs) {
-		
+
 		if (RelDisj != null){
 			RelDisj.add(IDs);
 			return;
@@ -571,38 +576,38 @@ public class FarisParse extends Parser {
 
 		disj.add(IDs);
 	}
-	
+
 	@Override
 	protected void beginRelative(String type) {
 		RelDisj = new ArrayList<>();
 	}
-	
+
 	@Override
 	protected void endRelative(String type) {
-		
+
 		if (RelDisj.isEmpty() ||
 				RelDisj.get(0).isEmpty() ||
 				!_players.containsKey(RelDisj.get(0).get(0))) {
 			RelDisj = null;
 			return;
 		}
-		
+
 		type = type.toUpperCase();
-		
+
 		//System.out.print("EndRelative: " + type);
-		
+
 		Adpositional adp = uMap.mapAdposition(type);
-		
+
 		int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
-		
+
 		PlaceTime adjType = Concepts.getAdjType(adp, firstSynset);
-		
+
 		//System.out.println(" which is " + adjType + "." + adp + ".syn:" + firstSynset);
 
 		//The destination is a role
 		//============================
 		if (StonLex.isPredicateRole(type)){
-			
+
 			//The main clause is an action
 			//==============================
 			//eg. The man is IN the car
@@ -629,7 +634,7 @@ public class FarisParse extends Parser {
 				default:
 					/*
 					Relative r = new Relative();
-					
+
 					for (List<String> conj: disj)
 						for (String subID: conj)
 							if (_players.containsKey(subID)){
@@ -638,22 +643,22 @@ public class FarisParse extends Parser {
 					currentAction.addLocation(p);*/
 					break;
 				}
-				
+
 				RelDisj = null;
 				return;
 			}
-			
+
 			//Here the destination must be defined before
 			//The main clause is a role
 			//=========================
 			//eg. The mother of the child
 			//eg. The man IN the car
-			
+
 			if (currentPlayer == null){
 				RelDisj = null;
 				return;
 			}
-			
+
 			//The mother OF the child
 			if (adp == Adpositional.POSSESSION){
 				//System.out.println("==> OF");
@@ -666,50 +671,50 @@ public class FarisParse extends Parser {
 				RelDisj = null;
 				return;
 			}
-			
+
 			//The man in the car
 			//This can be handled as "The man which is being in the car"
 			//As a state of a man <subject>, being in the car <no objects>
-						
-				Verb toBe = new Verb(2604760);
-				Action stateAction = Action.getNew(toBe);//To be
-				
-				switch (adjType) {
-				case PLACE:{
-					Place p = new Place(adp);
-					for (List<String> conj: RelDisj)
-						for (String subID: conj)
-							if (_players.containsKey(subID)){
-								p.addLocation(_players.get(subID));
-							}
-					stateAction.addLocation(p);
-					break;
-				}
-					
-				case TIME:{
-					Time t = new Time(adp);
-					for (List<String> conj: RelDisj)
-						for (String subID: conj)
-							if (_players.containsKey(subID)){
-								t.addTimeSubstance(_players.get(subID));
-							}
-					stateAction.addTime(t);
-					break;
-				}
-					
-				default:
-					RelDisj = null;
-					return;
-				}
-				
-				State state = new State();
-				state.affectState(stateAction, currentPlayer, null, Relation.Relative.SUBJECT);
-				
-				List<State> states = new ArrayList<State>();
-				states.add(state);
-				_states.put(currentPlayerID, states);
-			
-			
+
+			Verb toBe = new Verb(2604760);
+			Action stateAction = Action.getNew(toBe);//To be
+
+			switch (adjType) {
+			case PLACE:{
+				Place p = new Place(adp);
+				for (List<String> conj: RelDisj)
+					for (String subID: conj)
+						if (_players.containsKey(subID)){
+							p.addLocation(_players.get(subID));
+						}
+				stateAction.addLocation(p);
+				break;
+			}
+
+			case TIME:{
+				Time t = new Time(adp);
+				for (List<String> conj: RelDisj)
+					for (String subID: conj)
+						if (_players.containsKey(subID)){
+							t.addTimeSubstance(_players.get(subID));
+						}
+				stateAction.addTime(t);
+				break;
+			}
+
+			default:
+				RelDisj = null;
+				return;
+			}
+
+			State state = new State();
+			state.affectState(stateAction, currentPlayer, null, Relation.Relative.SUBJECT);
+
+			List<State> states = new ArrayList<State>();
+			states.add(state);
+			_states.put(currentPlayerID, states);
+
+
 			RelDisj = null;
 			return;
 		}
@@ -721,7 +726,7 @@ public class FarisParse extends Parser {
 		if (currentActionID != null){
 			//from action to action (adverbials)
 			Adverbial adv = uMap.mapAdverbial(type);
-			
+
 			switch (adv) {
 			case AFTER:
 				break;
@@ -746,7 +751,7 @@ public class FarisParse extends Parser {
 			default:
 				break;
 			}
-			
+
 			//System.out.println("Adverbial: " + adv);
 			RelDisj = null;
 			return;
@@ -756,29 +761,36 @@ public class FarisParse extends Parser {
 		//eg. The man who is driving
 		Relation.Relative rel = uMap.mapRelative(type);
 		
-		//TODO a list of states must be retained
+		List<TmpRelative> listRel = (subsRel.containsKey(currentPlayer))?
+				subsRel.get(currentPlayer): new ArrayList<TmpRelative>();
+		subsRel.put(currentPlayer, listRel);
+		TmpRelative tr = new TmpRelative();
+		tr.rel = rel;
+		tr.RelDisj = RelDisj;
+		listRel.add(tr);
+		//a list of states must be retained
 		//This can't be handled here, because we didn't create the relative action yet
-		
-		
+		//It will be handled when the parse is a success
+
 		RelDisj = null;
-		
+
 	}//endRelative
-	
+
 	@Override
 	protected boolean relativeFailure() {
 		return true;
 
 	}//relativeFailure
-	
+
 	//=====================================================================
 	//========================= PARSE METHODS =============================
 	//=====================================================================
-	
+
 	@Override
 	protected void parseSuccess() {
 
 		for(QuantSubstance sub : _players.values()){	
-			substances.add(sub.getSubstance());
+			wrapper.substances.add(sub.getSubstance());
 		}
 
 
@@ -786,18 +798,16 @@ public class FarisParse extends Parser {
 		for(String id: _actions.keySet()){
 			//If the action exists, we update the information 
 			Action action = _actions.get(id);
-			Action act = Search.getElement(actions, action);
+			Action act = Search.getElement(wrapper.actions, action);
 			act.update(action);
-			actions.add(act);
+			wrapper.actions.add(act);
 
 			if (mainActionsIDs.contains(id)){
 				_mainactions.add(act);
 			}
-
-
 		}
 
-		Mind defaultMind = minds.get("$");
+		Mind defaultMind = wrapper.minds.get("$");
 		for(Action action: _mainactions){
 			defaultMind.addAction(MentalState.FACT, action);
 		}
@@ -805,9 +815,31 @@ public class FarisParse extends Parser {
 
 		for(String mindID: mainMindsIDs){
 			Mind mind = _minds.get(mindID);
-			minds.put(mind.getName(), mind);
+			wrapper.minds.put(mind.getName(), mind);
 		}
 
+		for(List<State> states: _states.values()){
+			wrapper.states.addAll(states);
+		}
+		
+		
+		//Handle relatives Role-action
+		for (QuantSubstance owner: subsRel.keySet()){
+			for(TmpRelative tmpRel: subsRel.get(owner)){
+				List<List<QuantSubstance>> relatives = new ArrayList<>();
+				for(List<String> conj: tmpRel.RelDisj){
+					List<QuantSubstance> rel = new ArrayList<>();
+					for(String subID: conj)
+						if (_players.containsKey(subID))
+							rel.add(_players.get(subID));
+					if(!rel.isEmpty())
+						relatives.add(rel);
+						
+				}
+				State state = new State();
+				state.aff
+			}
+		}
 
 	}//parseSuccess
 

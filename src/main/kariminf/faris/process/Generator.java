@@ -192,7 +192,8 @@ public abstract class Generator<T> {
 		if(!wrapper.mainActions.contains(currentAction)) return;
 		
 		boolean isAgent = wrapper.stateAction.hasAgent(currentSubstance);
-		if(!(isAgent || wrapper.stateAction.hasTheme(currentSubstance))) return;
+		boolean isTheme = wrapper.stateAction.hasTheme(currentSubstance);
+		if(!( isAgent || isTheme )) return;
 		
 		Action tmpLastAction = currentAction;
 		QuantSubstance tmpSubstance = currentSubstance;
