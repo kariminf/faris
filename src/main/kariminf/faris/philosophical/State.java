@@ -146,6 +146,8 @@ public class State extends Being{
 	public boolean affectState (Action action, QuantSubstance owner, Relation.Relative affectionType){
 		
 		this.stateAction = action;
+		this.affectionType = affectionType;
+		
 		List<QuantSubstance> _owner = new ArrayList<>();
 		_owner.add(owner);
 		

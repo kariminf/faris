@@ -324,15 +324,28 @@ public class FarisParse extends Parser {
 			currentAction.addTime(t);
 			break;
 		default:
+			//System.out.println(currentActionID + ": " + adp);
+			//TODO think about these situations
 			/*
-			Relative r = new Relative();
-
-			for (List<String> conj: disj)
-				for (String subID: conj)
-					if (_players.containsKey(subID)){
-						p.addLocation(_players.get(subID));
-					}
-			currentAction.addLocation(p);*/
+			 * madefamous: ROLE 
+			 * began_writing_again: ACCOMPANY
+			 * began_writing_again: EXIST 
+			 * concealed: SITUATION 
+			 * employed: ROLE
+			 * made: DESTINATION 
+			 * regarded: ROLE 
+			 * mentioned: BETWEEN 
+			 * is_inevit: BETWEEN
+			 * 
+			 */
+			/*
+			 * Relative r = new Relative();
+			 * 
+			 * for (List<String> conj: disj) for (String subID: conj) if
+			 * (_players.containsKey(subID)){
+			 * p.addLocation(_players.get(subID)); }
+			 * currentAction.addLocation(p);
+			 */
 			break;
 		}
 
@@ -389,6 +402,8 @@ public class FarisParse extends Parser {
 		//The states will be processed in "parseSuccess"
 		List<TmpRelative> listRel = new ArrayList<TmpRelative>();
 		subsRel.put(currentPlayerID, listRel);
+		
+		System.out.println(rel);
 		
 		//These lists are composed of some objects, containing information
 		//about the elements used to create a state
