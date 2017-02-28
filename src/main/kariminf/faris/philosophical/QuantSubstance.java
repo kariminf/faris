@@ -91,8 +91,10 @@ public class QuantSubstance extends Being{
 	 */
 	public static QuantSubstance withNewSubstance(QuantSubstance orig, Substance newSubs){
 		QuantSubstance result = new QuantSubstance(newSubs);
-		result.plQuantity = orig.plQuantity;
-		result.nbrQuantity = orig.nbrQuantity;
+		if (orig.plQuantity != null)
+			result.plQuantity = orig.plQuantity;
+		if(orig.nbrQuantity != null)
+			result.nbrQuantity = orig.nbrQuantity;
 		result.actions = orig.actions;
 		result.affections = orig.affections;
 		result.states = orig.states;

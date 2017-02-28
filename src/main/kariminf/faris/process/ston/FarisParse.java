@@ -403,7 +403,7 @@ public class FarisParse extends Parser {
 		List<TmpRelative> listRel = new ArrayList<TmpRelative>();
 		subsRel.put(currentPlayerID, listRel);
 		
-		System.out.println(rel);
+		//System.out.println(rel);
 		
 		//These lists are composed of some objects, containing information
 		//about the elements used to create a state
@@ -590,7 +590,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginRole(String id, int synSet) {
-
+		//System.out.println("role: " + id);
 		if (_players.containsKey(id)){
 			currentPlayer = _players.get(id);
 			return;
@@ -607,7 +607,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginRole(String id, int synSet, String pronoun) {
-
+		//System.out.println("role: " + id);
 		if (synSet > 0) beginRole(id, synSet);
 
 		proleID = id;
@@ -670,6 +670,7 @@ public class FarisParse extends Parser {
 			_players.put(id, currentPlayer);
 		}
 
+		currentPlayer = null;
 
 	}//endRole
 
@@ -681,8 +682,9 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void addRoleSpecif(String name, String def, String quantity) {
+		
 		currentPlayer.getSubstance().setNounSpecif(name, def);
-
+		
 		quantity = quantity.toLowerCase();
 
 		if(quantity.endsWith("pl")){
@@ -701,9 +703,15 @@ public class FarisParse extends Parser {
 		}
 
 		double numQuantity = Double.parseDouble(quantity);
+		
+		if (!isOrdinal && numQuantity==1) return;
+		
+		//System.out.println(numQuantity);
 		Quantity farisQuantity = new Quantity(numQuantity);
+		//System.out.println(numQuantity + ": " + farisQuantity.isPlural());
 		if(isOrdinal) farisQuantity.setOrdinal();
 		currentPlayer.setQuantity(farisQuantity);
+		//System.out.println(currentPlayer + ": " + currentPlayer.getNbrQuanty());
 	}//addRoleSpecif
 
 
@@ -712,7 +720,17 @@ public class FarisParse extends Parser {
 		Adjective adj = new Adjective(synSet);
 		Quality quality = new Quality(adj);
 		quality.setAdverbsInt(advSynSets);
-		currentPlayer.getSubstance().addQuality(quality);
+
+		if (currentPlayer != null){
+			currentPlayer.getSubstance().addQuality(quality);
+			return;
+		}
+		
+		for (String relID: _pronouns.get(currentPlayerID)){
+			if (_players.containsKey(relID)){
+				_players.get(relID).getSubstance().addQuality(quality);
+			}
+		}
 
 	}//addAdjective
 

@@ -70,9 +70,10 @@ public class Quantity extends Being{
 	private double nbr;
 	private Substance unit; //mesure unit: kilogram, etc.
 	private boolean cardinal = true;
-	private boolean plural = false;
+	private boolean plural;
 
 	public Quantity(double nbr) {
+		this.plural = false;
 		this.nbr = nbr;
 	}
 	
@@ -132,8 +133,8 @@ public class Quantity extends Being{
 		String result = "";
 		if (plural) result += "PL";
 		else {
-			result += nbr;
 			result += (cardinal)? "": "O";
+			result += nbr;
 		}
 		result += (unit != null)? ":" + unit: "";
 		return result;
