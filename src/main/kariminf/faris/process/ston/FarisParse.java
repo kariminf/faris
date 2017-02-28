@@ -590,9 +590,7 @@ public class FarisParse extends Parser {
 	@Override
 	protected void endRelative(String type) {
 
-		if (RelDisj.isEmpty() ||
-				RelDisj.get(0).isEmpty() ||
-				!_players.containsKey(RelDisj.get(0).get(0))) {
+		if (RelDisj.isEmpty() || RelDisj.get(0).isEmpty()) {
 			RelDisj = null;
 			return;
 		}
@@ -601,17 +599,18 @@ public class FarisParse extends Parser {
 
 		System.out.println("EndRelative: " + type);
 
-		Adpositional adp = uMap.mapAdposition(type);
-
-		int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
-
-		PlaceTime adjType = Concepts.getAdjType(adp, firstSynset);
 
 		//System.out.println(" which is " + adjType + "." + adp + ".syn:" + firstSynset);
 
 		//The destination is a role
 		//============================
 		if (StonLex.isPredicateRole(type)){
+			
+			Adpositional adp = uMap.mapAdposition(type);
+
+			int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
+
+			PlaceTime adjType = Concepts.getAdjType(adp, firstSynset);
 
 			//The main clause is an action
 			//==============================
