@@ -83,6 +83,13 @@ public class State extends Being{
 	public State() {
 	}
 	
+	/**
+	 * A main action is the action where a substance has this state. 
+	 * For example: "The man who was there drives this car"; the action "drives" is 
+	 * one of the main actions for the state "who was there".
+	 * 
+	 * @param mainAction the action where a substance having this state
+	 */
 	public void addMainAction(Action mainAction) {
 		this.mainActions.add(mainAction);
 	}
@@ -123,6 +130,33 @@ public class State extends Being{
 		}
 		
 		this.stateAction = action;
+		
+		owner.addState(this);
+		
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param action
+	 * @param owner
+	 * @param affectionType
+	 * @return
+	 */
+	public boolean affectState (Action action, QuantSubstance owner, Relation.Relative affectionType){
+		
+		this.stateAction = action;
+		List<QuantSubstance> _owner = new ArrayList<>();
+		_owner.add(owner);
+		
+		if (affectionType == Relation.Relative.SUBJECT){
+			if(!action.hasAgent(owner))
+				action.addConjunctSubjects(_owner);
+		}
+		else {
+			if(!action.hasAgent(owner))
+				action.addConjunctObjects(_owner);
+		}
 		
 		owner.addState(this);
 		

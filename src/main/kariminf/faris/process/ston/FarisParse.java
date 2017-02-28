@@ -74,8 +74,11 @@ public class FarisParse extends Parser {
 	private static class TmpRelative {
 		Relation.Relative rel;
 		ArrayList<List<String>> RelDisj;
+		//we dont affect the state, but it is helpful to add main actions
+		State state = new State(); 
+		QuantSubstance substance;
 	}
-	private HashMap<QuantSubstance, List<TmpRelative>> subsRel = new HashMap<>();
+	private HashMap<String, List<TmpRelative>> subsRel = new HashMap<>();
 
 	private QuantSubstance currentPlayer;
 
@@ -170,7 +173,9 @@ public class FarisParse extends Parser {
 					List<State> states = _states.get(roleID);
 					for (State state: states)
 						state.addMainAction(currentAction);
-				}
+				} else if (subsRel.containsKey(roleID))
+					for (TmpRelative tmpRel: subsRel.get(roleID))
+						tmpRel.state.addMainAction(currentAction);
 			} else if (_pronouns.containsKey(roleID)){
 				List<QuantSubstance> result2 =
 						getSubstances(_pronouns.get(roleID));
@@ -594,7 +599,7 @@ public class FarisParse extends Parser {
 
 		type = type.toUpperCase();
 
-		//System.out.print("EndRelative: " + type);
+		System.out.println("EndRelative: " + type);
 
 		Adpositional adp = uMap.mapAdposition(type);
 
@@ -654,7 +659,7 @@ public class FarisParse extends Parser {
 			//eg. The mother of the child
 			//eg. The man IN the car
 
-			if (currentPlayer == null){
+			if (currentPlayer == null || currentPlayerID == null){
 				RelDisj = null;
 				return;
 			}
@@ -719,8 +724,13 @@ public class FarisParse extends Parser {
 			return;
 		}
 
+		
+		
 		//The destination is an action
-
+		//================================
+		
+		System.out.println("The destination is an action");
+				
 		//TODO the action can refer to an action:
 		//He is Where I can see him
 		if (currentActionID != null){
@@ -757,16 +767,25 @@ public class FarisParse extends Parser {
 			return;
 		}
 
-		//The main clause is a role
+		
+		if (currentPlayer == null || currentPlayerID == null){
+			RelDisj = null;
+			return;
+		}
+		
+		System.out.println("yaaay");
+		
+		//The main clause is a role, destination is an action
 		//eg. The man who is driving
 		Relation.Relative rel = uMap.mapRelative(type);
 		
-		List<TmpRelative> listRel = (subsRel.containsKey(currentPlayer))?
-				subsRel.get(currentPlayer): new ArrayList<TmpRelative>();
-		subsRel.put(currentPlayer, listRel);
+		List<TmpRelative> listRel = new ArrayList<TmpRelative>();
+		subsRel.put(currentPlayerID, listRel);
 		TmpRelative tr = new TmpRelative();
 		tr.rel = rel;
 		tr.RelDisj = RelDisj;
+		tr.substance = currentPlayer;
+		
 		listRel.add(tr);
 		//a list of states must be retained
 		//This can't be handled here, because we didn't create the relative action yet
@@ -824,20 +843,19 @@ public class FarisParse extends Parser {
 		
 		
 		//Handle relatives Role-action
-		for (QuantSubstance owner: subsRel.keySet()){
-			for(TmpRelative tmpRel: subsRel.get(owner)){
-				List<List<QuantSubstance>> relatives = new ArrayList<>();
+		for (String subID: subsRel.keySet()){
+			for(TmpRelative tmpRel: subsRel.get(subID)){
+				
 				for(List<String> conj: tmpRel.RelDisj){
-					List<QuantSubstance> rel = new ArrayList<>();
-					for(String subID: conj)
-						if (_players.containsKey(subID))
-							rel.add(_players.get(subID));
-					if(!rel.isEmpty())
-						relatives.add(rel);
-						
+					for(String stateActID: conj)
+						if (_actions.containsKey(stateActID)){
+							Action stateAction = _actions.get(stateActID);
+							State state = tmpRel.state;
+							state.affectState(stateAction, tmpRel.substance, tmpRel.rel);
+							wrapper.states.add(state);
+							System.out.println(state);
+						}		
 				}
-				State state = new State();
-				state.aff
 			}
 		}
 
