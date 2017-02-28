@@ -69,8 +69,8 @@ import kariminf.sentrep.univ.types.Relation.Adverbial;
 public class FarisParse extends Parser {
 
 	private FarisWrapper wrapper;
-	
-	
+
+
 	private static class TmpRelative {
 		Relation.Relative rel;
 		ArrayList<List<String>> RelDisj;
@@ -185,6 +185,12 @@ public class FarisParse extends Parser {
 		return result;
 	}//getSubstances
 
+
+	/**
+	 * Get the available actions from a collection (List, Set, etc.) of their IDs
+	 * @param IDs The IDs of the actions we want to retreive
+	 * @return The actions already created having these IDs
+	 */
 	private List<Action> getActions(Collection<String> IDs){
 		List<Action> result = new ArrayList<>();
 		for (String actID: IDs)
@@ -195,6 +201,11 @@ public class FarisParse extends Parser {
 		return result;
 	}//getActions
 
+	/**
+	 * Get a list of minds from a collection of IDs
+	 * @param IDs The IDs of the actions already created within this parser
+	 * @return A list of existing minds having the input IDs
+	 */
 	private List<Mind> getMinds(Collection<String> IDs){
 		List<Mind> result = new ArrayList<>();
 		for (String actID: IDs)
@@ -207,6 +218,189 @@ public class FarisParse extends Parser {
 
 
 
+	private void role2roleRelative(Adpositional adp){
+		//Here the destination must be defined before
+		//The main clause is a role
+		//=========================
+		//eg. The mother of the child
+		//eg. The man IN the car
+
+		if (currentPlayer == null || currentPlayerID == null){
+			RelDisj = null;
+			return;
+		}
+
+		//The mother OF the child
+		if (adp == Adpositional.POSSESSION){
+			//System.out.println("==> OF");
+			for (List<String> conj: RelDisj)
+				for (String subID: conj)
+					if (_players.containsKey(subID)){
+						QuantSubstance relative = _players.get(subID);
+						Relative.affectRelative(currentPlayer, relative);
+					}
+			RelDisj = null;
+			return;
+		}
+
+		//The man in the car
+		//This can be handled as "The man which is being in the car"
+		//As a state of a man <subject>, being in the car <no objects>
+
+		int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
+
+		PlaceTime adjType = Concepts.getAdjType(adp, firstSynset);
+
+		Verb toBe = new Verb(2604760);
+		Action stateAction = Action.getNew(toBe);//To be
+
+		switch (adjType) {
+		case PLACE:{
+			Place p = new Place(adp);
+			for (List<String> conj: RelDisj)
+				for (String subID: conj)
+					if (_players.containsKey(subID)){
+						p.addLocation(_players.get(subID));
+					}
+			stateAction.addLocation(p);
+			break;
+		}
+
+		case TIME:{
+			Time t = new Time(adp);
+			for (List<String> conj: RelDisj)
+				for (String subID: conj)
+					if (_players.containsKey(subID)){
+						t.addTimeSubstance(_players.get(subID));
+					}
+			stateAction.addTime(t);
+			break;
+		}
+
+		default:
+			RelDisj = null;
+			return;
+		}
+
+		State state = new State();
+		state.affectState(stateAction, currentPlayer, null, Relation.Relative.SUBJECT);
+
+		List<State> states = new ArrayList<State>();
+		states.add(state);
+		_states.put(currentPlayerID, states);
+
+
+		RelDisj = null;
+	}
+
+	/**
+	 * Called inside endRelative to process the case where an action is having 
+	 * some roles as relatives
+	 * @param adp The adposition (preposition) describing the relation
+	 */
+	private void action2roleRelative(Adpositional adp){
+
+		int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
+
+		PlaceTime adjType = Concepts.getAdjType(adp, firstSynset);
+
+		switch (adjType) {
+		case PLACE:
+			Place p = new Place(adp);
+			for (List<String> conj: RelDisj)
+				for (String subID: conj)
+					if (_players.containsKey(subID)){
+						p.addLocation(_players.get(subID));
+					}
+			currentAction.addLocation(p);
+			break;
+		case TIME:
+			Time t = new Time(adp);
+			for (List<String> conj: RelDisj)
+				for (String subID: conj)
+					if (_players.containsKey(subID)){
+						t.addTimeSubstance(_players.get(subID));
+					}
+			currentAction.addTime(t);
+			break;
+		default:
+			/*
+			Relative r = new Relative();
+
+			for (List<String> conj: disj)
+				for (String subID: conj)
+					if (_players.containsKey(subID)){
+						p.addLocation(_players.get(subID));
+					}
+			currentAction.addLocation(p);*/
+			break;
+		}
+
+		RelDisj = null;
+	}//action2roleRelative
+
+
+	/**
+	 * Called inside endRelative to process the case where an action is having 
+	 * some actions as relatives
+	 * @param adv the adverb describing the relation
+	 */
+	private void action2actionRelative(Adverbial adv){
+		//TODO the action can refer to an action
+		switch (adv) {
+		case AFTER:
+			break;
+		case BEFORE:
+			break;
+		case CONDITION:
+			break;
+		case CONSESSION:
+			break;
+		case CONTINUUM:
+			break;
+		case MANNER:
+			break;
+		case PLACE:
+			break;
+		case PURPOSE:
+			break;
+		case REASON:
+			break;
+		case TIME:
+			break;
+		default:
+			break;
+		}
+
+		//System.out.println("Adverbial: " + adv);
+		RelDisj = null;
+	}//action2actionRelative
+
+
+	/**
+	 * Called inside endRelative to process the case where a role is having 
+	 * some actions as relatives
+	 * @param rel
+	 */
+	private void role2actionRelative(Relation.Relative rel){
+
+		//because we didn't create the relative action yet, 
+		//a list of states of each role must be retained
+		//The states will be processed in "parseSuccess"
+		List<TmpRelative> listRel = new ArrayList<TmpRelative>();
+		subsRel.put(currentPlayerID, listRel);
+		
+		//These lists are composed of some objects, containing information
+		//about the elements used to create a state
+		TmpRelative tr = new TmpRelative();
+		tr.rel = rel;
+		tr.RelDisj = RelDisj;
+		tr.substance = currentPlayer;
+
+		listRel.add(tr);
+		
+	}//role2actionRelative
+	
 
 	//=====================================================================
 	//================== Implementing methods =============================
@@ -497,6 +691,7 @@ public class FarisParse extends Parser {
 		currentPlayer.setQuantity(farisQuantity);
 	}//addRoleSpecif
 
+
 	@Override
 	protected void addAdjective(int synSet, List<Integer> advSynSets) {
 		Adjective adj = new Adjective(synSet);
@@ -597,198 +792,58 @@ public class FarisParse extends Parser {
 
 		type = type.toUpperCase();
 
-		System.out.println("EndRelative: " + type);
-
-
-		//System.out.println(" which is " + adjType + "." + adp + ".syn:" + firstSynset);
+		//System.out.println("EndRelative: " + type);
 
 		//The destination is a role
-		//============================
+		//==========================
 		if (StonLex.isPredicateRole(type)){
-			
+
 			Adpositional adp = uMap.mapAdposition(type);
 
-			int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
-
-			PlaceTime adjType = Concepts.getAdjType(adp, firstSynset);
-
-			//The main clause is an action
-			//==============================
+			//The main clause is an action (Action-Role)
+			//==========================================
 			//eg. The man is IN the car
 			if (currentActionID != null){
-				switch (adjType) {
-				case PLACE:
-					Place p = new Place(adp);
-					for (List<String> conj: RelDisj)
-						for (String subID: conj)
-							if (_players.containsKey(subID)){
-								p.addLocation(_players.get(subID));
-							}
-					currentAction.addLocation(p);
-					break;
-				case TIME:
-					Time t = new Time(adp);
-					for (List<String> conj: RelDisj)
-						for (String subID: conj)
-							if (_players.containsKey(subID)){
-								t.addTimeSubstance(_players.get(subID));
-							}
-					currentAction.addTime(t);
-					break;
-				default:
-					/*
-					Relative r = new Relative();
-
-					for (List<String> conj: disj)
-						for (String subID: conj)
-							if (_players.containsKey(subID)){
-								p.addLocation(_players.get(subID));
-							}
-					currentAction.addLocation(p);*/
-					break;
-				}
-
+				action2roleRelative(adp);
 				RelDisj = null;
 				return;
 			}
 
-			//Here the destination must be defined before
-			//The main clause is a role
-			//=========================
+			//The main clause is a role (Role-Role)
+			//=====================================
 			//eg. The mother of the child
 			//eg. The man IN the car
-
-			if (currentPlayer == null || currentPlayerID == null){
-				RelDisj = null;
-				return;
-			}
-
-			//The mother OF the child
-			if (adp == Adpositional.POSSESSION){
-				//System.out.println("==> OF");
-				for (List<String> conj: RelDisj)
-					for (String subID: conj)
-						if (_players.containsKey(subID)){
-							QuantSubstance relative = _players.get(subID);
-							Relative.affectRelative(currentPlayer, relative);
-						}
-				RelDisj = null;
-				return;
-			}
-
-			//The man in the car
-			//This can be handled as "The man which is being in the car"
-			//As a state of a man <subject>, being in the car <no objects>
-
-			Verb toBe = new Verb(2604760);
-			Action stateAction = Action.getNew(toBe);//To be
-
-			switch (adjType) {
-			case PLACE:{
-				Place p = new Place(adp);
-				for (List<String> conj: RelDisj)
-					for (String subID: conj)
-						if (_players.containsKey(subID)){
-							p.addLocation(_players.get(subID));
-						}
-				stateAction.addLocation(p);
-				break;
-			}
-
-			case TIME:{
-				Time t = new Time(adp);
-				for (List<String> conj: RelDisj)
-					for (String subID: conj)
-						if (_players.containsKey(subID)){
-							t.addTimeSubstance(_players.get(subID));
-						}
-				stateAction.addTime(t);
-				break;
-			}
-
-			default:
-				RelDisj = null;
-				return;
-			}
-
-			State state = new State();
-			state.affectState(stateAction, currentPlayer, null, Relation.Relative.SUBJECT);
-
-			List<State> states = new ArrayList<State>();
-			states.add(state);
-			_states.put(currentPlayerID, states);
-
-
+			role2roleRelative(adp);
 			RelDisj = null;
 			return;
-		}
+		}//End destination Role
 
-		
-		
 		//The destination is an action
 		//================================
-		
-		System.out.println("The destination is an action");
-				
-		//TODO the action can refer to an action:
+
+
+		//The main clause is an action (Action-Action)
+		//============================================
 		//He is Where I can see him
 		if (currentActionID != null){
-			//from action to action (adverbials)
 			Adverbial adv = uMap.mapAdverbial(type);
-
-			switch (adv) {
-			case AFTER:
-				break;
-			case BEFORE:
-				break;
-			case CONDITION:
-				break;
-			case CONSESSION:
-				break;
-			case CONTINUUM:
-				break;
-			case MANNER:
-				break;
-			case PLACE:
-				break;
-			case PURPOSE:
-				break;
-			case REASON:
-				break;
-			case TIME:
-				break;
-			default:
-				break;
-			}
-
-			//System.out.println("Adverbial: " + adv);
+			action2actionRelative(adv);
 			RelDisj = null;
 			return;
 		}
 
-		
+
+		//The main clause is a role (Role-Action)
+		//========================================
+		//eg. The man who is driving
+
 		if (currentPlayer == null || currentPlayerID == null){
 			RelDisj = null;
 			return;
 		}
-		
-		System.out.println("yaaay");
-		
-		//The main clause is a role, destination is an action
-		//eg. The man who is driving
+
 		Relation.Relative rel = uMap.mapRelative(type);
-		
-		List<TmpRelative> listRel = new ArrayList<TmpRelative>();
-		subsRel.put(currentPlayerID, listRel);
-		TmpRelative tr = new TmpRelative();
-		tr.rel = rel;
-		tr.RelDisj = RelDisj;
-		tr.substance = currentPlayer;
-		
-		listRel.add(tr);
-		//a list of states must be retained
-		//This can't be handled here, because we didn't create the relative action yet
-		//It will be handled when the parse is a success
+		role2actionRelative(rel);
 
 		RelDisj = null;
 
@@ -839,12 +894,12 @@ public class FarisParse extends Parser {
 		for(List<State> states: _states.values()){
 			wrapper.states.addAll(states);
 		}
-		
-		
+
+
 		//Handle relatives Role-action
 		for (String subID: subsRel.keySet()){
 			for(TmpRelative tmpRel: subsRel.get(subID)){
-				
+
 				for(List<String> conj: tmpRel.RelDisj){
 					for(String stateActID: conj)
 						if (_actions.containsKey(stateActID)){
@@ -852,7 +907,7 @@ public class FarisParse extends Parser {
 							State state = tmpRel.state;
 							state.affectState(stateAction, tmpRel.substance, tmpRel.rel);
 							wrapper.states.add(state);
-							System.out.println(state);
+
 						}		
 				}
 			}
