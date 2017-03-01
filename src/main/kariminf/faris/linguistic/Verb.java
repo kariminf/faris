@@ -20,6 +20,8 @@
 
 package kariminf.faris.linguistic;
 
+import kariminf.sentrep.univ.types.VerbTense;
+
 /**
  * 
  * @author Abdelkrime Aries (kariminfo0@gmail.com)
@@ -39,71 +41,43 @@ package kariminf.faris.linguistic;
  *         limitations under the License.
  */
 public class Verb extends POS {
-
-	public static enum Tense {
-		PAST,
-		PRESENT,
-		FUTURE;
-		
-		/*public static Tense getTense (int number){
-			switch (number){
-			case 0: return PAST;
-			case 1: return PRESENT;
-			case 2: return FUTURE;
-			}
-			
-			return PRESENT;
-		}*/
-	}
 	
-	public static enum Aspect {
-		SIMPLE, //“I see” (simple aspect) expresses the act of seeing as a simple fact;
-		PROGRESSIVE, //“I am seeing” (progressive aspect) represents the action as continuous and ongoing; 
-		PERFECT, //“I have seen” (perfect aspect) represents the present situation as the result of past action.
-		PROGRESSIVEPERFECT;
+	private VerbTense tense = VerbTense.PRESENT;
 	
-		/*public static Aspect getAspect (int number){
-			switch (number){
-			case 0: return SIMPLE;
-			case 1: return PROGRESSIVE;
-			case 2: return PERFECT;
-			}
-			
-			return SIMPLE;
-		}*/
-	}
+	private boolean perfect = false;
+	private boolean progressive = false;
 	
 	/**
 	 * @return the tense
 	 */
-	public Tense getTense() {
+	public VerbTense getTense() {
 		return tense;
 	}
 
 	/**
 	 * @param tense the tense to set
 	 */
-	public void setTense(Tense tense) {
+	public void setTense(VerbTense tense) {
 		this.tense = tense;
 	}
 
-	/**
-	 * @return the aspect
-	 */
-	public Aspect getAspect() {
-		return aspect;
-	}
 
-	/**
-	 * @param aspect the aspect to set
-	 */
-	public void setAspect(Aspect aspect) {
-		this.aspect = aspect;
+	public boolean isPerfect() {
+		return perfect;
 	}
-
-	private Tense tense = Tense.PRESENT;
 	
-	private Aspect aspect = Aspect.SIMPLE;
+	public boolean isProgressive() {
+		return progressive;
+	}
+
+
+	public void setPerfect() {
+		this.perfect = true;
+	}
+	
+	public void setProgressive() {
+		this.progressive = true;
+	}
 	
 	//the mood (imperative, indicative, subjective)
 	//we don't need person, number, voice
@@ -122,7 +96,10 @@ public class Verb extends POS {
 	 */
 	@Override
 	public String toString() {
-		return "V@" + getSynSet() +  "." + tense + "." + aspect ;
+		String result = "V@" + getSynSet() +  "." + tense;
+		result += (perfect)? ".PRF": "";
+		result += (progressive)? ".PROG": "";
+		return result ;
 	}
 	
 	

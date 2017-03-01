@@ -154,18 +154,32 @@ public abstract class Generator<T> {
 		actionsNbr++;
 
 		beginActionHandler(actID, wrapper.verb, wrapper.adverbs);
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
 
 		beginAgentsHandler(actID);
 		processDisjunctions(wrapper.doers);
 		endAgentsHandler(actID);
+		
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
 
 		beginThemesHandler(actID);
 		processDisjunctions(wrapper.receivers);
 		endThemesHandler(actID);
 		
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
+		
 		for(Place place: wrapper.locations) place.generate(this);
 		
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
+		
 		for(Time time: wrapper.times) time.generate(this);
+		
+		currentAction = tmpLastAction;
+		currentSubstance = tmpSubstance;
 		
 		beginActionRelativeHandler(actID);
 		for (Relative relative: wrapper.relatives){
@@ -248,13 +262,15 @@ public abstract class Generator<T> {
 		currentSubstance = wrapper.qsubstance;
 		
 		Action tmpLastAction = currentAction;
-		QuantSubstance tmpSubstance = currentSubstance;
+		//QuantSubstance tmpSubstance = currentSubstance;
 		
-		String subID = ROLE + substancesNbr;
 		if (qsubstanceIDs.containsKey(wrapper.qsubstance)){
+			String subID = ROLE + qsubstanceIDs.get(wrapper.qsubstance);
 			substanceFoundHandler(subID);
 			return;
 		}
+		
+		String subID = ROLE + substancesNbr;
 		
 		qsubstanceIDs.put(wrapper.qsubstance, substancesNbr);
 		
@@ -286,23 +302,25 @@ public abstract class Generator<T> {
 		
 		endSubstanceHandler(subID, wrapper.noun);
 		
-		currentAction = tmpLastAction;
-		currentSubstance = tmpSubstance;
+		//currentAction = tmpLastAction;
+		//currentSubstance = tmpSubstance;
 	}
 
 	public void processSubstance(SubstanceWrapper wrapper){
-		String id = ROLE + substancesNbr;
+		
 		if (substanceIDs.containsKey(wrapper.substance)){
-			substanceFoundHandler(id);
+			String subID = ROLE + substanceIDs.get(wrapper.substance);
+			substanceFoundHandler(subID);
 			return;
 		}
 		
+		String subID = ROLE + substancesNbr;
 		substanceIDs.put(wrapper.substance, substancesNbr);
 		substancesNbr++;
 		
-		beginSubstanceHandler(id, wrapper.noun);
+		beginSubstanceHandler(subID, wrapper.noun);
 		for (Quality ql : wrapper.qualities) ql.generate(this);
-		endSubstanceHandler(id, wrapper.noun);
+		endSubstanceHandler(subID, wrapper.noun);
 	}
 	
 	/**

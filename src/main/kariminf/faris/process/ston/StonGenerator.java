@@ -60,6 +60,13 @@ public class StonGenerator extends Generator<String> {
 	@Override
 	protected void beginActionHandler(String actID, Verb verb, Set<Adverb> adverbs) {
 		rc.addAction(actID, verb.getSynSet());
+		{
+			String tense = u2sMap.getTense(verb.getTense());
+			//TODO modality and negation of a verb
+			rc.addVerbSpecif(actID, tense , "NONE" , verb.isProgressive(), verb.isPerfect(), false);
+			
+		}
+		
 		currentActIDs.push(actID);
 		openBlocks.push(Block.ACTION);
 		
@@ -76,7 +83,7 @@ public class StonGenerator extends Generator<String> {
 	@Override
 	protected void beginAgentsHandler(String actID) {
 		openBlocks.push(Block.AGENT);
-		conj = new ArrayList<>();
+		//conj = new ArrayList<>();
 	}
 
 	@Override
@@ -88,7 +95,7 @@ public class StonGenerator extends Generator<String> {
 	@Override
 	protected void beginThemesHandler(String actID) {
 		openBlocks.push(Block.THEME);
-		conj = new ArrayList<>();
+		//conj = new ArrayList<>();
 	}
 
 	@Override
@@ -116,10 +123,9 @@ public class StonGenerator extends Generator<String> {
 			if (currentActIDs.isEmpty()) break;
 			String currentActID = currentActIDs.peek();
 			rc.addAgentConjunctions(currentActID, conj);
-			conj = new ArrayList<>();
-			break;
-		}
 			
+		}
+		break;
 		case ROLE:
 			break;
 		case THEME:
@@ -127,10 +133,9 @@ public class StonGenerator extends Generator<String> {
 			if (currentActIDs.isEmpty()) break;
 			String currentActID = currentActIDs.peek();
 			rc.addThemeConjunctions(currentActID, conj);
-			conj = new ArrayList<>();
-			break;
+			
 		}
-		
+		break;
 		case PLACE:
 		{
 			if (currentActIDs.isEmpty()) {
@@ -140,10 +145,9 @@ public class StonGenerator extends Generator<String> {
 			//System.out.println("place>>>" + u2sMap.getAdposition(adpos, ""));
 			rc.addRelative(u2sMap.getAdposition(adpos, ""), currentActID);
 			rc.addRelativeConjunctions(conj);
-			conj = new ArrayList<>();
-			break;
+			
 		}
-		
+		break;
 		case TIME:
 		{
 			if (currentActIDs.isEmpty()) break;
@@ -152,16 +156,13 @@ public class StonGenerator extends Generator<String> {
 			rc.addRelative(u2sMap.getAdposition(adpos, ""), currentActID);
 			rc.addRelativeConjunctions(conj);
 			conj = new ArrayList<>();
-			break;
 		}
-		
+		break;
 		default:
 			break;
 		}
 		
-		return;
-		
-		
+		conj = null;
 	}
 
 	@Override
@@ -277,13 +278,13 @@ public class StonGenerator extends Generator<String> {
 		
 		
 		if (prevStates.containsKey(subID)){
-			id = subID + "S" + (stateCounter++);
+			id = subID + "s" + (stateCounter++);
 			ReqRolePlayer rrp = ReqRolePlayer.create(id, prevStates.get(subID));
 			rc.addRolePlayer(rrp);
 			rc.replaceRoleInAction(actID, subID, id);
 			
 		} else {
-			id = subID + "S" + (stateCounter++);
+			id = subID + "s" + (stateCounter++);
 			ReqRolePlayer rrp = rc.getReqRolePlayerCopie(subID, id);
 			id = subID;
 			//Here we save a copy of substance subID

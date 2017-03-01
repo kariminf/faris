@@ -30,7 +30,6 @@ import kariminf.faris.knowledge.Faris.FarisWrapper;
 import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
-import kariminf.faris.linguistic.Verb.Aspect;
 import kariminf.faris.philosophical.*;
 import kariminf.faris.philosophical.Relative.RelativeType;
 import kariminf.faris.process.ston.Concepts.PlaceTime;
@@ -463,11 +462,11 @@ public class FarisParse extends Parser {
 	protected void addVerbSpecif(String tense, String modality,
 			boolean progressive, boolean perfect, boolean negated) {
 		Verb verb = currentAction.getVerb();
-		verb.setTense(Ston2FarisLex.getTense(tense));
+		
+		verb.setTense(uMap.mapTense(tense));
 
-		if (progressive && perfect) verb.setAspect(Aspect.PROGRESSIVEPERFECT);
-		else if (progressive) verb.setAspect(Aspect.PROGRESSIVE);
-		else if (perfect) verb.setAspect(Aspect.PERFECT);
+		if (progressive) verb.setProgressive();
+		if (perfect) verb.setPerfect();
 
 	}
 
