@@ -116,6 +116,18 @@ public class Noun extends POS {
 				n.sameAttributs(gender, defined)
 				);
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode(java.lang.Object)
+	 */
+	@Override
+	public int hashCode() {
+		int result = 3;
+		result = super.hashCode() + 5 *  result;
+		result = gender.hashCode() + 7 * result;
+		result = (defined)? 11 * result: result;
+		return result;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

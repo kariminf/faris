@@ -128,6 +128,18 @@ public class Substance extends Being{
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + noun.hashCode();
+		result = prime * result + qualities.hashCode();
+		return result;
+	}
+	
 	//Probably won't be used, but let it here for now
 	/**
 	 * This function will assure the existence of one instance of the same substance

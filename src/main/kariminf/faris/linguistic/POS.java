@@ -80,8 +80,6 @@ public abstract class POS {
 	}
 
 	
-	
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
