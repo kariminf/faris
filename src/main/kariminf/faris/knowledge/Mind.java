@@ -27,7 +27,6 @@ import java.util.Set;
 import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.QuantSubstance;
 import kariminf.faris.process.Generator;
-import kariminf.faris.process.ston.FarisGenerate;
 import kariminf.faris.tools.Search;
 
 
@@ -196,27 +195,6 @@ public class Mind {
 
 		ideas.add(condition);
 		mentalStates.add(ms);
-	}
-
-
-	/**
-	 * 
-	 * @param synSet
-	 * @return
-	 */
-	public String getSynSetText(int synSet){
-		if (! thoughts.containsKey(MentalState.FACT))
-			return "";
-		
-		return FarisGenerate.getSynsetIdeas(this, synSet);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getAllText(){
-		return FarisGenerate.getAllIdeas(this);
 	}
 
 	/* (non-Javadoc)

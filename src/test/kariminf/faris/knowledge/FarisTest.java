@@ -82,11 +82,6 @@ public class FarisTest {
 		print(faris);
 		//faris.displayStates();
 		
-		//search(faris);
-	}
-	
-	public static void search(Faris faris){
-		System.out.print(faris.getSynSetText(7846));
 	}
 	
 	

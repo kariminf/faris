@@ -98,41 +98,6 @@ public class Faris {
 	}
 	
 	
-	/**
-	 * 
-	 * @param mindLabel
-	 * @param synSet
-	 * @return
-	 */
-	public String getSynSetText (String mindLabel, int synSet){
-		if (! minds.containsKey(mindLabel)) return "";
-		Mind mind = minds.get(mindLabel);
-		
-		return mind.getSynSetText(synSet);
-	}
-	
-	/**
-	 * 
-	 * @param synSet
-	 * @return
-	 */
-	public String getSynSetText (int synSet){
-		return getSynSetText("$", synSet);
-	}
-	
-	/**
-	 * Get all the thoughts in a mind
-	 * @param mindLabel the label of the mind
-	 * @return STON representation of the thoughts
-	 */
-	public String getMindThoughts (String mindLabel){
-		if (! minds.containsKey(mindLabel)) return "";
-		Mind mind = minds.get(mindLabel);
-		
-		return mind.getAllText();
-	}
-	
-	
 	
 	/**
 	 * 
