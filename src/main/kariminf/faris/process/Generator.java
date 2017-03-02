@@ -212,9 +212,13 @@ public abstract class Generator<T> {
 		Action tmpLastAction = currentAction;
 		QuantSubstance tmpSubstance = currentSubstance;
 		
-		wrapper.stateAction.generate(this);
+		Action stateAction = wrapper.stateAction;
+		if (isAgent)  stateAction= stateAction.copyAgentTheme(false, true);
+		if (isTheme)  stateAction= stateAction.copyAgentTheme(true, false);
 		
-		String actID = ACTION + actionIDs.get(wrapper.stateAction);
+		stateAction.generate(this);
+		
+		String actID = ACTION + actionIDs.get(stateAction);
 		
 		
 		addStateHandler(isAgent, actID);

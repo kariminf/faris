@@ -160,6 +160,7 @@ public class Action extends Being{
 		adverbs.add(adv);
 	}
 	
+	
 	/**
 	 * Adds substances that are separated by the word "and". <br>
 	 * @param conjunctions2
@@ -187,6 +188,27 @@ public class Action extends Being{
 		for (ConjunctedSubstances cs: doers)
 			if (cs.contains(agent)) return true;
 		return false;
+	}
+	
+	
+	/**
+	 * 
+	 * @param withAgents
+	 * @param withThemes
+	 * @return
+	 */
+	public Action copyAgentTheme(boolean withAgents, boolean withThemes){
+		Action result = new Action(verb);
+		result.adverbs = adverbs;
+		result.relations = relations;
+		result.relatives = relatives;
+		result.locations = locations; 
+		result.times = times; 
+		
+		if(withAgents) result.doers = doers; 
+		if(withThemes) result.receivers = receivers; 
+		
+		return result;
 	}
 	
 	public boolean hasAgents(){
