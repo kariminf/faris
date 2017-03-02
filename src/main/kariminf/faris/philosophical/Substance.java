@@ -150,9 +150,14 @@ public class Substance extends Being{
 		return sub2;
 	}
 	
-	//TODO update a substance
+	/**
+	 * Updates the qualities of the current substance, from another substance, 
+	 * when they share the same noun
+	 * @param sub2 the source substance
+	 */
 	public void update(Substance sub2){
-		
+		if(noun.equals(sub2.noun))
+			qualities.addAll(sub2.qualities);
 	}
 	
 	public Noun getNoun(){

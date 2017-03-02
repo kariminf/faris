@@ -95,12 +95,21 @@ public class QuantSubstance extends Being{
 			result.plQuantity = orig.plQuantity;
 		if(orig.nbrQuantity != null)
 			result.nbrQuantity = orig.nbrQuantity;
-		result.actions = orig.actions;
-		result.affections = orig.affections;
+		result.actions = new HashSet<>();
+		result.affections = new HashSet<>();
 		result.states = orig.states;
 		result.relatives = orig.relatives;
 		
 		return result;
+	}
+	
+	/**
+	 * Updates a substance with 
+	 * @param orig
+	 */
+	public void update(QuantSubstance orig){
+		substance.update(orig.substance);
+		states.addAll(orig.states);
 	}
 
 
