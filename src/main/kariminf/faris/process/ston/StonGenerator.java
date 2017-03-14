@@ -52,6 +52,7 @@ public class StonGenerator extends Generator<String> {
 	//This is used when a substance has been used with some action before
 	//So if it changes states with another, we must create new substance
 	private int stateCounter = 0;
+	private HashMap<String, List<String> > linkStates = new HashMap<>();
 	private HashMap<String, ReqRolePlayer> prevStates = new HashMap<>();
 	
 	private Adpositional adpos = null;
@@ -278,22 +279,46 @@ public class StonGenerator extends Generator<String> {
 		
 		
 		if (prevStates.containsKey(subID)){
-			id = subID + "s" + (stateCounter++);
-			ReqRolePlayer rrp = ReqRolePlayer.create(id, prevStates.get(subID));
-			rc.addRolePlayer(rrp);
-			rc.replaceRoleInAction(actID, subID, id);
+			
+			//TODO Verify if it has a same state
+			
+			
+			return;
 			
 		} else {
-			id = subID + "s" + (stateCounter++);
-			ReqRolePlayer rrp = rc.getReqRolePlayerCopie(subID, id);
-			id = subID;
+			
+			//Add the request role player without states
+			prevStates.put(subID, rc.getReqRolePlayer(subID));
+			ArrayList<String> subStates = new ArrayList<>();
+			linkStates.put(subID, subStates);
+			
+			
 			//Here we save a copy of substance subID
-			if (rrp != null) prevStates.put(subID, rrp);
+			//if (rrp != null) prevStates.put(subID, rrp);
+		}
+		
+		//Here, we replace subID with id
+		if (statesSUB.isEmpty() && statesOBJ.isEmpty()){
+			//rc.replaceRoleInAction(actID, subID, id);
+			return;
+		}
+		
+		id = subID + "s" + (stateCounter++) + actID;
+		ReqRolePlayer rrp = ReqRolePlayer.create(id, rc.getReqRolePlayer(subID));
+		rc.addRolePlayer(rrp);
+		rc.replaceRoleInAction(actID, subID, id);
+		
+		subID = id;
+		
+		if (currentRoleIDs.peek().equals(subID)){
+			currentActIDs.pop();
+			currentActIDs.push(id);
 		}
 		
 		if(!statesSUB.isEmpty()){
 			rc.addRelative("SBJ", id);
 			rc.addRelativeConjunctions(statesSUB);
+			
 		}
 		
 		if(!statesOBJ.isEmpty()){

@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import kariminf.faris.knowledge.Mind;
 import kariminf.faris.knowledge.Mind.MentalState;
 import kariminf.faris.linguistic.*;
 import kariminf.faris.philosophical.*;
@@ -62,6 +61,9 @@ public abstract class Generator<T> {
 	
 	private HashMap<Substance, Integer> substanceIDs = new HashMap<>();
 	private HashMap<QuantSubstance, Integer> qsubstanceIDs = new HashMap<>();
+	
+	//A substance can have many IDs according to the states 
+	//private HashMap<QuantSubstance, List<HashMap<Integer, List<State>>>> qsubstanceIDs = new HashMap<>();
 	
 	private int substancesNbr = 0;
 	
@@ -267,7 +269,6 @@ public abstract class Generator<T> {
 		
 		Action tmpLastAction = currentAction;
 		//QuantSubstance tmpSubstance = currentSubstance;
-		
 		if (qsubstanceIDs.containsKey(wrapper.qsubstance)){
 			String subID = ROLE + qsubstanceIDs.get(wrapper.qsubstance);
 			substanceFoundHandler(subID);
@@ -275,6 +276,9 @@ public abstract class Generator<T> {
 		}
 		
 		String subID = ROLE + substancesNbr;
+		
+		
+		List<HashMap<Integer, List<State>>> idStates = new ArrayList<>();
 		
 		qsubstanceIDs.put(wrapper.qsubstance, substancesNbr);
 		

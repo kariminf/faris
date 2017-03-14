@@ -77,6 +77,7 @@ public class FarisParse extends Parser {
 		State state = new State(); 
 		QuantSubstance substance;
 	}
+	
 	private HashMap<String, List<TmpRelative>> subsRel = new HashMap<>();
 
 	private QuantSubstance currentPlayer;
@@ -298,7 +299,7 @@ public class FarisParse extends Parser {
 	 * @param adp The adposition (preposition) describing the relation
 	 */
 	private void action2roleRelative(Adpositional adp){
-
+		
 		int firstSynset = _players.get(RelDisj.get(0).get(0)).getSubstance().getNounSynSet();
 
 		PlaceTime adjType = Concepts.getAdjType(adp, firstSynset);
@@ -347,7 +348,11 @@ public class FarisParse extends Parser {
 			 */
 			break;
 		}
-
+		
+		for (List<String> conj: RelDisj)
+			for (String subID: conj)
+				addMainActions(subID);
+		
 		RelDisj = null;
 	}//action2roleRelative
 
@@ -414,6 +419,18 @@ public class FarisParse extends Parser {
 		listRel.add(tr);
 		
 	}//role2actionRelative
+	
+	
+	private void addMainActions(String id){
+		if (!subsRel.containsKey(id)) return;
+		
+		//System.out.println("addMainActions: ");
+		
+		for (TmpRelative tr: subsRel.get(id)){
+			tr.state.addMainAction(currentAction);
+			//System.out.println(">> " + id);
+		}
+	}
 	
 
 	//=====================================================================
@@ -511,6 +528,8 @@ public class FarisParse extends Parser {
 
 		for (List<String> IDs: disj){
 			currentAction.addConjunctSubjects(getSubstances(IDs));
+			for(String ID: IDs)
+				addMainActions(ID);
 		}
 
 	}//endAgents
@@ -528,6 +547,7 @@ public class FarisParse extends Parser {
 		if (s == MentalState.FACT){
 			for (List<String> IDs: disj){
 				currentAction.addConjunctObjects(getSubstances(IDs));
+				
 			}
 			return;
 		}
@@ -547,6 +567,9 @@ public class FarisParse extends Parser {
 						m.addOpinion(s, m2);
 						//System.out.println(m2.getName());
 					}
+					
+					for(String ID: IDs)
+						addMainActions(ID);
 				}
 
 				//The mind is added in the function addNewMind()
