@@ -15,14 +15,14 @@ import kariminf.faris.linguistic.Noun;
 import kariminf.faris.linguistic.POS;
 import kariminf.faris.linguistic.ProperNoun;
 import kariminf.faris.linguistic.Verb;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.GeneratorHandler;
 import kariminf.sentrep.ston.Univ2StonMap;
 import kariminf.sentrep.ston.request.ReqCreator;
 import kariminf.sentrep.ston.request.ReqRolePlayer;
 import kariminf.sentrep.types.Comparison;
 import kariminf.sentrep.types.Relation.Adpositional;
 
-public class StonGenerator extends Generator<String> {
+public class StonGeneratorHandler extends GeneratorHandler<String> {
 	
 	private ReqCreator rc = new ReqCreator();
 	
@@ -395,7 +395,7 @@ public class StonGenerator extends Generator<String> {
 	}
 
 	@Override
-	protected void addRelative(Comparison cmp, Adjective adjective, String relID) {
+	protected void addRelativeHandler(Comparison cmp, Adjective adjective, String relID) {
 		
 		//Here it is a relative such as: the mother OF the child
 		if (cmp == null) {

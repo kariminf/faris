@@ -26,7 +26,7 @@ import java.util.Set;
 
 import kariminf.faris.philosophical.Action;
 import kariminf.faris.philosophical.QuantSubstance;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 import kariminf.faris.tools.Search;
 
 
@@ -57,6 +57,32 @@ public class Mind {
 		FEAR,
 		FACT
 	} 
+	
+	public static final class MindWrapper {
+		public Mind mind;
+		public String name;
+		public QuantSubstance owner;
+		
+		public HashMap<MentalState, Set<Thought>> thoughts = new HashMap<>();
+		public HashMap<MentalState, Set<Opinion>> opinions = new HashMap<>();
+		//even conditional have a truth level: "I think if ..., then ... ."
+		public HashMap<MentalState, Set<Conditional>> conditions = new HashMap<>();
+		
+		public HashSet<MentalState> mentalStates = new HashSet<>();
+		
+		public MindWrapper(Mind mind){
+			this.mind = mind;
+		}
+		
+		public void unsafeAddAll(){
+			name = mind.name;
+			owner = mind.owner;
+			thoughts = mind.thoughts;
+			opinions = mind.opinions;
+			conditions = mind.conditions;
+			mentalStates = mind.mentalStates;
+		}
+	}
 	
 	protected String name;
 	private QuantSubstance owner;
@@ -230,19 +256,10 @@ public class Mind {
 		return result;
 	}
 	
-	public void generate(Generator gr){
-		//Process thoughts
-		gr.processMind(owner);
-		for(MentalState ms: mentalStates){
-			gr.processMentalState(ms);
-			for(Thought th: thoughts.get(ms)){
-				th.generate(gr);
-			}
-				
-		}
-		
-		gr.endMindProcessing(owner);
-		
+	public void process(Processor pr){
+		MindWrapper wrapper = new MindWrapper(this);
+		wrapper.unsafeAddAll();
+		pr.processMind(wrapper);
 	}
 
 }

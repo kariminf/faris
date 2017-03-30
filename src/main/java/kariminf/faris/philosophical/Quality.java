@@ -27,7 +27,7 @@ import java.util.Set;
 
 import kariminf.faris.linguistic.Adjective;
 import kariminf.faris.linguistic.Adverb;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 
 /**
@@ -118,12 +118,11 @@ public class Quality extends Being{
 		return result;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		QualityWrapper wrapper = new QualityWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processQuality(wrapper);
+		pr.processQuality(wrapper);
 		
 	}
 	

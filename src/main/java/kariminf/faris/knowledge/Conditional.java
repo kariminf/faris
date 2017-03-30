@@ -20,7 +20,7 @@
 
 package kariminf.faris.knowledge;
 
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 /**
  * 
@@ -41,6 +41,22 @@ import kariminf.faris.process.Generator;
  *         limitations under the License.
  */
 public class Conditional extends Idea {
+	
+	public static final class ConditionalWrapper {
+		
+		public Conditional conditional;
+		public Idea condition;
+		public Idea predicate;
+		
+		public ConditionalWrapper(Conditional conditional){
+			this.conditional = conditional;
+		}
+		
+		public void unsafeAddAll(){
+			this.condition = conditional.condition;
+			this.predicate = conditional.predicate;
+		}
+	}
 
 	private Idea condition;
 	private Idea predicate;
@@ -67,9 +83,10 @@ public class Conditional extends Idea {
 	}
 
 	@Override
-	public void generate(Generator gr) {
-		// TODO Auto-generated method stub
-		
+	public void process(Processor pr) {
+		ConditionalWrapper wrapper = new ConditionalWrapper(this);
+		wrapper.unsafeAddAll();
+		pr.processIdea(wrapper);
 	}
 
 }

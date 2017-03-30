@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import kariminf.faris.knowledge.Faris;
+import kariminf.faris.process.Generator;
 
 public class StonGeneratorTest {
 
@@ -59,9 +60,11 @@ public class StonGeneratorTest {
 		Faris faris = new Faris();
 		faris.addStonDescription(specif);
 		
-		StonGenerator sg = new StonGenerator();
+		StonGeneratorHandler sg = new StonGeneratorHandler();
 		
-		faris.generate(sg);
+		
+		
+		faris.process(new Generator(sg));
 		
 		String ston = sg.generate();
 		

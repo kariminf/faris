@@ -25,7 +25,7 @@ import java.util.Set;
 
 import kariminf.faris.linguistic.Noun;
 import kariminf.faris.linguistic.ProperNoun;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 
 /**
@@ -178,10 +178,10 @@ public class Substance extends Being{
 	}
 
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		SubstanceWrapper wrapper = new SubstanceWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processSubstance(wrapper);
+		pr.processSubstance(wrapper);
 		
 	}
 	

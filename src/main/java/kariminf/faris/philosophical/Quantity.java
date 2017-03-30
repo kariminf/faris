@@ -20,7 +20,7 @@
 
 package kariminf.faris.philosophical;
 
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 /**
  * Quantity (ποσόν, poson, how much). This is the extension of an object, and may be 
@@ -140,12 +140,12 @@ public class Quantity extends Being{
 		return result;
 	}
 
-	@SuppressWarnings("rawtypes")
+
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		QuantityWrapper wrapper = new QuantityWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processQuantity(wrapper);
+		pr.processQuantity(wrapper);
 		
 	}
 	

@@ -1,9 +1,22 @@
 package kariminf.faris.knowledge;
 
 import kariminf.faris.philosophical.Action;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 public class Thought extends Idea {
+	
+	public static final class ThoughtWrapper {
+		public Thought thought;
+		public Action action;
+		
+		public ThoughtWrapper(Thought thought){
+			this.thought = thought;
+		}
+		
+		public void unsafeAddAll(){
+			action = thought.action;
+		}
+	}
 
 	private Action action;
 	
@@ -63,9 +76,10 @@ public class Thought extends Idea {
 	}
 
 	@Override
-	public void generate(Generator gr) {
-		gr.mainIdea();
-		action.generate(gr);
+	public void process(Processor pr) {
+		ThoughtWrapper wrapper = new ThoughtWrapper(this);
+		wrapper.unsafeAddAll();
+		pr.processIdea(wrapper);
 		
 	}
 

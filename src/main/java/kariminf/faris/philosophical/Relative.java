@@ -21,7 +21,7 @@
 package kariminf.faris.philosophical;
 
 import kariminf.faris.linguistic.Adjective;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 import kariminf.sentrep.types.Comparison;
 
 /**
@@ -212,13 +212,13 @@ public class Relative extends Being{
 	}
 	
 
-	@SuppressWarnings("rawtypes")
+
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		
 		RelativeWrapper wrapper = new RelativeWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processRelative(wrapper);
+		pr.processRelative(wrapper);
 		
 	}
 	

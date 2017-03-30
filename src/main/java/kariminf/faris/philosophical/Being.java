@@ -20,7 +20,7 @@
 
 package kariminf.faris.philosophical;
 
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 /**
  * Of things said without any combination, each signifies either substance or quantity 
@@ -49,6 +49,6 @@ import kariminf.faris.process.Generator;
  */
 public abstract class Being {
 
-	public abstract void generate(Generator gr);
+	public abstract void process(Processor pr);
 	
 }

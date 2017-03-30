@@ -23,7 +23,7 @@ package kariminf.faris.philosophical;
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 import kariminf.sentrep.types.Relation;
 
 /**
@@ -191,10 +191,10 @@ public class State extends Being{
 	}
 
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		StateWrapper wrapper = new StateWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processState(wrapper);
+		pr.processState(wrapper);
 		
 	}
 

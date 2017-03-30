@@ -1,11 +1,41 @@
 package kariminf.faris.linguistic;
 
+import static org.junit.Assert.*;
+
 import java.util.HashSet;
+
+import org.junit.Test;
 
 import kariminf.faris.linguistic.Noun.Gender;
 
 public class NounTest {
-
+	//=====================================
+	// As JUnit
+	//=====================================
+	
+	@Test
+	public void newTest(){
+		
+		
+		Noun n = Noun.getNew(10332385);
+		assertEquals(10332385, n.getSynSet());
+		
+		n.setAttributs(Gender.FEMININE, true);
+		assertEquals(Gender.FEMININE, n.getGender());
+		assertEquals(true, n.isDefined());
+		
+		Noun ncopy = Noun.getNew(n);
+		assertEquals(n, ncopy);
+		//assertTrue(ncopy.equals(n));
+		
+		String str = "N@10332385.FEMININE.def";
+		assertEquals(str, n.toString());
+		
+	}
+	
+	//=====================================
+	// As Java Application
+	//=====================================
 	public static void main(String[] args) {
 		Noun mother = Noun.getNew(10332385); //mother
 		mother.setAttributs(Gender.FEMININE, true);

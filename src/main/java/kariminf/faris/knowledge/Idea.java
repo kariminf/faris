@@ -20,7 +20,7 @@
 
 package kariminf.faris.knowledge;
 
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 /**
  * 
@@ -52,7 +52,7 @@ public abstract class Idea {
 		return true;
 	}
 	
-	public abstract void generate(Generator gr);
+	public abstract void process(Processor pr);
 	
 
 }

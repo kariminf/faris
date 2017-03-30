@@ -22,10 +22,8 @@ package kariminf.faris.philosophical;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-
 import kariminf.faris.linguistic.Adverb;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 import kariminf.sentrep.types.Relation.Adpositional;
 
 /**
@@ -110,11 +108,10 @@ public class Time extends Being{
 		return result;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		TimeWrapper wrapper = new TimeWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processTime(wrapper);
+		pr.processTime(wrapper);
 	}
 }

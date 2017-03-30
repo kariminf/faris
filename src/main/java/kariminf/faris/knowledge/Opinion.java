@@ -1,9 +1,23 @@
 package kariminf.faris.knowledge;
 
 import kariminf.faris.philosophical.QuantSubstance;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 public class Opinion extends Idea {
+	
+	public static final class OpinionWrapper {
+		
+		public Opinion opinion;
+		public Mind otherMind;
+		
+		public OpinionWrapper(Opinion opinion){
+			this.opinion = opinion;
+		}
+		
+		public void unsafeAddAll(){
+			otherMind = opinion.otherMind;
+		}
+	}
 
 	private Mind otherMind;
 	
@@ -40,9 +54,10 @@ public class Opinion extends Idea {
 	}
 
 	@Override
-	public void generate(Generator gr) {
-		// TODO Auto-generated method stub
-		
+	public void process(Processor pr) {
+		OpinionWrapper wrapper = new OpinionWrapper(this);
+		wrapper.unsafeAddAll();
+		pr.processIdea(wrapper);
 	}
 
 	

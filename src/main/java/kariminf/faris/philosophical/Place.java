@@ -23,7 +23,7 @@ package kariminf.faris.philosophical;
 import java.util.ArrayList;
 
 import kariminf.faris.linguistic.Adverb;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 import kariminf.sentrep.types.Relation.Adpositional;
 
 /**
@@ -99,12 +99,12 @@ public class Place extends Being {
 		return result;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		PlaceWrapper wrapper = new PlaceWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processPlace(wrapper);
+		pr.processPlace(wrapper);
 	}
 	
 	

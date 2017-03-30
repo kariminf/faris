@@ -28,7 +28,7 @@ import java.util.Set;
 
 import kariminf.faris.linguistic.Adverb;
 import kariminf.faris.linguistic.Verb;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 import kariminf.faris.process.ston.Concepts;
 import kariminf.faris.tools.ConjunctedSubstances;
 
@@ -402,12 +402,11 @@ public class Action extends Being{
 		return true;
 	}
 
-	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		ActionWrapper wrapper = new ActionWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processAction(wrapper);
+		pr.processAction(wrapper);
 		
 	}
 	

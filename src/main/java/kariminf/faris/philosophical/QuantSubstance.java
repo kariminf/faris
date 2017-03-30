@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import kariminf.faris.philosophical.Substance.SubstanceWrapper;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 public class QuantSubstance extends Being{
 	
@@ -167,12 +167,11 @@ public class QuantSubstance extends Being{
 		this.relatives.add(relative);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		QSubstanceWrapper wrapper = new QSubstanceWrapper(this);
 		wrapper.unsafeAddAll();
-		gr.processSubstance(wrapper);
+		pr.processSubstance(wrapper);
 		
 	}
 	

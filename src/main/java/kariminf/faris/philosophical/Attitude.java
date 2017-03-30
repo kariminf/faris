@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import kariminf.faris.linguistic.Verb;
-import kariminf.faris.process.Generator;
+import kariminf.faris.process.Processor;
 
 /**
  * Being-in-a-position, posture, attitude (κεῖσθαι, keisthai, to lie). 
@@ -90,9 +90,8 @@ public class Attitude extends Being{
 		return result;
 	}
 
-	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public void generate(Generator gr) {
+	public void process(Processor pr) {
 		// TODO Auto-generated method stub
 		
 	}
