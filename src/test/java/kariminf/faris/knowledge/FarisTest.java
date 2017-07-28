@@ -47,7 +47,7 @@ import kariminf.faris.knowledge.Faris;
  */
 public class FarisTest {
 	
-	static String testFile = "/home/kariminf/Github/Projects/Nolporas/STON/bio/NaguibMahfouz_bio/NaguibMahfouz_Bio.ston";
+	static String testFile = "/home/kariminf/Github/Projects/Nolporas/STON/bio/NaguibMahfouz_bio/NaguibMahfouz_01.ston";
 
 	public static String readFile (String f) {
 		try {
@@ -80,7 +80,7 @@ public class FarisTest {
 		
 		if (!success) System.out.println("NOT SUCCESS");
 		print(faris);
-		//faris.displayStates();
+		faris.displayStates();
 		
 	}
 	

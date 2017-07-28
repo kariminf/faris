@@ -81,9 +81,9 @@ public class Generator implements Processor {
 	
 	private QuantSubstance currentSubstance;
 	
-	private GeneratorHandler handler;
+	private GeneratorHandler<?> handler;
 	
-	public Generator(GeneratorHandler handler){
+	public Generator(GeneratorHandler<?> handler){
 		this.handler = handler;
 	}
 	
@@ -290,7 +290,7 @@ public class Generator implements Processor {
 		String subID = ROLE + substancesNbr;
 		
 		
-		List<HashMap<Integer, List<State>>> idStates = new ArrayList<>();
+		//List<HashMap<Integer, List<State>>> idStates = new ArrayList<>();
 		
 		qsubstanceIDs.put(wrapper.qsubstance, substancesNbr);
 		

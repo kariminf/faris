@@ -445,6 +445,8 @@ public class FarisParse extends Parser {
 	protected void beginAction(String id, int synSet) {
 
 		//MentalState pastState = s;
+		
+		//System.out.println("begin act[" + id + "]");
 
 		s = Concepts.getMentalState(synSet);
 
@@ -467,6 +469,8 @@ public class FarisParse extends Parser {
 	@Override
 	protected void endAction(String id, int synSet) {
 		currentActionID = null;
+		
+		//System.out.println("end act[" + id + "]");
 	}
 
 	@Override
@@ -611,7 +615,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginRole(String id, int synSet) {
-		//System.out.println("role: " + id);
+		//System.out.println("begin role: " + id);
 		if (_players.containsKey(id)){
 			currentPlayer = _players.get(id);
 			return;
@@ -628,7 +632,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void beginRole(String id, int synSet, String pronoun) {
-		//System.out.println("role: " + id);
+		//System.out.println("begin role: " + id);
 		if (synSet > 0) beginRole(id, synSet);
 
 		proleID = id;
@@ -641,7 +645,7 @@ public class FarisParse extends Parser {
 
 	@Override
 	protected void endRole(String id, int synSet) {
-		//System.out.println(id);
+		//System.out.println("end role: " + id);
 		currentPlayerID = null;
 
 		if (currentPronoun != null){

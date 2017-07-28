@@ -18,10 +18,10 @@
  */
 
 
-rootProject.name = 'Faris'
+rootProject.name = 'faris'
 
-include ':SentRep'
-project(':SentRep').projectDir = new File(settingsDir, '../SentRep')
+include ':sentrep'
+project(':sentrep').projectDir = new File(settingsDir, '../sentrep')
 
-include ':LangPi'
-project(':LangPi').projectDir = new File(settingsDir, '../LangPi')
+include ':langpi'
+project(':langpi').projectDir = new File(settingsDir, '../langpi')

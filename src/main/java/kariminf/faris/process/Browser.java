@@ -8,7 +8,6 @@ import kariminf.faris.knowledge.Thought.ThoughtWrapper;
 import kariminf.faris.philosophical.Action.ActionWrapper;
 import kariminf.faris.philosophical.Place.PlaceWrapper;
 import kariminf.faris.philosophical.Quality.QualityWrapper;
-import kariminf.faris.philosophical.QuantSubstance;
 import kariminf.faris.philosophical.QuantSubstance.QSubstanceWrapper;
 import kariminf.faris.philosophical.Quantity.QuantityWrapper;
 import kariminf.faris.philosophical.Relative.RelativeWrapper;

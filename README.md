@@ -1,6 +1,7 @@
 # Faris
 
 [![Project](https://img.shields.io/badge/Project-Faris-4B0082.svg)](https://github.com/kariminf/Faris)
+[![Type](https://img.shields.io/badge/Type-Research-4B0082.svg)](https://github.com/kariminf/AllSummarizer)
 [![License](https://img.shields.io/badge/License-Apache_2-4B0082.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 <!---
 [![Travis](https://img.shields.io/travis/kariminf/Faris.svg)](https://travis-ci.org/kariminf/Faris)
